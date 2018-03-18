@@ -40,7 +40,7 @@ public class AlternativesRanking {
 	 * @param rang
 	 * @return alternative(s)
 	 */
-	public Collection<Alternative> getAlternative(int rank) {
+	public Collection<Alternative> getAltRank(int rank) {
 		return map.get(rank);
 	}
 	

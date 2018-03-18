@@ -39,7 +39,7 @@ public class MCProblem {
 	 */
 	public void addValue(Alternative alt, Criterion c, Double val) {
 		if (!alternatives.contains(alt))
-				this.alternatives.add(alt);
+			this.alternatives.add(alt);
 		if (!criteria.contains(c))
 			this.criteria.add(c);
 		tableEval.put(alt, c, val);	
