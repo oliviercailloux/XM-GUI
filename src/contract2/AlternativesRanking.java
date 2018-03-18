@@ -7,7 +7,6 @@ import contract1.Alternative;
 
 /**
  * This class contains all alternatives associated with their rank.
- * @author Razorin
  *
  */
 public class AlternativesRanking {

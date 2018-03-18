@@ -10,7 +10,6 @@ import java.util.Iterator;
 /**
  * An object of this class MCProblem contains a set of alternatives, criteria and
  * an evaluation table in order to store a complete multi-criteria problem for decision making.
- * @author Razorin
  *
  */
 public class MCProblem {
@@ -51,18 +50,5 @@ public class MCProblem {
 	public Double getCriteriaValues(Alternative alt, Criterion c) {
 		return tableEval.get(alt, c);
 	}
-	
-	/**
-	 * TableEval accessor to return the values of a specific alternative for all the criteria in the set
-	 */
-	public Map<Criterion, Double> getCriteriaValues(Alternative alt) {
-		return tableEval.row(alt);
-	}
-	
-	/**
-	 * TableEval accessor to return the values of a specific criterion for all the alternatives in the set
-	 */
-	public Map<Alternative, Double> getAlternativesValues(Criterion c) {
-		return tableEval.row(c);
-	}
+
 }
