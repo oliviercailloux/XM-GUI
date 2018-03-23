@@ -111,9 +111,5 @@ public class AlternativesRanking {
 		return s;
 	}
 
-	public static void main(String[] args) {
-		Alternative alt=new Alternative(2);
-		AlternativesRanking altr = new AlternativesRanking(1,alt);
-		altr.toString();
-	}
+	
 }
