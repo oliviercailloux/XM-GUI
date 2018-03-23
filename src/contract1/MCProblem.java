@@ -50,5 +50,9 @@ public class MCProblem {
 	public Double getCriteriaValues(Alternative alt, Criterion c) {
 		return tableEval.get(alt, c);
 	}
+<<<<<<< HEAD
+=======
+	
+>>>>>>> 29565039de724b941540f86ef73867a7b433ae2f
 
 }

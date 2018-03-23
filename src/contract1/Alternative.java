@@ -2,7 +2,6 @@ package contract1;
 
 /**
  * An object of this immuable class Alternative contains a simple identifier of type integer
- * @author Razorin
  *
  */
 public final class Alternative {
