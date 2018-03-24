@@ -91,7 +91,7 @@ public class AlternativesRanking {
 	 * Validate that the rank about to be put is inferior to the number of alternatives + 1.
 	 */
 	private void validateRank(int rank) {
-		if ( (rank > map.size() +1) ) {
+		if ( (rank > map.KeySet().size() +1) ) {
 			throw new IllegalArgumentException("Given rank is invalid (too big).");
 		}
 	}
