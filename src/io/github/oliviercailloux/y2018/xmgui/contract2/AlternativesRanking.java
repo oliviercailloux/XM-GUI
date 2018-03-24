@@ -22,7 +22,6 @@ public class AlternativesRanking {
 	/**
 	 * Put a rank for a given alternative in order to construct and AlternativeRanking instance
 	 * This also creates a history entry for the put alternative.
-	 * 
 	 * @param rank must be positive
 	 * @param alt must not be null
 	 */
@@ -38,13 +37,13 @@ public class AlternativesRanking {
 	/**
 	 * Put a rank for a given alternative. Can be used to put ex-aequo alternatives on the same rank.
 	 * This also creates a history entry for the put alternative.
-	 * 
 	 * @param rank must be positive and inferior to the total number of alternatives + 1
 	 * @param alt must not be null
 	 */
 	public void putAltRank(int rank, Alternative alt) {
-		if (rank <= 0 || alt == null)
+		if (rank <= 0 || alt == null) {
 			throw new IllegalArgumentException("rank must be positive and alt must not be null");
+		}
 		// Validate the rank given is not too big
 		validateRank(rank);
 		history("Inserted by putAltRank AlternativeId : " + alt.getId());
@@ -54,15 +53,13 @@ public class AlternativesRanking {
 	/**
 	 * Alternative accessor. Return the corresponding alternative(s) for a given
 	 * rank.
-	 * 
 	 * @param rank must be positive and inferior to the total number of alternatives + 1
 	 * @return alternative(s)
 	 */
 	public Set<Alternative> getAlt(int rank) {
-
-		if (rank <= 0 || (rank > map.size() + 1))
+		if (rank <= 0 || (rank > map.size() + 1)) {
 			throw new IllegalArgumentException("Given rank does not exist");
-
+		}
 		return map.get(rank);
 	}
 
@@ -76,7 +73,6 @@ public class AlternativesRanking {
 	/**
 	 * Remove all entries of a given alternative from the map.
 	 * This also creates a history entry for the removed alternative.
-	 * 
 	 * @param alt must not be null
 	 */
 	public void removeAlt(Alternative alt) {
