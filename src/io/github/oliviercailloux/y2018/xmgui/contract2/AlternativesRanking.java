@@ -82,8 +82,6 @@ public class AlternativesRanking {
 	public void removeAlt(Alternative alt) {
 		if (alt == null)
 			throw new IllegalArgumentException("alt must not be null");
-		// PB si il y a des ex-aequos -> i n'attendra jamais map.size() car le dernier rang entré sera inférieur.
-		// Il faudrait itérer i sur map.keys() ? j'ai tenté ci-dessous
 		for (int i: map.keys()) {
 			for (Alternative a : map.get(i))
 				if (a.getId() == alt.getId()) {
