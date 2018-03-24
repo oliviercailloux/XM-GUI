@@ -8,10 +8,6 @@ import com.google.common.collect.Table;
 /**
  * An object of this class MCProblem contains a set of alternatives, criteria and
  * an evaluation table in order to store a complete multi-criteria problem for decision making.
-<<<<<<< HEAD
- *
-=======
->>>>>>> 5111ae5dd0b995108069a07b9c1691ccb81ff72f
  */
 public class MCProblem {
 
@@ -62,10 +58,7 @@ public class MCProblem {
 		}
 		this.criteria.add(c);
 	}
-	
-<<<<<<< HEAD
 
-=======
 	/**
 	 * Accessor for an alternative-criterion pair value in the tableEval
 	 * @param alt and c must not be null and must be present in the tableEval
@@ -92,5 +85,4 @@ public class MCProblem {
 		return tempTableEval;
 	}
 	
->>>>>>> 5111ae5dd0b995108069a07b9c1691ccb81ff72f
 }

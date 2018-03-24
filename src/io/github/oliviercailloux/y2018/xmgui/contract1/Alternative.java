@@ -1,12 +1,7 @@
 package io.github.oliviercailloux.y2018.xmgui.contract1;
 
 /**
-<<<<<<< HEAD
- * An object of this immuable class Alternative contains a simple identifier of type integer
- *
-=======
  * An object of this immutable class Alternative contains a simple identifier of type int
->>>>>>> 5111ae5dd0b995108069a07b9c1691ccb81ff72f
  */
 public final class Alternative {
 
