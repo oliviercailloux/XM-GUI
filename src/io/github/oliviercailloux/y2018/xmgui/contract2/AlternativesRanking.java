@@ -20,10 +20,8 @@ public class AlternativesRanking {
 	 * AlternativeRanking instance This also creates a history entry for the put
 	 * alternative.
 	 * 
-	 * @param rank
-	 *            must be positive
-	 * @param alt
-	 *            must not be null
+	 * @param rank must be positive
+	 * @param alt must not be null
 	 */
 	public AlternativesRanking(int rank, Alternative alt) {
 		if (rank <= 0 || alt == null)
@@ -36,11 +34,8 @@ public class AlternativesRanking {
 	 * Put a rank for a given alternative. Can be used to put ex-aequo alternatives
 	 * on the same rank. This also creates a history entry for the put alternative.
 	 * 
-	 * @param rank
-	 *            must be positive and inferior to the total number of alternatives
-	 *            + 1
-	 * @param alt
-	 *            must not be null
+	 * @param rank must be positive and inferior to the total number of alternatives + 1
+	 * @param alt must not be null
 	 */
 	public void putAltRank(int rank, Alternative alt) {
 		if (rank <= 0 || alt == null) {
@@ -55,9 +50,7 @@ public class AlternativesRanking {
 	 * Alternative accessor. Return the corresponding alternative(s) for a given
 	 * rank.
 	 * 
-	 * @param rank
-	 *            must be positive and inferior to the total number of alternatives
-	 *            + 1
+	 * @param rank must be positive and inferior to the total number of alternatives + 1
 	 * @return alternative(s)
 	 */
 	public Set<Alternative> getAlt(int rank) {
@@ -78,12 +71,10 @@ public class AlternativesRanking {
 	 * Remove all entries of a given alternative from the map. This also creates a
 	 * history entry for the removed alternative.
 	 * 
-	 * @param alt
-	 *            must not be null
+	 * @param alt must not be null
 	 */
 	public void removeAlt(Alternative alt) {
-		if (alt == null)
-			throw new IllegalArgumentException("alt must not be null");
+		Objects.requireNonNull(alt);
 		for (int i : map.keys()) {
 			for (Alternative a : map.get(i))
 				if (a.getId() == alt.getId()) {
@@ -110,5 +101,5 @@ public class AlternativesRanking {
 		}
 		return s;
 	}
-
+	
 }

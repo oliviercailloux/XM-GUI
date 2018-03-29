@@ -5,7 +5,10 @@ import java.util.HashSet;
 import java.util.Objects;
 
 import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Table;
+
+import jdk.nashorn.internal.ir.annotations.Immutable;
 
 /**
  * An object of this class MCProblem contains a set of alternatives, criteria
@@ -21,8 +24,7 @@ public class MCProblem {
 	/**
 	 * Add a value for an alternative-criterion pair
 	 * 
-	 * @param alt,
-	 *            c and val must not be null
+	 * @param alt, c and val must not be null
 	 */
 	public void putValue(Alternative alt, Criterion c, double val) {
 		this.alternatives.add(Objects.requireNonNull(alt));
@@ -33,8 +35,7 @@ public class MCProblem {
 	/**
 	 * Add an alternative to the Set
 	 * 
-	 * @param alt
-	 *            must not be null
+	 * @param alt must not be null
 	 */
 	public void addAlt(Alternative alt) {
 		this.alternatives.add(Objects.requireNonNull(alt));
@@ -43,8 +44,7 @@ public class MCProblem {
 	/**
 	 * Add a criterion to the Set
 	 * 
-	 * @param c
-	 *            must not be null
+	 * @param c must not be null
 	 */
 	public void addAlt(Criterion c) {
 		this.criteria.add(Objects.requireNonNull(c));
@@ -53,8 +53,7 @@ public class MCProblem {
 	/**
 	 * Accessor for an alternative-criterion pair value in the tableEval
 	 * 
-	 * @param alt
-	 *            and c must not be null and must be present in the tableEval
+	 * @param alt and c must not be null and must be present in the tableEval
 	 */
 	public double getValue(Alternative alt, Criterion c) {
 		if (!tableEval.contains(Objects.requireNonNull(alt), Objects.requireNonNull(c))) {
@@ -66,11 +65,10 @@ public class MCProblem {
 	/**
 	 * Accessor for the whole tableEval
 	 * 
-	 * @return a copy of the tableEval
+	 * @return an immutable copy of the tableEval
 	 */
-	public Table<Alternative, Criterion, Double> getTableEval() {
-		Table<Alternative, Criterion, Double> tempTableEval = tableEval;
-		return tempTableEval;
+	public ImmutableTable<Alternative, Criterion, Double> getTableEval() {
+		return ImmutableTable.copyOf(tableEval);
 	}
 
 }
