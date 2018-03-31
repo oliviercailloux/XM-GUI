@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableSetMultimap;
 import com.google.common.collect.SetMultimap;
 
 import io.github.oliviercailloux.y2018.xmgui.contract1.Alternative;
+import io.github.oliviercailloux.y2018.xmgui.file1.TestMarshal;
 
 /**
  * This class contains all alternatives associated with their rank.
@@ -101,5 +102,7 @@ public class AlternativesRanking {
 		}
 		return s;
 	}
+	
+	
 	
 }
