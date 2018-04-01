@@ -8,8 +8,6 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Table;
 
-// import jdk.nashorn.internal.ir.annotations.Immutable;
-
 /**
  * An object of this class MCProblem contains a set of alternatives, criteria
  * and an evaluation table in order to store a complete multi-criteria problem
