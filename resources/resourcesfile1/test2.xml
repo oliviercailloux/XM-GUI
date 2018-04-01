@@ -2,6 +2,7 @@
 <x2:XMCDA xmlns:x2="http://www.decision-deck.org/2012/XMCDA-2.2.1">
     <alternatives>
         <alternative id="a1"/>
+        <alternative id="a2"/>
     </alternatives>
     <criteria>
         <criterion id="c1" mcdaConcept="concept"/>

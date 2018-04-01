@@ -55,14 +55,14 @@ public class TestMarshal {
 		 
 		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
         
-		try(final FileOutputStream fos = new FileOutputStream(new File("C:/Users/Lamrani/3D Objects/XM-GUI/resources/resourcesfile1/test2.xml"))){
+		try(final FileOutputStream fos = new FileOutputStream(new File("/Users/Razorin/Desktop/PERSO/MIAGE/DEV/JAVA/XM-GUI/resources/resourcesfile1/testOrdiRaph.xml"))){
 				marshaller.marshal(xmcda,fos);
 				
 		}
 		
 	}
 
-	// main pour tester à enelver avant le commit final
+	// main pour tester ï¿½ enelver avant le commit final
 
 	public static void main(String[] args) throws JAXBException, FileNotFoundException, IOException {
 		Criterion crt = new Criterion(1);
