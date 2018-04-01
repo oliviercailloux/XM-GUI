@@ -8,7 +8,7 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Table;
 
-import jdk.nashorn.internal.ir.annotations.Immutable;
+// import jdk.nashorn.internal.ir.annotations.Immutable;
 
 /**
  * An object of this class MCProblem contains a set of alternatives, criteria
@@ -17,8 +17,8 @@ import jdk.nashorn.internal.ir.annotations.Immutable;
  */
 public class MCProblem {
 
-	private Set<Alternative> alternatives = new HashSet<Alternative>();
-	private Set<Criterion> criteria = new HashSet<Criterion>();
+	private Set<Alternative> alternatives = new HashSet<>();
+	private Set<Criterion> criteria = new HashSet<>();
 	private Table<Alternative, Criterion, Double> tableEval = HashBasedTable.create();
 
 	/**
