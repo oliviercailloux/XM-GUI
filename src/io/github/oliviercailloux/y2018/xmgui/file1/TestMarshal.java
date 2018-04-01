@@ -55,14 +55,13 @@ public class TestMarshal {
 		 
 		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
         
-		try(final FileOutputStream fos = new FileOutputStream(new File("/Users/Razorin/Desktop/PERSO/MIAGE/DEV/JAVA/XM-GUI/resources/resourcesfile1/testOrdiRaph.xml"))){
+		try(final FileOutputStream fos = new FileOutputStream(new File("/Users/Razorin/Desktop/PERSO/MIAGE/DEV/JAVA/XM-GUI/resources/resourcesfile1/testOrdiRaph.xml"))) {
 				marshaller.marshal(xmcda,fos);
-				
 		}
 		
 	}
 
-	// main pour tester � enelver avant le commit final
+	// main pour tester à enlever avant le commit final
 
 	public static void main(String[] args) throws JAXBException, FileNotFoundException, IOException {
 		Criterion crt = new Criterion(1);
