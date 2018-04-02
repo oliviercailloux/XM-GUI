@@ -5,10 +5,10 @@ import java.util.HashSet;
 import java.util.Objects;
 
 import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Table;
 
-import jdk.nashorn.internal.ir.annotations.Immutable;
 
 /**
  * An object of this class MCProblem contains a set of alternatives, criteria
@@ -69,6 +69,14 @@ public class MCProblem {
 	 */
 	public ImmutableTable<Alternative, Criterion, Double> getTableEval() {
 		return ImmutableTable.copyOf(tableEval);
+	}
+	
+	public ImmutableSet<Alternative> getAlternatives(){
+		return ImmutableSet.copyOf(alternatives);
+	}
+	
+	public ImmutableSet<Criterion> getCriteria(){
+		return ImmutableSet.copyOf(criteria);
 	}
 
 }
