@@ -48,8 +48,7 @@ public class TestMarshal {
 		criteria.getCriterion().add(crit);
 
 		final XMCDA xmcda = f.createXMCDA();
-		final List<JAXBElement<?>> xmcdaSubElements = xmcda
-				.getProjectReferenceOrMethodMessagesOrMethodParameters();
+		final List<JAXBElement<?>> xmcdaSubElements = xmcda.getProjectReferenceOrMethodMessagesOrMethodParameters();
 		xmcdaSubElements.add(f.createXMCDAAlternatives(alternatives));
 		xmcdaSubElements.add(f.createXMCDACriteria(criteria));
 		 

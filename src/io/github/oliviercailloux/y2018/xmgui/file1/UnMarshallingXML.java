@@ -56,7 +56,7 @@ public class UnMarshallingXML {
 	public static Criterion getCrtFromXml(int i, NodeList nList) {
 			Node nNode = nList.item(i);
 			Element eElement = (Element) nNode;
-			System.out.println("AlternativeID : " + eElement.getAttribute("id"));
+			System.out.println("CriterionID : " + eElement.getAttribute("id"));
 			String crt = eElement.getAttribute("id").substring(1);
 			int finalCrt = Integer.parseInt(crt);
 			Criterion criterion = new Criterion(finalCrt);
