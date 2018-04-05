@@ -64,7 +64,7 @@ public class UnMarshallingXML {
 		return criterion;
 	}
 	
-	
+
 	
 	// Main Pour test avant commit final
 	public static void main(String[] args) throws JAXBException, FileNotFoundException, IOException, ParserConfigurationException, SAXException {

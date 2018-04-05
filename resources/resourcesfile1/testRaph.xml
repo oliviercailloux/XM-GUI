@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<x2:XMCDA xmlns:x2="http://www.decision-deck.org/2012/XMCDA-2.2.1">
+    <alternatives>
+        <alternative id="alt1"/>
+    </alternatives>
+    <criteria>
+        <criterion id="c1" mcdaConcept="concept"/>
+    </criteria>
+</x2:XMCDA>
