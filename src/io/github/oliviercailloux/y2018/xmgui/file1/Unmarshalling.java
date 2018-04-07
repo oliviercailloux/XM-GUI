@@ -4,21 +4,24 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Iterator;
+
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
+
 import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
 
 
-import io.github.oliviercailloux.xmcda_2_2_1_jaxb.ObjectFactory;
+
+
+
+
+
 import io.github.oliviercailloux.xmcda_2_2_1_jaxb.X2Alternative;
 import io.github.oliviercailloux.xmcda_2_2_1_jaxb.X2Alternatives;
-import io.github.oliviercailloux.xmcda_2_2_1_jaxb.X2AlternativesSet;
+
 import io.github.oliviercailloux.xmcda_2_2_1_jaxb.X2Criteria;
 import io.github.oliviercailloux.xmcda_2_2_1_jaxb.X2Criterion;
 import io.github.oliviercailloux.xmcda_2_2_1_jaxb.XMCDA;
@@ -30,10 +33,17 @@ import io.github.oliviercailloux.y2018.xmgui.contract1.Alternative;
 import io.github.oliviercailloux.y2018.xmgui.contract1.Criterion;
 
 
-public class Unmarshalling2 {
+public class Unmarshalling {
 	
 	private MCProblem mcp = new MCProblem();
 
+	/**
+	 * @return
+	 * @throws JAXBException
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * 
+	 */
 	public MCProblem unmarshalAndStore() throws JAXBException, FileNotFoundException, IOException {
 		
 		
@@ -41,7 +51,7 @@ public class Unmarshalling2 {
 		final Unmarshaller unmarshaller = jc.createUnmarshaller();
 		// final ObjectFactory f = new ObjectFactory();
 		
-		try (final FileInputStream fis = new FileInputStream( new File("/Users/Razorin/Desktop/PERSO/MIAGE/DEV/JAVA/Test resources/test6realCars.xml"))) {
+		try (final FileInputStream fis = new FileInputStream( new File("resources/resourcesfile1/file1.xml"))) {
 			
 			final XMCDA xmcda = (XMCDA) unmarshaller.unmarshal(fis);
 			final List<JAXBElement<?>> xmcdaSubElements = xmcda.getProjectReferenceOrMethodMessagesOrMethodParameters();
@@ -69,6 +79,7 @@ public class Unmarshalling2 {
 				String firstAltId = firstAlt.getId();
 				// Put it in an Alternative object
 				Alternative a = new Alternative(Integer.parseInt(firstAltId.substring(1)));
+				
 				// Put it in an MCProblem object
 				mcp.addAlt(a);
 				
@@ -129,7 +140,7 @@ public class Unmarshalling2 {
 					// Put the Alternative-Criteria pair in the tableEval
 					Criterion c = new Criterion(Integer.parseInt(firstEvalAltPerfOnCritId.substring(1)));
 					double v = firstEvalAltPerfOnCritIdValue.getReal();
-					mcp.putValue(a, c, v);
+					mcp.putValue(a, c, (float) v);
 				}
 			}
 		} // end try
@@ -138,9 +149,4 @@ public class Unmarshalling2 {
 				
 	} // end marshalAndStore
 	
-	public static void main(String[] args) throws JAXBException, FileNotFoundException, IOException{
-		Unmarshalling2 u = new Unmarshalling2();
-		MCProblem unmarshalledMcp = u.unmarshalAndStore();
-		System.out.println(unmarshalledMcp.getTableEval());
-	}
 }
