@@ -55,7 +55,7 @@ public class Unmarshalling {
 			
 			final XMCDA xmcda = (XMCDA) unmarshaller.unmarshal(fis);
 			final List<JAXBElement<?>> xmcdaSubElements = xmcda.getProjectReferenceOrMethodMessagesOrMethodParameters();
-			System.out.println(xmcdaSubElements);
+			//System.out.println(xmcdaSubElements);
 			
 			//////// FOR ALTERNATIVES ///////
 			// Find the index of the xmcdaSubElements list where there are the X2Alternatives
@@ -67,7 +67,7 @@ public class Unmarshalling {
 				altsIndex++;
 				} 
 			// Visual verification on console		
-			System.out.println(xmcdaSubElements.get(altsIndex).getName());
+			//System.out.println(xmcdaSubElements.get(altsIndex).getName());
 			// Get X2Alternatives
 			X2Alternatives alts = (X2Alternatives) xmcdaSubElements.get(altsIndex).getValue();
 			// Drilldown to get List of X2Alternative inside
@@ -95,7 +95,7 @@ public class Unmarshalling {
 				critsIndex++;
 				} 
 			// Visual verification on console		
-			System.out.println(xmcdaSubElements.get(critsIndex).getName());
+			//System.out.println(xmcdaSubElements.get(critsIndex).getName());
 			// Get X2Criteria
 			X2Criteria crits = (X2Criteria) xmcdaSubElements.get(critsIndex).getValue();
 			// Get X2Criterion list
@@ -121,7 +121,7 @@ public class Unmarshalling {
 				perfsIndex++;
 				} 
 			// Visual verification on console		
-			System.out.println(xmcdaSubElements.get(perfsIndex).getName());
+			//System.out.println(xmcdaSubElements.get(perfsIndex).getName());
 			// Get X2PerformanceTable
 			X2PerformanceTable perfTable = (X2PerformanceTable) xmcdaSubElements.get(perfsIndex).getValue();
 			// Get the list of X2Alternative performances
