@@ -1,10 +1,13 @@
 package io.github.oliviercailloux.y2018.xmgui.contract1;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Objects;
 
 import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Table;
@@ -19,17 +22,17 @@ public class MCProblem {
 
 	private Set<Alternative> alternatives = new HashSet<Alternative>();
 	private Set<Criterion> criteria = new HashSet<Criterion>();
-	private Table<Alternative, Criterion, Double> tableEval = HashBasedTable.create();
+	private Table<Alternative, Criterion, Float> tableEval = HashBasedTable.create();
 
 	/**
 	 * Add a value for an alternative-criterion pair
 	 * 
 	 * @param alt, c and val must not be null
 	 */
-	public void putValue(Alternative alt, Criterion c, double val) {
+	public void putValue(Alternative alt, Criterion c, Float d) {
 		this.alternatives.add(Objects.requireNonNull(alt));
 		this.criteria.add(Objects.requireNonNull(c));
-		tableEval.put(alt, c, val);
+		tableEval.put(alt, c, d);
 	}
 
 	/**
@@ -67,7 +70,7 @@ public class MCProblem {
 	 * 
 	 * @return an immutable copy of the tableEval
 	 */
-	public ImmutableTable<Alternative, Criterion, Double> getTableEval() {
+	public ImmutableTable<Alternative, Criterion, Float> getTableEval() {
 		return ImmutableTable.copyOf(tableEval);
 	}
 	
@@ -75,8 +78,14 @@ public class MCProblem {
 		return ImmutableSet.copyOf(alternatives);
 	}
 	
+	
+	
 	public ImmutableSet<Criterion> getCriteria(){
 		return ImmutableSet.copyOf(criteria);
+	}
+	
+	public ImmutableMap<Criterion,Float> getValueList(Alternative alt){
+		return ImmutableMap.copyOf(tableEval.row(alt));
 	}
 
 }
