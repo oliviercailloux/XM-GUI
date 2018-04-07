@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -11,6 +12,8 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.stream.StreamSource;
+
 
 import io.github.oliviercailloux.xmcda_2_2_1_jaxb.ObjectFactory;
 import io.github.oliviercailloux.xmcda_2_2_1_jaxb.X2Alternative;
@@ -41,13 +44,24 @@ public class Unmarshalling2 {
 		final Unmarshaller unmarshaller = jc.createUnmarshaller();
 		// final ObjectFactory f = new ObjectFactory();
 		
-		try (final FileInputStream fis = new FileInputStream( new File("/Users/Razorin/Desktop/PERSO/MIAGE/DEV/JAVA/XM-GUI/resources/resourcesfile1/testAyoub.xml"))) {
+		try (final FileInputStream fis = new FileInputStream( new File("/Users/Razorin/Desktop/PERSO/MIAGE/DEV/JAVA/Test resources/test6realCars.xml"))) {
 			
 			final XMCDA xmcda = (XMCDA) unmarshaller.unmarshal(fis);
 			final List<JAXBElement<?>> xmcdaSubElements = xmcda.getProjectReferenceOrMethodMessagesOrMethodParameters();
+			System.out.println(xmcdaSubElements);
 			
+			// Find the index of the xmcdaSubElements list where there are the X2Alternatives
+			int altsIndex = 0;
+			while (altsIndex < xmcdaSubElements.size()) {
+				if ( xmcdaSubElements.get(altsIndex).getName().toString().equalsIgnoreCase("alternatives") ) {
+					break;
+				}
+				altsIndex++;
+				} 
+			// Visual verification on console		
+			System.out.println(xmcdaSubElements.get(altsIndex).getName());
 			// Get X2Alternatives
-			X2Alternatives alts = (X2Alternatives) xmcdaSubElements.get(0).getValue();
+			X2Alternatives alts = (X2Alternatives) xmcdaSubElements.get(altsIndex).getValue();
 			// Drilldown to get List of X2Alternative inside
 			List<Object> altsList = alts.getDescriptionOrAlternative();
 			for (int i = 0; i < altsList.size(); i++) {
@@ -59,11 +73,21 @@ public class Unmarshalling2 {
 				Alternative a = new Alternative(Integer.parseInt(firstAltId.substring(1)));
 				// Put it in an MCProblem object
 				mcp.addAlt(a);
+				
 			}
 			
-			
+			// Find the index of the xmcdaSubElements list where there are the X2Criteria
+			int critsIndex = 0;
+			while (critsIndex < xmcdaSubElements.size()) {
+				if ( xmcdaSubElements.get(critsIndex).getName().toString().equalsIgnoreCase("criteria") ) {
+						break;
+					}
+						critsIndex++;
+				} 
+			// Visual verification on console		
+			System.out.println(xmcdaSubElements.get(critsIndex).getName());
 			// Get X2Criteria
-			X2Criteria crits = (X2Criteria) xmcdaSubElements.get(1).getValue();
+			X2Criteria crits = (X2Criteria) xmcdaSubElements.get(critsIndex).getValue();
 			// Get X2Criterion list
 			List<X2Criterion> critsList = crits.getCriterion();
 			for (int i = 0; i < critsList.size(); i++) {
@@ -76,31 +100,11 @@ public class Unmarshalling2 {
 				//Put it in an MCProlem object
 				mcp.addCrit(c);
 			}
-			
-		/*
-		final X2Alternatives alternatives = f.createX2Alternatives();
-		final X2Alternative alt = f.createX2Alternative();
-		// for (X2Alternative alt : alternatives) {
-			Alternative a = new Alternative(Integer.parseInt(alt.getId().substring(1)));
-			mcp.addAlt(a);
-		
-		final X2Criteria criteria = f.createX2Criteria();
-		final X2Criterion crit = f.createX2Criterion();
-		// for (X2Alternative alt : alternatives) {
-			Criterion c = new Criterion(Integer.parseInt(crit.getId().substring(1)));
-			mcp.addCrit(c);
-			
-		final XMCDA xmcda = f.createXMCDA();
-		final List<JAXBElement<?>> xmcdaSubElements = xmcda.getProjectReferenceOrMethodMessagesOrMethodParameters();
-		xmcdaSubElements.add(f.createXMCDAAlternatives(alternatives));
-		xmcdaSubElements.add(f.createXMCDACriteria(criteria));
-		 */
-		}
-	}
+		} // end try
+	} // end marshalAndStore
 	
 	public static void main(String[] args) throws JAXBException, FileNotFoundException, IOException{
 		Unmarshalling2 u = new Unmarshalling2();
 		u.unmarshalAndStore();
 	}
-
 }
