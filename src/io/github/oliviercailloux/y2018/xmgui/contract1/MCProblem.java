@@ -49,7 +49,7 @@ public class MCProblem {
 	 * 
 	 * @param c must not be null
 	 */
-	public void addAlt(Criterion c) {
+	public void addCrit(Criterion c) {
 		this.criteria.add(Objects.requireNonNull(c));
 	}
 
