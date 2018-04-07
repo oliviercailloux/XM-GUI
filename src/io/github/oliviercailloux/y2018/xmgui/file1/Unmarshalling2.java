@@ -26,11 +26,13 @@ import io.github.oliviercailloux.y2018.xmgui.contract1.Criterion;
 
 public class Unmarshalling2 {
 	
-	private MCProblem mcp;
+	private MCProblem mcp = new MCProblem();
 
-	public Unmarshalling2(MCProblem mcp) {
+	/* public Unmarshalling2(MCProblem mcp) {
 		this.mcp = mcp;
-	}
+		}
+	*/
+	
 	
 	public void unmarshalAndStore() throws JAXBException, FileNotFoundException, IOException {
 		
@@ -45,21 +47,35 @@ public class Unmarshalling2 {
 			final List<JAXBElement<?>> xmcdaSubElements = xmcda.getProjectReferenceOrMethodMessagesOrMethodParameters();
 			
 			// Get X2Alternatives
-			System.out.println(xmcdaSubElements.get(0).getValue());
 			X2Alternatives alts = (X2Alternatives) xmcdaSubElements.get(0).getValue();
-			
-			// Drilldown to get List of X2Alternative
+			// Drilldown to get List of X2Alternative inside
 			List<Object> altsList = alts.getDescriptionOrAlternative();
-			System.out.println(altsList);
+			for (int i = 0; i < altsList.size(); i++) {
+				//Drilldown to get the first X2Alternative
+				X2Alternative firstAlt = (X2Alternative) altsList.get(i);
+				//Drilldown to get the first X2Alternative's id
+				String firstAltId = firstAlt.getId();
+				// Put it in an Alternative object
+				Alternative a = new Alternative(Integer.parseInt(firstAltId.substring(1)));
+				// Put it in an MCProblem object
+				mcp.addAlt(a);
+			}
 			
-			//Drilldown to get the first X2Alternative
-			X2Alternative firstAlt = (X2Alternative) altsList.get(0);
-			System.out.println(firstAlt);
 			
-			//Drilldown to get the first X2Alternative's id
-			String firstAltId = firstAlt.getId();
-			System.out.println(firstAltId);
-			
+			// Get X2Criteria
+			X2Criteria crits = (X2Criteria) xmcdaSubElements.get(1).getValue();
+			// Get X2Criterion list
+			List<X2Criterion> critsList = crits.getCriterion();
+			for (int i = 0; i < critsList.size(); i++) {
+				// Get first criterion
+				X2Criterion firstCrit = critsList.get(i);
+				// Get firstCriterion's id
+				String firstCritId = firstCrit.getId();
+				// Put it in a Criterion object from contract1
+				Criterion c = new Criterion(Integer.parseInt(firstCritId.substring(1)));
+				//Put it in an MCProlem object
+				mcp.addCrit(c);
+			}
 			
 		/*
 		final X2Alternatives alternatives = f.createX2Alternatives();
@@ -83,8 +99,7 @@ public class Unmarshalling2 {
 	}
 	
 	public static void main(String[] args) throws JAXBException, FileNotFoundException, IOException{
-		MCProblem mcp = new MCProblem();
-		Unmarshalling2 u = new Unmarshalling2(mcp);
+		Unmarshalling2 u = new Unmarshalling2();
 		u.unmarshalAndStore();
 	}
 
