@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <x2:XMCDA xmlns:x2="http://www.decision-deck.org/2012/XMCDA-2.2.1">
     <alternatives>
-        <alternative id="a2"/>
         <alternative id="a1"/>
+        <alternative id="a2"/>
     </alternatives>
     <criteria>
-        <criterion id="c1"/>
         <criterion id="c2"/>
+        <criterion id="c1"/>
     </criteria>
     <performanceTable>
-        <alternativePerformances>
-            <alternativeID>a2</alternativeID>
-            <performance>
-                <criterionID>c2</criterionID>
-                <value>
-                    <real>13.3</real>
-                </value>
-            </performance>
-        </alternativePerformances>
         <alternativePerformances>
             <alternativeID>a1</alternativeID>
             <performance>
                 <criterionID>c1</criterionID>
                 <value>
                     <real>2.0</real>
+                </value>
+            </performance>
+        </alternativePerformances>
+        <alternativePerformances>
+            <alternativeID>a2</alternativeID>
+            <performance>
+                <criterionID>c2</criterionID>
+                <value>
+                    <real>13.3</real>
                 </value>
             </performance>
         </alternativePerformances>
