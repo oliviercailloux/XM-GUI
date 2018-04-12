@@ -5,6 +5,9 @@ import java.io.IOException;
 
 import javax.xml.bind.JAXBException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.github.oliviercailloux.y2018.xmgui.contract1.Alternative;
 import io.github.oliviercailloux.y2018.xmgui.contract1.Criterion;
 import io.github.oliviercailloux.y2018.xmgui.contract1.MCProblem;
@@ -12,7 +15,10 @@ import io.github.oliviercailloux.y2018.xmgui.contract1.MCProblem;
 import com.google.common.collect.UnmodifiableIterator;
 
 public class App {
-
+	
+	@SuppressWarnings("unused")
+	private static final Logger LOGGER = LoggerFactory.getLogger(App.class);
+	
 	public static void main(String[] args) throws FileNotFoundException, JAXBException, IOException {
 		Alternative alt= new Alternative(1);
 		Criterion crt =new Criterion(1);
@@ -22,11 +28,16 @@ public class App {
 		mcp.putValue(alt, crt, 2.0f);
 		mcp.putValue(alt2, crt2, 13.3f);
 		Marshalling tm = new Marshalling(mcp);
+		LOGGER.debug("MCP instance created");
+		
 		tm.marshalAndWrite();
+		LOGGER.info("Marshalling invoked");
 		
 		//lecture de file1
 		Unmarshalling u = new Unmarshalling();
 		MCProblem unmarshalledMcp = u.unmarshalAndStore();
+		LOGGER.debug("Unmarshalling invoked");
+
 		
 		UnmodifiableIterator<Alternative> it =unmarshalledMcp.getTableEval().rowKeySet().iterator();
 		while(it.hasNext()){

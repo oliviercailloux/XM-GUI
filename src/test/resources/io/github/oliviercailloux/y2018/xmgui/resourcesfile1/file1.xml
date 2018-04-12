@@ -5,8 +5,8 @@
         <alternative id="a2"/>
     </alternatives>
     <criteria>
-        <criterion id="c2"/>
         <criterion id="c1"/>
+        <criterion id="c2"/>
     </criteria>
     <performanceTable>
         <alternativePerformances>
