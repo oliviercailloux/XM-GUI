@@ -160,7 +160,7 @@ public class Marshalling {
 		//Ecriture dans file1
 		try (final FileOutputStream fos = new FileOutputStream(
 				new File(
-						"resources/resourcesfile1/file1.xml"))) {
+						"src/test/resources/io/github/oliviercailloux/y2018/xmgui/resourcesfile1/file1.xml"))) {
 			marshaller.marshal(xmcda, fos);
 		}
 

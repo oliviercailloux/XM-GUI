@@ -51,7 +51,7 @@ public class Unmarshalling {
 		final Unmarshaller unmarshaller = jc.createUnmarshaller();
 		// final ObjectFactory f = new ObjectFactory();
 		
-		try (final FileInputStream fis = new FileInputStream( new File("resources/resourcesfile1/file1.xml"))) {
+		try (final FileInputStream fis = new FileInputStream( new File("src/test/resources/io/github/oliviercailloux/y2018/xmgui/resourcesfile1/file1.xml"))) {
 			
 			final XMCDA xmcda = (XMCDA) unmarshaller.unmarshal(fis);
 			final List<JAXBElement<?>> xmcdaSubElements = xmcda.getProjectReferenceOrMethodMessagesOrMethodParameters();
