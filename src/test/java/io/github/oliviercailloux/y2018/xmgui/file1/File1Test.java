@@ -38,9 +38,9 @@ public class File1Test {
 		
 		UnmodifiableIterator<Alternative> it =unmarshalledMcp.getTableEval().rowKeySet().iterator();
 		Alternative a=it.next();
-		assertEquals(alt.getId(), a.getId());
-		a=it.next();
 		assertEquals(alt2.getId(), a.getId());
+		a=it.next();
+		assertEquals(alt.getId(), a.getId());
 		//assertEquals(mcp.getValueList(alt).values(),unmarshalledMcp.getValueList(a).values());
 		
 		
