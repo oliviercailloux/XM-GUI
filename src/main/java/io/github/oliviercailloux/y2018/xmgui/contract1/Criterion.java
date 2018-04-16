@@ -21,4 +21,24 @@ public final class Criterion {
 	public int getId() {
 		return id;
 	}
+		
+	/** 
+	 * Overriding equals() to compare to Criterion objects
+	 * according to their ids.
+	 */
+	@Override
+	public boolean equals(Object o) {
+		Criterion c = (Criterion) o;
+		return (this.id == c.id);
+	}
+	
+	/** 
+	 * Overriding hashCode() because we
+	 * overrid equals()
+	 */
+	@Override
+	public int hashCode() {
+		return this.id;
+	}
+	
 }
