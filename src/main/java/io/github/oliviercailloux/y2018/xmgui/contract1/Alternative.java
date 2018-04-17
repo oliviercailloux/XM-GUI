@@ -22,4 +22,23 @@ public final class Alternative {
 	public int getId() {
 		return id;
 	}
+	
+	/** 
+	 * Overriding equals() to compare to Criterion objects
+	 * according to their ids.
+	 */
+	@Override
+	public boolean equals(Object o) {
+		Alternative a = (Alternative) o;
+		return (this.id == a.id);
+	}
+	
+	/** 
+	 * Overriding hashCode() because we
+	 * overrid equals()
+	 */
+	@Override
+	public int hashCode() {
+		return this.id;
+	}
 }
