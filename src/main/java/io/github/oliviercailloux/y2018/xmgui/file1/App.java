@@ -26,6 +26,8 @@ public class App {
 		Alternative alt2 = new Alternative(2);
 		MCProblem mcp = new MCProblem();
 		mcp.putValue(alt, crt, 2.0f);
+		mcp.putValue(alt, crt2, 3.0f);
+		mcp.putValue(alt2, crt, 10.0f);
 		mcp.putValue(alt2, crt2, 13.3f);
 		Marshalling tm = new Marshalling(mcp);
 		LOGGER.debug("MCP instance created");
@@ -44,10 +46,13 @@ public class App {
 			Alternative a=it.next();
 			System.out.println("-------------------------------------------------------");
 			System.out.println("Alternative : " + a.getId());
-			for(Criterion c: unmarshalledMcp.getValueList(a).keySet().asList())
-				System.out.println("Criterion : " + c.getId());
-			System.out.println("Value : " + unmarshalledMcp.getValueList(a).values());
+			for(Criterion c: unmarshalledMcp.getValueList(a).keySet().asList()) {
+				System.out.println("Criterion : " + c.getId()); // erreur car il itère mal : il devrait ecrire les deux critères pour chaque alternative...
+				System.out.println("Value : " + unmarshalledMcp.getValueList(a).values());
+			}
 			System.out.println("-------------------------------------------------------");
+			// Print la table entière pour vérifier que les Criterion et Alternative objects sont bien identifiés et uniques via l'ID
+			System.out.println(mcp.getTableEval());
 		}
 	}
 
