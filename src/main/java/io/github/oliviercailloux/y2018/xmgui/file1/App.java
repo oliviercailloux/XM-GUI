@@ -51,9 +51,9 @@ public class App {
 				System.out.println("Value : " + unmarshalledMcp.getValueList(a).values());
 			}
 			System.out.println("-------------------------------------------------------");
-			// Print la table entière pour vérifier que les Criterion et Alternative objects sont bien identifiés et uniques via l'ID
-			System.out.println(mcp.getTableEval());
 		}
+		// Print la table entière pour vérifier que les Criterion et Alternative objects sont bien identifiés et uniques via l'ID
+		System.out.println(mcp.getTableEval());
 	}
 
 }
