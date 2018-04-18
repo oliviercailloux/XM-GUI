@@ -4,14 +4,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
-
 import javax.xml.bind.Unmarshaller;
+
 
 
 
@@ -21,7 +20,6 @@ import javax.xml.bind.Unmarshaller;
 
 import io.github.oliviercailloux.xmcda_2_2_1_jaxb.X2Alternative;
 import io.github.oliviercailloux.xmcda_2_2_1_jaxb.X2Alternatives;
-
 import io.github.oliviercailloux.xmcda_2_2_1_jaxb.X2Criteria;
 import io.github.oliviercailloux.xmcda_2_2_1_jaxb.X2Criterion;
 import io.github.oliviercailloux.xmcda_2_2_1_jaxb.XMCDA;
@@ -38,20 +36,21 @@ public class Unmarshalling {
 	private MCProblem mcp = new MCProblem();
 
 	/**
+	 * @param file 
 	 * @return
 	 * @throws JAXBException
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 * 
 	 */
-	public MCProblem unmarshalAndStore() throws JAXBException, FileNotFoundException, IOException {
+	public MCProblem unmarshalAndStore(String file) throws JAXBException, FileNotFoundException, IOException {
 		
 		
 		final JAXBContext jc = JAXBContext.newInstance(XMCDA.class);
 		final Unmarshaller unmarshaller = jc.createUnmarshaller();
 		// final ObjectFactory f = new ObjectFactory();
 		
-		try (final FileInputStream fis = new FileInputStream( new File("src/test/resources/io/github/oliviercailloux/y2018/xmgui/resourcesfile1/file1.xml"))) {
+		try (final FileInputStream fis = new FileInputStream(file)) {
 			
 			final XMCDA xmcda = (XMCDA) unmarshaller.unmarshal(fis);
 			final List<JAXBElement<?>> xmcdaSubElements = xmcda.getProjectReferenceOrMethodMessagesOrMethodParameters();

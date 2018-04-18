@@ -2,6 +2,7 @@ package io.github.oliviercailloux.y2018.xmgui.file1;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 
 import javax.xml.bind.JAXBException;
 
@@ -20,24 +21,29 @@ public class App {
 	private static final Logger LOGGER = LoggerFactory.getLogger(App.class);
 	
 	public static void main(String[] args) throws FileNotFoundException, JAXBException, IOException {
+		URL resourceUrl= Marshalling.class.getResource("/io/github/oliviercailloux/y2018/xmgui/file1.xml");
 		Alternative alt= new Alternative(1);
 		Criterion crt =new Criterion(1);
 		Criterion crt2 = new Criterion(2);
+		Criterion crt3 = new Criterion(3);
 		Alternative alt2 = new Alternative(2);
+		Alternative alt3 = new Alternative(3);
 		MCProblem mcp = new MCProblem();
 		mcp.putValue(alt, crt, 2.0f);
 		mcp.putValue(alt, crt2, 3.0f);
 		mcp.putValue(alt2, crt, 10.0f);
 		mcp.putValue(alt2, crt2, 13.3f);
+		
+		mcp.putValue(alt3, crt3, 18042018f);
 		Marshalling tm = new Marshalling(mcp);
 		LOGGER.debug("MCP instance created");
 		
-		tm.marshalAndWrite();
+		tm.marshalAndWrite(resourceUrl.getFile());
 		LOGGER.info("Marshalling invoked");
 		
 		//lecture de file1
 		Unmarshalling u = new Unmarshalling();
-		MCProblem unmarshalledMcp = u.unmarshalAndStore();
+		MCProblem unmarshalledMcp = u.unmarshalAndStore(resourceUrl.getFile());
 		LOGGER.debug("Unmarshalling invoked");
 
 		
