@@ -44,8 +44,7 @@ public class App {
 		
 		//lecture de file1
 		Unmarshalling u = new Unmarshalling();
-		// MCProblem unmarshalledMcp = u.unmarshalAndStore(resourceUrl.getFile());
-		MCProblem unmarshalledMcp = u.unmarshalAndStore();
+		MCProblem unmarshalledMcp = u.unmarshalAndStore(resourceUrl.getFile());
 		LOGGER.debug("Unmarshalling invoked");
 
 		

@@ -37,15 +37,14 @@ public class Unmarshalling {
 	 * @throws IOException
 	 * 
 	 */
-	public MCProblem unmarshalAndStore() throws JAXBException, FileNotFoundException, IOException {
+	public MCProblem unmarshalAndStore(String file) throws JAXBException, FileNotFoundException, IOException {
 		
 		
 		final JAXBContext jc = JAXBContext.newInstance(XMCDA.class);
 		final Unmarshaller unmarshaller = jc.createUnmarshaller();
 		// final ObjectFactory f = new ObjectFactory();
 		
-		// Il faudra modifier ce fonctionnement car le file doit être dans le file path (cf. mail de Cailloux)
-		try (final FileInputStream fis = new FileInputStream( new File("src/test/resources/io/github/oliviercailloux/y2018/xmgui/resourcesfile1/file1.xml"))) {
+		try (final FileInputStream fis = new FileInputStream(file)) {
 			
 			final XMCDA xmcda = (XMCDA) unmarshaller.unmarshal(fis);
 			final List<JAXBElement<?>> xmcdaSubElements = xmcda.getProjectReferenceOrMethodMessagesOrMethodParameters();
