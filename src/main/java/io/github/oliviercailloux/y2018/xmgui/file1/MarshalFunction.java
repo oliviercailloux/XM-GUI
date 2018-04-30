@@ -15,33 +15,31 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.UnmodifiableIterator;
 
 public class MarshalFunction {
-	
-	protected static Set<ObjectFactory> marshallmap = new  HashSet<ObjectFactory>();
-	
-	//set une X2Alternative avec les valeurs d'une alternative
-	public static X2Alternative x2Alt(Alternative a) { 
-		
+
+	protected static Set<ObjectFactory> marshallmap = new HashSet<ObjectFactory>();
+
+	// set X2Alternative with Alternative value
+	public static X2Alternative x2Alt(Alternative a) {
+
 		final X2Alternative alt = getObjectFactoy().createX2Alternative();
 		alt.setId("a" + a.getId());
 		return alt;
 	}
-	
-	//set une X2Criterion avec les valeurs d'un critere 
-	public static X2Criterion x2Crit( Criterion c) {
+
+	// set X2Criterion value with Criterion
+	public static X2Criterion x2Crit(Criterion c) {
 		final X2Criterion crit = getObjectFactoy().createX2Criterion();
 		crit.setId("c" + c.getId());
 		return crit;
 
 	}
 
-	 
 	/**
 	 * @param f
 	 * @param alt
-	 * @return
-	 * //set la valeur de perfomance
+	 * @return set Perfomance value
 	 */
-	public static X2Value x2Val(MCProblem mcp,Alternative alt) {
+	public static X2Value x2Val(MCProblem mcp, Alternative alt) {
 		final X2Value value = getObjectFactoy().createX2Value();
 		UnmodifiableIterator<Float> val = mcp.getValueList(alt).values()
 				.iterator();
@@ -51,16 +49,14 @@ public class MarshalFunction {
 		}
 		return value;
 	}
-    
-	
+
 	/**
 	 * @param f
 	 * @param a
-	 * @return
-	 * configuration  d'une performance   
+	 * @return Set X2AlternativeOnCriteriaPerformances.Performance
 	 */
-	public static  X2AlternativeOnCriteriaPerformances perftest(
-			MCProblem mcp,Alternative a) {
+	public static X2AlternativeOnCriteriaPerformances perftest(MCProblem mcp,
+			Alternative a) {
 		final X2AlternativeOnCriteriaPerformances.Performance performance = getObjectFactoy()
 				.createX2AlternativeOnCriteriaPerformancesPerformance();
 		final X2Value value = getObjectFactoy().createX2Value();
@@ -77,21 +73,22 @@ public class MarshalFunction {
 	 * @param performance
 	 * @param f
 	 * @param a
-	 * @return
-	 * ajout d'une configuration
+	 * @return Performance list Add performance to the list of performance
 	 */
 	public static X2AlternativeOnCriteriaPerformances addToPerf(
-			X2AlternativeOnCriteriaPerformances.Performance performance,Alternative a) {
+			X2AlternativeOnCriteriaPerformances.Performance performance,
+			Alternative a) {
 		final X2AlternativeOnCriteriaPerformances performances = getObjectFactoy()
 				.createX2AlternativeOnCriteriaPerformances();
 		performances.getPerformance().add(performance);
 		performances.setAlternativeID("a" + a.getId());
 		return performances;
 	}
-	public static ObjectFactory getObjectFactoy(){
-		ObjectFactory of=null;
-		for(ObjectFactory f : ImmutableSet.copyOf(marshallmap))
-			of=f;
+
+	public static ObjectFactory getObjectFactoy() {
+		ObjectFactory of = null;
+		for (ObjectFactory f : ImmutableSet.copyOf(marshallmap))
+			of = f;
 		return of;
 	}
 }

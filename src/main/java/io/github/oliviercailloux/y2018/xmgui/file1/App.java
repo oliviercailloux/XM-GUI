@@ -31,8 +31,6 @@ public class App {
 		MCProblem mcp = new MCProblem();
 		
 		mcp.putValue(alt, crt, 2.0f);
-		mcp.putValue(alt, crt2, 3.0f);
-		mcp.putValue(alt2, crt, 10.0f);
 		mcp.putValue(alt2, crt2, 13.3f);
 		mcp.putValue(alt3, crt3, 18042018f);
 		
@@ -50,8 +48,8 @@ public class App {
 		
 		UnmodifiableIterator<Alternative> it =unmarshalledMcp.getTableEval().rowKeySet().iterator();
 		
-		/* Mis en commentaire car erreur dans l'itération : il devrait ecrire tous les critères pour chaque alternative...
-		 *  while(it.hasNext()){
+		 //Mis en commentaire car erreur dans l'itération : il devrait ecrire tous les critères pour chaque alternative...
+		   while(it.hasNext()){
 			Alternative a=it.next();
 			System.out.println("-------------------------------------------------------");
 			System.out.println("Alternative : " + a.getId());
@@ -61,7 +59,7 @@ public class App {
 			}
 			System.out.println("-------------------------------------------------------");
 		}
-		*/
+		
 		
 		// Print la table entière pour vérifier que les Criterion et Alternative objects sont bien identifiés et uniques via l'ID
 		System.out.println(mcp.getTableEval());
