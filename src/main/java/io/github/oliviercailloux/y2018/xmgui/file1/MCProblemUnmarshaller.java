@@ -26,7 +26,7 @@ import io.github.oliviercailloux.y2018.xmgui.contract1.Alternative;
 import io.github.oliviercailloux.y2018.xmgui.contract1.Criterion;
 
 
-public class Unmarshalling {
+public class MCProblemUnmarshaller {
 	
 	private MCProblem mcp = new MCProblem();
 

@@ -14,21 +14,23 @@ import io.github.oliviercailloux.y2018.xmgui.contract1.MCProblem;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.UnmodifiableIterator;
 
-public class MarshalFunction {
+public class BasicObjectsMarshallerToX2 {
 
-	protected static Set<ObjectFactory> marshallmap = new HashSet<ObjectFactory>();
-
+	//protected static Set<ObjectFactory> marshallmap = new HashSet<ObjectFactory>();
+	
+	private static ObjectFactory of; 
+	
 	// set X2Alternative with Alternative value
 	public static X2Alternative x2Alt(Alternative a) {
 
-		final X2Alternative alt = getObjectFactoy().createX2Alternative();
+		final X2Alternative alt = of.createX2Alternative();
 		alt.setId("a" + a.getId());
 		return alt;
 	}
 
 	// set X2Criterion value with Criterion
 	public static X2Criterion x2Crit(Criterion c) {
-		final X2Criterion crit = getObjectFactoy().createX2Criterion();
+		final X2Criterion crit = of.createX2Criterion();
 		crit.setId("c" + c.getId());
 		return crit;
 
@@ -40,7 +42,7 @@ public class MarshalFunction {
 	 * @return set Perfomance value
 	 */
 	public static X2Value x2Val(MCProblem mcp, Alternative alt) {
-		final X2Value value = getObjectFactoy().createX2Value();
+		final X2Value value = of.createX2Value();
 		UnmodifiableIterator<Float> val = mcp.getValueList(alt).values()
 				.iterator();
 		while (val.hasNext()) {
@@ -57,9 +59,9 @@ public class MarshalFunction {
 	 */
 	public static X2AlternativeOnCriteriaPerformances perftest(MCProblem mcp,
 			Alternative a) {
-		final X2AlternativeOnCriteriaPerformances.Performance performance = getObjectFactoy()
+		final X2AlternativeOnCriteriaPerformances.Performance performance = of
 				.createX2AlternativeOnCriteriaPerformancesPerformance();
-		final X2Value value = getObjectFactoy().createX2Value();
+		final X2Value value = of.createX2Value();
 		for (Criterion c : mcp.getValueList(a).keySet())
 			performance.setCriterionID("c" + c.getId());
 		for (Float val : mcp.getValueList(a).values()) {
@@ -78,17 +80,22 @@ public class MarshalFunction {
 	public static X2AlternativeOnCriteriaPerformances addToPerf(
 			X2AlternativeOnCriteriaPerformances.Performance performance,
 			Alternative a) {
-		final X2AlternativeOnCriteriaPerformances performances = getObjectFactoy()
+		final X2AlternativeOnCriteriaPerformances performances = of
 				.createX2AlternativeOnCriteriaPerformances();
 		performances.getPerformance().add(performance);
 		performances.setAlternativeID("a" + a.getId());
 		return performances;
 	}
 
-	public static ObjectFactory getObjectFactoy() {
+	/*public static ObjectFactory of {
 		ObjectFactory of = null;
 		for (ObjectFactory f : ImmutableSet.copyOf(marshallmap))
 			of = f;
 		return of;
+	}
+	*/
+	
+	public static void setObjectfactory(ObjectFactory f) {
+		of=f;
 	}
 }

@@ -30,13 +30,13 @@ import io.github.oliviercailloux.y2018.xmgui.contract1.Alternative;
 import io.github.oliviercailloux.y2018.xmgui.contract1.Criterion;
 import io.github.oliviercailloux.y2018.xmgui.contract1.MCProblem;
 
-public class Marshalling {
+public class MCProblemMarshaller {
 
 	private MCProblem mcp;
 	
 	 
 	
-	public  Marshalling(MCProblem mcp) {
+	public  MCProblemMarshaller(MCProblem mcp) {
 		Objects.requireNonNull(mcp);
 		this.mcp = mcp;
 	}
@@ -54,7 +54,7 @@ public class Marshalling {
 		final JAXBContext jc = JAXBContext.newInstance(XMCDA.class);
 		final Marshaller marshaller = jc.createMarshaller();
 		final ObjectFactory f = new ObjectFactory();
-		MarshalFunction.marshallmap.add(f);
+		BasicObjectsMarshallerToX2.setObjectfactory(f);
 
 		final X2PerformanceTable perfTable = f.createX2PerformanceTable();
 
@@ -64,7 +64,7 @@ public class Marshalling {
 		//Ajout des alternatives
 		while (it.hasNext()) {
 			Alternative a = it.next();
-			alternatives.getDescriptionOrAlternative().add(MarshalFunction.x2Alt(a));
+			alternatives.getDescriptionOrAlternative().add(BasicObjectsMarshallerToX2.x2Alt(a));
 		}
 
 		final X2Criteria criteria = f.createX2Criteria();
@@ -72,13 +72,13 @@ public class Marshalling {
 
 		// ajout des criterion 
 		while (itc.hasNext()) {
-			criteria.getCriterion().add(MarshalFunction.x2Crit(itc.next()));
+			criteria.getCriterion().add(BasicObjectsMarshallerToX2.x2Crit(itc.next()));
 		}
 		
 		// ajout Performances dans la table performance
 		for (Alternative a : mcp.getAlternatives()) {
 
-			perfTable.getAlternativePerformances().add(MarshalFunction.perftest(mcp,a));
+			perfTable.getAlternativePerformances().add(BasicObjectsMarshallerToX2.perftest(mcp,a));
 		}
 
 		final XMCDA xmcda = f.createXMCDA();

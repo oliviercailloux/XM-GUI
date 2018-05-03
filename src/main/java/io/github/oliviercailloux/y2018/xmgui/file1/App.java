@@ -21,7 +21,7 @@ public class App {
 	private static final Logger LOGGER = LoggerFactory.getLogger(App.class);
 	
 	public static void main(String[] args) throws FileNotFoundException, JAXBException, IOException {
-		URL resourceUrl= Marshalling.class.getResource("/io/github/oliviercailloux/y2018/xmgui/file1.xml");
+		URL resourceUrl= MCProblemMarshaller.class.getResource("/io/github/oliviercailloux/y2018/xmgui/file1.xml");
 		Alternative alt= new Alternative(1);
 		Criterion crt =new Criterion(1);
 		Criterion crt2 = new Criterion(2);
@@ -34,14 +34,14 @@ public class App {
 		mcp.putValue(alt2, crt2, 13.3f);
 		mcp.putValue(alt3, crt3, 18042018f);
 		
-		Marshalling tm = new Marshalling(mcp);
+		MCProblemMarshaller tm = new MCProblemMarshaller(mcp);
 		LOGGER.debug("MCP instance created");
 		
 		tm.marshalAndWrite(resourceUrl.getFile());
 		LOGGER.info("Marshalling invoked");
 		
 		//lecture de file1
-		Unmarshalling u = new Unmarshalling();
+		MCProblemUnmarshaller u = new MCProblemUnmarshaller();
 		MCProblem unmarshalledMcp = u.unmarshalAndStore(resourceUrl.getFile());
 		LOGGER.debug("Unmarshalling invoked");
 
