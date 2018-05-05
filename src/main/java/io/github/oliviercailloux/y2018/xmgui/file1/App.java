@@ -34,6 +34,7 @@ public class App {
 		Criterion crt2 = new Criterion(1);
 		Criterion crt3 = new Criterion(1);
 		Criterion crt4 = new Criterion(2);
+		Criterion crt5 = new Criterion(3);
 		Alternative alt2 = new Alternative(2);
 		Alternative alt3 = new Alternative(3);
 		MCProblem mcp = new MCProblem();
@@ -43,6 +44,7 @@ public class App {
 		mcp.putValue(alt2, crt2, 13.3f);
 		mcp.putValue(alt3, crt3, 6f);
 		mcp.putValue(alt3, crt4, 12f);
+		mcp.putValue(alt3, crt5, 120f);
 		
 		MCProblemMarshaller tm = new MCProblemMarshaller(mcp);
 		LOGGER.debug("MCP instance created");
@@ -61,7 +63,7 @@ public class App {
 		}
 		
 		//print tableEval
-		mcp.toStringTableEval();
+		System.out.println(mcp.toStringTableEval());
 	}
 
 }

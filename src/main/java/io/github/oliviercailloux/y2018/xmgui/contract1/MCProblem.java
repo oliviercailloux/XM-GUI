@@ -89,16 +89,19 @@ public class MCProblem {
 		return ImmutableMap.copyOf(tableEval.row(alt));
 	}
 	
-	public void toStringTableEval(){
+	public String toStringTableEval(){
+		String s="---------------------------TableEval--------------------------------------\n";
 		for (Alternative key : tableEval.rowKeySet()) {
-
-	        System.out.println(key.toString());
+			
+	        s+=key.toString()+"\n";
 
 	        for (java.util.Map.Entry<Criterion, Float> row : tableEval.row(key).entrySet()) {
-	            System.out.println("\t"+ row.getKey().toString() + " value : " + row.getValue());
+	            s+="\t"+ row.getKey().toString() + " value : " + row.getValue() +"\n";
 	        }
+	        
 	    }
-		 
+		s+="\n---------------------------TableEval--------------------------------------";
+		return s;
 		
 	}
 }
