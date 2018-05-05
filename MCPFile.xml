@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:XMCDA xmlns:ns2="http://www.decision-deck.org/2012/XMCDA-2.2.1">
+    <alternatives>
+        <alternative id="a100000"/>
+        <alternative id="a2"/>
+        <alternative id="a3"/>
+    </alternatives>
+    <criteria>
+        <criterion id="c1"/>
+        <criterion id="c2"/>
+        <criterion id="c3"/>
+    </criteria>
+    <performanceTable>
+        <alternativePerformances>
+            <alternativeID>a100000</alternativeID>
+            <performance>
+                <criterionID>c1</criterionID>
+                <value>
+                    <real>2.0</real>
+                </value>
+            </performance>
+        </alternativePerformances>
+        <alternativePerformances>
+            <alternativeID>a2</alternativeID>
+            <performance>
+                <criterionID>c2</criterionID>
+                <value>
+                    <real>13.3</real>
+                </value>
+            </performance>
+        </alternativePerformances>
+        <alternativePerformances>
+            <alternativeID>a3</alternativeID>
+            <performance>
+                <criterionID>c3</criterionID>
+                <value>
+                    <real>1.8042018E7</real>
+                </value>
+            </performance>
+        </alternativePerformances>
+    </performanceTable>
+</ns2:XMCDA>

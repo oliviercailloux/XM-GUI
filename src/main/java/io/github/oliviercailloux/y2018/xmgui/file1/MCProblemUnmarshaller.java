@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
+import java.io.InputStream;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -14,7 +14,6 @@ import javax.xml.bind.Unmarshaller;
 
 import io.github.oliviercailloux.xmcda_2_2_1_jaxb.X2Alternative;
 import io.github.oliviercailloux.xmcda_2_2_1_jaxb.X2Alternatives;
-
 import io.github.oliviercailloux.xmcda_2_2_1_jaxb.X2Criteria;
 import io.github.oliviercailloux.xmcda_2_2_1_jaxb.X2Criterion;
 import io.github.oliviercailloux.xmcda_2_2_1_jaxb.XMCDA;
@@ -37,16 +36,16 @@ public class MCProblemUnmarshaller {
 	 * @throws IOException
 	 * 
 	 */
-	public MCProblem unmarshalAndStore(String file) throws JAXBException, FileNotFoundException, IOException {
+	public MCProblem unmarshalAndStore(InputStream in) throws JAXBException, FileNotFoundException, IOException {
 		
 		
 		final JAXBContext jc = JAXBContext.newInstance(XMCDA.class);
 		final Unmarshaller unmarshaller = jc.createUnmarshaller();
 		// final ObjectFactory f = new ObjectFactory();
 		
-		try (final FileInputStream fis = new FileInputStream(file)) {
+		
 			
-			final XMCDA xmcda = (XMCDA) unmarshaller.unmarshal(fis);
+			final XMCDA xmcda = (XMCDA) unmarshaller.unmarshal(in);
 			final List<JAXBElement<?>> xmcdaSubElements = xmcda.getProjectReferenceOrMethodMessagesOrMethodParameters();
 			
 			//////// FOR ALTERNATIVES ///////
@@ -74,7 +73,7 @@ public class MCProblemUnmarshaller {
 				getListOfX2AlternativePerformancesOnCriteriaAndPutInMcp(i, altsOnCritsPerf);
 			}
 			
-		} // end try
+		
 		
 		return mcp;
 				

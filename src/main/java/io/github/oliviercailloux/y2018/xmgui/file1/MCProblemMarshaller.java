@@ -43,13 +43,13 @@ public class MCProblemMarshaller {
 	
 
 	/**
-	 * @param file 
+	 * @param fos 
 	 * @throws JAXBException
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 * ecrit dans un fichier XML le McProblem
 	 */
-	public void marshalAndWrite(String file) throws JAXBException, FileNotFoundException,
+	public void marshalAndWrite(FileOutputStream fos) throws JAXBException, FileNotFoundException,
 			IOException {
 		final JAXBContext jc = JAXBContext.newInstance(XMCDA.class);
 		final Marshaller marshaller = jc.createMarshaller();
@@ -89,13 +89,11 @@ public class MCProblemMarshaller {
 		xmcdaSubElements.add(f.createXMCDAPerformanceTable(perfTable));
 
 		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+		marshaller.marshal(xmcda, fos);
 		
 		
 		
-		//Ecriture dans file1
-		try (final FileOutputStream fos = new FileOutputStream(file)) {
-			marshaller.marshal(xmcda, fos);
-		}
+		
 
 	}
 	

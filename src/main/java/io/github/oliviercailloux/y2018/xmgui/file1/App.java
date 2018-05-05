@@ -1,8 +1,13 @@
 package io.github.oliviercailloux.y2018.xmgui.file1;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.xml.bind.JAXBException;
 
@@ -14,6 +19,7 @@ import io.github.oliviercailloux.y2018.xmgui.contract1.Criterion;
 import io.github.oliviercailloux.y2018.xmgui.contract1.MCProblem;
 
 import com.google.common.collect.UnmodifiableIterator;
+import com.google.common.io.Files;
 
 public class App {
 	
@@ -21,14 +27,16 @@ public class App {
 	private static final Logger LOGGER = LoggerFactory.getLogger(App.class);
 	
 	public static void main(String[] args) throws FileNotFoundException, JAXBException, IOException {
-		URL resourceUrl= MCProblemMarshaller.class.getResource("/io/github/oliviercailloux/y2018/xmgui/file1.xml");
-		Alternative alt= new Alternative(1);
+		String path="MCPFile.xml";
+		Path filepath= Paths.get(path);
+		Alternative alt= new Alternative(100000);
 		Criterion crt =new Criterion(1);
 		Criterion crt2 = new Criterion(2);
 		Criterion crt3 = new Criterion(3);
 		Alternative alt2 = new Alternative(2);
 		Alternative alt3 = new Alternative(3);
 		MCProblem mcp = new MCProblem();
+		
 		
 		mcp.putValue(alt, crt, 2.0f);
 		mcp.putValue(alt2, crt2, 13.3f);
@@ -37,16 +45,20 @@ public class App {
 		MCProblemMarshaller tm = new MCProblemMarshaller(mcp);
 		LOGGER.debug("MCP instance created");
 		
-		tm.marshalAndWrite(resourceUrl.getFile());
-		LOGGER.info("Marshalling invoked");
-		
+		try (final FileOutputStream fos = new FileOutputStream(path)) {
+			tm.marshalAndWrite(fos);
+			LOGGER.info("Marshalling invoked");
+		}
 		//lecture de file1
 		MCProblemUnmarshaller u = new MCProblemUnmarshaller();
-		MCProblem unmarshalledMcp = u.unmarshalAndStore(resourceUrl.getFile());
-		LOGGER.debug("Unmarshalling invoked");
-
+		try (InputStream in = java.nio.file.Files.newInputStream(filepath)) {
+			MCProblem unmarshalledMcp = u.unmarshalAndStore(in);
+			LOGGER.debug("Unmarshalling invoked");
 		
+		
+
 		UnmodifiableIterator<Alternative> it =unmarshalledMcp.getTableEval().rowKeySet().iterator();
+		
 		
 		 //Mis en commentaire car erreur dans l'itération : il devrait ecrire tous les critères pour chaque alternative...
 		   while(it.hasNext()){
@@ -60,6 +72,7 @@ public class App {
 			System.out.println("-------------------------------------------------------");
 		}
 		
+		}
 		
 		// Print la table entière pour vérifier que les Criterion et Alternative objects sont bien identifiés et uniques via l'ID
 		System.out.println(mcp.getTableEval());
