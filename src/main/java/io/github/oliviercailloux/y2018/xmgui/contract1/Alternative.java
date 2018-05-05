@@ -41,4 +41,8 @@ public final class Alternative {
 	public int hashCode() {
 		return this.id;
 	}
+	
+	public String toString(){
+		return "AlternativeId:<"+ getId()+">";
+	}
 }

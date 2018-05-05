@@ -41,4 +41,8 @@ public final class Criterion {
 		return this.id;
 	}
 	
+	@Override
+	public String toString() {
+		return "CriterionId:<"+ getId()+">";
+	}
 }

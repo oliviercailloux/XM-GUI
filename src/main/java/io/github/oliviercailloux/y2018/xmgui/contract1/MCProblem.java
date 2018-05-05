@@ -10,6 +10,7 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableTable;
+import com.google.common.collect.Multiset.Entry;
 import com.google.common.collect.Table;
 
 
@@ -87,5 +88,17 @@ public class MCProblem {
 	public ImmutableMap<Criterion,Float> getValueList(Alternative alt){
 		return ImmutableMap.copyOf(tableEval.row(alt));
 	}
+	
+	public void toStringTableEval(){
+		for (Alternative key : tableEval.rowKeySet()) {
 
+	        System.out.println(key.toString());
+
+	        for (java.util.Map.Entry<Criterion, Float> row : tableEval.row(key).entrySet()) {
+	            System.out.println("\t"+ row.getKey().toString() + " value : " + row.getValue());
+	        }
+	    }
+		 
+		
+	}
 }
