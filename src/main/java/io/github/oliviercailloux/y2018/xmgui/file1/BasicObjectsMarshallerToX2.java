@@ -16,86 +16,17 @@ import com.google.common.collect.UnmodifiableIterator;
 
 public class BasicObjectsMarshallerToX2 {
 
-	//protected static Set<ObjectFactory> marshallmap = new HashSet<ObjectFactory>();
-	
-	private static ObjectFactory of; 
-	
-	// set X2Alternative with Alternative value
-	public static X2Alternative x2Alt(Alternative a) {
+	public static X2Alternative basicAlternativeToX2(Alternative a) {
 
-		final X2Alternative alt = of.createX2Alternative();
+		final X2Alternative alt = MCProblemMarshaller.f.createX2Alternative();
 		alt.setId("a" + a.getId());
 		return alt;
 	}
 
-	// set X2Criterion value with Criterion
-	public static X2Criterion x2Crit(Criterion c) {
-		final X2Criterion crit = of.createX2Criterion();
+	public static X2Criterion basicCriterionToX2(Criterion c) {
+		final X2Criterion crit = MCProblemMarshaller.f.createX2Criterion();
 		crit.setId("c" + c.getId());
 		return crit;
 
-	}
-
-	/**
-	 * @param f
-	 * @param alt
-	 * @return set Perfomance value
-	 */
-	public static X2Value x2Val(MCProblem mcp, Alternative alt) {
-		final X2Value value = of.createX2Value();
-		UnmodifiableIterator<Float> val = mcp.getValueList(alt).values()
-				.iterator();
-		while (val.hasNext()) {
-			value.setReal(val.next());
-			return value;
-		}
-		return value;
-	}
-
-	/**
-	 * @param f
-	 * @param a
-	 * @return Set X2AlternativeOnCriteriaPerformances.Performance
-	 */
-	public static X2AlternativeOnCriteriaPerformances perftest(MCProblem mcp,
-			Alternative a) {
-		final X2AlternativeOnCriteriaPerformances.Performance performance = of
-				.createX2AlternativeOnCriteriaPerformancesPerformance();
-		final X2Value value = of.createX2Value();
-		for (Criterion c : mcp.getValueList(a).keySet())
-			performance.setCriterionID("c" + c.getId());
-		for (Float val : mcp.getValueList(a).values()) {
-			value.setReal(val);
-			performance.setValue(value);
-		}
-		return addToPerf(performance, a);
-	}
-
-	/**
-	 * @param performance
-	 * @param f
-	 * @param a
-	 * @return Performance list Add performance to the list of performance
-	 */
-	public static X2AlternativeOnCriteriaPerformances addToPerf(
-			X2AlternativeOnCriteriaPerformances.Performance performance,
-			Alternative a) {
-		final X2AlternativeOnCriteriaPerformances performances = of
-				.createX2AlternativeOnCriteriaPerformances();
-		performances.getPerformance().add(performance);
-		performances.setAlternativeID("a" + a.getId());
-		return performances;
-	}
-
-	/*public static ObjectFactory of {
-		ObjectFactory of = null;
-		for (ObjectFactory f : ImmutableSet.copyOf(marshallmap))
-			of = f;
-		return of;
-	}
-	*/
-	
-	public static void setObjectfactory(ObjectFactory f) {
-		of=f;
 	}
 }

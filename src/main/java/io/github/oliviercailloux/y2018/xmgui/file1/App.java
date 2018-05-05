@@ -29,8 +29,8 @@ public class App {
 	public static void main(String[] args) throws FileNotFoundException, JAXBException, IOException {
 		String path="MCPFile.xml";
 		Path filepath= Paths.get(path);
-		Alternative alt= new Alternative(100000);
-		Criterion crt =new Criterion(1);
+		Alternative alt= new Alternative(300);
+		Criterion crt =new Criterion(1997);
 		Criterion crt2 = new Criterion(2);
 		Criterion crt3 = new Criterion(3);
 		Alternative alt2 = new Alternative(2);
