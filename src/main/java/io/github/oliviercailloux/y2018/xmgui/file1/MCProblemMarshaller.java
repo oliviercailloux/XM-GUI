@@ -4,7 +4,9 @@ package io.github.oliviercailloux.y2018.xmgui.file1;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Objects;
 
 import javax.xml.bind.JAXBContext;
@@ -14,6 +16,7 @@ import javax.xml.bind.Marshaller;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.UnmodifiableIterator;
 
@@ -74,8 +77,15 @@ public class MCProblemMarshaller {
 		
 		// ajout Performances dans la table performance
 		for (Alternative a : mcp.getAlternatives()) {
-
-			perfTable.getAlternativePerformances().add(CreatePerformances.createPerformance(mcp,a));
+			X2AlternativeOnCriteriaPerformances performances=f.createX2AlternativeOnCriteriaPerformances();
+			UnmodifiableIterator<Entry<Criterion, Float>> itcp=mcp.getTableEval().row(a).entrySet().iterator();
+			while(itcp.hasNext()){
+				performances.getPerformance().add(CreatePerformance.createPerformance(itcp.next()));
+				performances.setAlternativeID("a" + a.getId());
+			}
+				perfTable.getAlternativePerformances().add(performances);
+				
+			
 		}
 
 		final XMCDA xmcda = f.createXMCDA();
