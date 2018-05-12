@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ns2:XMCDA xmlns:ns2="http://www.decision-deck.org/2012/XMCDA-2.2.1">
     <alternatives>
-        <alternative id="a100000"/>
+        <alternative id="a1"/>
         <alternative id="a2"/>
         <alternative id="a3"/>
     </alternatives>
@@ -12,7 +12,7 @@
     </criteria>
     <performanceTable>
         <alternativePerformances>
-            <alternativeID>a100000</alternativeID>
+            <alternativeID>a1</alternativeID>
             <performance>
                 <criterionID>c1</criterionID>
                 <value>
@@ -23,7 +23,7 @@
         <alternativePerformances>
             <alternativeID>a2</alternativeID>
             <performance>
-                <criterionID>c2</criterionID>
+                <criterionID>c1</criterionID>
                 <value>
                     <real>13.3</real>
                 </value>
@@ -32,9 +32,21 @@
         <alternativePerformances>
             <alternativeID>a3</alternativeID>
             <performance>
+                <criterionID>c1</criterionID>
+                <value>
+                    <real>6.0</real>
+                </value>
+            </performance>
+            <performance>
+                <criterionID>c2</criterionID>
+                <value>
+                    <real>12.0</real>
+                </value>
+            </performance>
+            <performance>
                 <criterionID>c3</criterionID>
                 <value>
-                    <real>1.8042018E7</real>
+                    <real>120.0</real>
                 </value>
             </performance>
         </alternativePerformances>

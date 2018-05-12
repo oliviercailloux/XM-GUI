@@ -21,14 +21,23 @@ import io.github.oliviercailloux.y2018.xmgui.contract1.MCProblem;
 import com.google.common.collect.UnmodifiableIterator;
 import com.google.common.io.Files;
 
+/*
+ * This class test the File1 functionality: marshalling and unmarshalling of an MCProblem.
+ */
 public class App {
 	
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(App.class);
 	
+	/*
+	 * Creates a MCProblem objects, marshalls it to an XML file whose path is specified, and unmarshalls it.
+	 * Verification is done visually by printing the whole tableEval of the MCProblem object.
+	 */
 	public static void main(String[] args) throws FileNotFoundException, JAXBException, IOException {
+		
 		String path="MCPFile.xml";
 		Path filepath= Paths.get(path);
+		
 		Alternative alt= new Alternative(1);
 		Criterion crt =new Criterion(1);
 		Criterion crt2 = new Criterion(1);
@@ -38,31 +47,25 @@ public class App {
 		Alternative alt2 = new Alternative(2);
 		Alternative alt3 = new Alternative(3);
 		MCProblem mcp = new MCProblem();
-		
-		
 		mcp.putValue(alt, crt, 2.0f);
 		mcp.putValue(alt2, crt2, 13.3f);
 		mcp.putValue(alt3, crt3, 6f);
 		mcp.putValue(alt3, crt4, 12f);
 		mcp.putValue(alt3, crt5, 120f);
+		LOGGER.info("MCP instance created");
 		
-		MCProblemMarshaller tm = new MCProblemMarshaller(mcp);
-		LOGGER.debug("MCP instance created");
-		
+		MCProblemMarshaller mcpMarshaller = new MCProblemMarshaller(mcp);
 		try (final FileOutputStream fos = new FileOutputStream(path)) {
-			tm.marshalAndWrite(fos);
-			LOGGER.info("Marshalling invoked");
+			mcpMarshaller.marshalAndWrite(fos);
+			LOGGER.debug("Marshalling invoked");
 		}
-		//lecture de file1
-		MCProblemUnmarshaller u = new MCProblemUnmarshaller();
 		
+		MCProblemUnmarshaller mcpUnmarshaller = new MCProblemUnmarshaller();
 		try (InputStream in = java.nio.file.Files.newInputStream(filepath)) {
-			MCProblem unmarshalledMcp = u.readMCProblemFromXml(in);
+			mcpUnmarshaller.readMCProblemFromXml(in);
 			LOGGER.debug("Unmarshalling invoked");
-			
 		}
 		
-		//print tableEval
 		System.out.println(mcp.toStringTableEval());
 	}
 
