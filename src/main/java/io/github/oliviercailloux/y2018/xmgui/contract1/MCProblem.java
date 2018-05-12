@@ -21,8 +21,8 @@ import com.google.common.collect.Table;
  */
 public class MCProblem {
 
-	private Set<Alternative> alternatives = new HashSet<Alternative>();
-	private Set<Criterion> criteria = new HashSet<Criterion>();
+	private Set<Alternative> alternatives = new HashSet<>();
+	private Set<Criterion> criteria = new HashSet<>();
 	private Table<Alternative, Criterion, Float> tableEval = HashBasedTable.create();
 
 	/**
