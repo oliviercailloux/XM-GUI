@@ -23,8 +23,7 @@ public final class Criterion {
 	}
 		
 	/** 
-	 * Overriding equals() to compare to Criterion objects
-	 * according to their ids.
+	 * Overriding equals() to compare Criterion objects according to their id.
 	 */
 	@Override
 	public boolean equals(Object o) {

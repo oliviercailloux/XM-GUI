@@ -24,8 +24,7 @@ public final class Alternative {
 	}
 	
 	/** 
-	 * Overriding equals() to compare Criterion objects
-	 * according to their ids.
+	 * Overriding equals() to compare Alternative objects according to their id.
 	 */
 	@Override
 	public boolean equals(Object o) {

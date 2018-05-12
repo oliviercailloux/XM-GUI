@@ -28,9 +28,11 @@ public class MCProblem {
 	/**
 	 * Add a value for an alternative-criterion pair
 	 * 
-	 * @param alt, c and val must not be null
+	 * @param alt must not be null
+	 * @param c must not be null
+	 * @param val must not be null
 	 */
-	public void putValue(Alternative alt, Criterion c, Float d) {
+	public void putEvaluation(Alternative alt, Criterion c, Float d) {
 		this.alternatives.add(Objects.requireNonNull(alt));
 		this.criteria.add(Objects.requireNonNull(c));
 		tableEval.put(alt, c, d);
@@ -79,8 +81,6 @@ public class MCProblem {
 		return ImmutableSet.copyOf(alternatives);
 	}
 	
-	
-	
 	public ImmutableSet<Criterion> getCriteria(){
 		return ImmutableSet.copyOf(criteria);
 	}
@@ -92,16 +92,12 @@ public class MCProblem {
 	public String toStringTableEval(){
 		String s="---------------------------TableEval--------------------------------------\n";
 		for (Alternative key : tableEval.rowKeySet()) {
-			
 	        s+=key.toString()+"\n";
-
 	        for (java.util.Map.Entry<Criterion, Float> row : tableEval.row(key).entrySet()) {
 	            s+="\t"+ row.getKey().toString() + " value : " + row.getValue() +"\n";
 	        }
-	        
 	    }
 		s+="\n---------------------------TableEval--------------------------------------";
 		return s;
-		
 	}
 }
