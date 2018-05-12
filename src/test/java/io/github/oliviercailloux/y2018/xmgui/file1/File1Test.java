@@ -54,7 +54,7 @@ public class File1Test {
 		MCProblem unmarshalledMcp=null;
 		
 		try (InputStream in = java.nio.file.Files.newInputStream(filepath)) {
-			 unmarshalledMcp = u.unmarshalAndStore(in);
+			 unmarshalledMcp = u.readMCProblemFromXml(in);
 		}
 		
 		

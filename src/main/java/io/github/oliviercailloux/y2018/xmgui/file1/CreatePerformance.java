@@ -13,17 +13,14 @@ import io.github.oliviercailloux.y2018.xmgui.contract1.MCProblem;
 public class CreatePerformance{
 
 	/**
-	 * @param entry 
-	 * @param f
-	 * @param a
-	 * @return Create Performance with value and criterion for each Alternative
+	 * This method enters creates the X2Performance for a given Criterion object, identified by its unique ID.
+	 * 
+	 * @param entry the Criterion-Performance value pair
+	 * @return performance the X2Performance value for a Criterion object
 	 */
 	public static X2AlternativeOnCriteriaPerformances.Performance createPerformance(Entry<Criterion, Float> entry) {
-		final X2AlternativeOnCriteriaPerformances.Performance performance = MCProblemMarshaller.f
-				.createX2AlternativeOnCriteriaPerformancesPerformance();
+		final X2AlternativeOnCriteriaPerformances.Performance performance = MCProblemMarshaller.f.createX2AlternativeOnCriteriaPerformancesPerformance();
 		final X2Value value = MCProblemMarshaller.f.createX2Value();
-		
-			
 		performance.setCriterionID(BasicObjectsMarshallerToX2.basicCriterionToX2(entry.getKey()).getId());
 		value.setReal(entry.getValue());
 		performance.setValue(value);

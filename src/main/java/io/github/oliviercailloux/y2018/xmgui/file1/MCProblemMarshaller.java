@@ -59,26 +59,27 @@ public class MCProblemMarshaller {
 		
 		// Add X2Alternative objects
 		final X2Alternatives alternatives = f.createX2Alternatives();
-		UnmodifiableIterator<Alternative> it = mcp.getAlternatives().iterator();
-		while (it.hasNext()) {
-			Alternative a = it.next();
+		UnmodifiableIterator<Alternative> itAlts = mcp.getAlternatives().iterator();
+		while (itAlts.hasNext()) {
+			Alternative a = itAlts.next();
 			alternatives.getDescriptionOrAlternative().add(BasicObjectsMarshallerToX2.basicAlternativeToX2(a));
+
 		}
 		
 		// Add X2Criterion objects
 		final X2Criteria criteria = f.createX2Criteria();
-		UnmodifiableIterator<Criterion> itc = mcp.getCriteria().iterator();
-		while (itc.hasNext()) {
-			criteria.getCriterion().add(BasicObjectsMarshallerToX2.basicCriterionToX2(itc.next()));
+		UnmodifiableIterator<Criterion> itCrits = mcp.getCriteria().iterator();
+		while (itCrits.hasNext()) {
+			criteria.getCriterion().add(BasicObjectsMarshallerToX2.basicCriterionToX2(itCrits.next()));
 		}
 		
 		// Add X2Performances 
 		final X2PerformanceTable perfTable = f.createX2PerformanceTable();
 		for (Alternative a : mcp.getAlternatives()) {
 			X2AlternativeOnCriteriaPerformances performances=f.createX2AlternativeOnCriteriaPerformances();
-			UnmodifiableIterator<Entry<Criterion, Float>> itcp=mcp.getTableEval().row(a).entrySet().iterator();
-			while(itcp.hasNext()){
-				performances.getPerformance().add(CreatePerformance.createPerformance(itcp.next()));
+			UnmodifiableIterator<Entry<Criterion, Float>> itCritsPerf=mcp.getTableEval().row(a).entrySet().iterator();
+			while(itCritsPerf.hasNext()){
+				performances.getPerformance().add(CreatePerformance.createPerformance(itCritsPerf.next()));
 				performances.setAlternativeID("a" + a.getId());
 			}
 				perfTable.getAlternativePerformances().add(performances);

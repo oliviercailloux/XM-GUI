@@ -14,10 +14,12 @@ import io.github.oliviercailloux.y2018.xmgui.contract1.MCProblem;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.UnmodifiableIterator;
 
+/*
+ * This class is used to marshal Alternative and Criterion objects to X2Alternative and X2Criterion objects.
+ */
 public class BasicObjectsMarshallerToX2 {
 
 	public static X2Alternative basicAlternativeToX2(Alternative a) {
-
 		final X2Alternative alt = MCProblemMarshaller.f.createX2Alternative();
 		alt.setId("a" + a.getId());
 		return alt;
