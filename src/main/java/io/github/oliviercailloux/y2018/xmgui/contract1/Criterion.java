@@ -28,8 +28,11 @@ public final class Criterion {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		Criterion c = (Criterion) o;
-		return (this.id == c.id);
+		if (o instanceof Criterion) {
+			Criterion c = (Criterion) o;
+			return (this.id == c.id);
+		}
+		return false;
 	}
 	
 	/** 

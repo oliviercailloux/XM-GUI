@@ -24,13 +24,16 @@ public final class Alternative {
 	}
 	
 	/** 
-	 * Overriding equals() to compare to Criterion objects
+	 * Overriding equals() to compare Criterion objects
 	 * according to their ids.
 	 */
 	@Override
 	public boolean equals(Object o) {
-		Alternative a = (Alternative) o;
-		return (this.id == a.id);
+		if (o instanceof Alternative) {
+			Alternative a = (Alternative) o;
+			return (this.id == a.id);
+		}
+		return false;
 	}
 	
 	/** 
