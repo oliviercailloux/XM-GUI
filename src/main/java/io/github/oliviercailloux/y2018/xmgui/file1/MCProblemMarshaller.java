@@ -35,47 +35,45 @@ import io.github.oliviercailloux.y2018.xmgui.contract1.MCProblem;
 
 public class MCProblemMarshaller {
 
+	/*
+	 * The Multi-Criteria Problem to be marshalled.
+	 */
 	private MCProblem mcp;
-	protected static final ObjectFactory f = new ObjectFactory();
-	 
-	
-	public  MCProblemMarshaller(MCProblem mcp) {
+	public MCProblemMarshaller(MCProblem mcp) {
 		Objects.requireNonNull(mcp);
 		this.mcp = mcp;
 	}
 	
+	protected static final ObjectFactory f = new ObjectFactory();
 
 	/**
-	 * @param fos 
+	 * This method marshalls Alternative and Criterion objects and their respective performance pair values 
+	 * from the MCProblem object to output an XML file abiding by the XMCDA standard.
+	 * 
+	 * @param fos the XML file output
 	 * @throws JAXBException
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 * ecrit dans un fichier XML le McProblem
 	 */
-	public void marshalAndWrite(FileOutputStream fos) throws JAXBException, FileNotFoundException,
-			IOException {
+	public void marshalAndWrite(FileOutputStream fos) throws JAXBException {
 		final JAXBContext jc = JAXBContext.newInstance(XMCDA.class);
 		final Marshaller marshaller = jc.createMarshaller();
-		final X2PerformanceTable perfTable = f.createX2PerformanceTable();
-		final X2Alternatives alternatives = f.createX2Alternatives();
 		
+		// Add X2Alternative objects
+		final X2Alternatives alternatives = f.createX2Alternatives();
 		UnmodifiableIterator<Alternative> it = mcp.getAlternatives().iterator();
-
-		//Ajout des alternatives
 		while (it.hasNext()) {
 			Alternative a = it.next();
 			alternatives.getDescriptionOrAlternative().add(BasicObjectsMarshallerToX2.basicAlternativeToX2(a));
 		}
-
+		
+		// Add X2Criterion objects
 		final X2Criteria criteria = f.createX2Criteria();
 		UnmodifiableIterator<Criterion> itc = mcp.getCriteria().iterator();
-
-		// ajout des criterion 
 		while (itc.hasNext()) {
 			criteria.getCriterion().add(BasicObjectsMarshallerToX2.basicCriterionToX2(itc.next()));
 		}
 		
-		// ajout Performances dans la table performance
+		// Add X2Performances 
+		final X2PerformanceTable perfTable = f.createX2PerformanceTable();
 		for (Alternative a : mcp.getAlternatives()) {
 			X2AlternativeOnCriteriaPerformances performances=f.createX2AlternativeOnCriteriaPerformances();
 			UnmodifiableIterator<Entry<Criterion, Float>> itcp=mcp.getTableEval().row(a).entrySet().iterator();
@@ -84,27 +82,15 @@ public class MCProblemMarshaller {
 				performances.setAlternativeID("a" + a.getId());
 			}
 				perfTable.getAlternativePerformances().add(performances);
-				
-			
 		}
 
+		// Output the corresponding XMCDA file
 		final XMCDA xmcda = f.createXMCDA();
-		final List<JAXBElement<?>> xmcdaSubElements = xmcda
-				.getProjectReferenceOrMethodMessagesOrMethodParameters();
+		final List<JAXBElement<?>> xmcdaSubElements = xmcda.getProjectReferenceOrMethodMessagesOrMethodParameters();
 		xmcdaSubElements.add(f.createXMCDAAlternatives(alternatives));
 		xmcdaSubElements.add(f.createXMCDACriteria(criteria));
 		xmcdaSubElements.add(f.createXMCDAPerformanceTable(perfTable));
-
 		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 		marshaller.marshal(xmcda, fos);
-		
-		
-		
-		
-
 	}
-	
-	
-
-
 }
