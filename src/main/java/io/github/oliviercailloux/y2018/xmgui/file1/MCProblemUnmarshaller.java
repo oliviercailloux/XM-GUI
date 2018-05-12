@@ -36,11 +36,9 @@ public class MCProblemUnmarshaller {
 	 * @param in the InputStream corresponding to the XML file containing the multi-criteria problem
 	 * @return the MCProblem object corresponding to the XML file transmitted
 	 * @throws JAXBException
-	 * @throws FileNotFoundException
-	 * @throws IOException
 	 * 
 	 */
-	public MCProblem readMCProblemFromXml(InputStream in) throws JAXBException, FileNotFoundException, IOException {
+	public MCProblem readMCProblemFromXml(InputStream in) throws JAXBException {
 		
 		final JAXBContext jc = JAXBContext.newInstance(XMCDA.class);
 		final Unmarshaller unmarshaller = jc.createUnmarshaller();
