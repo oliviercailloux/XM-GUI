@@ -38,9 +38,9 @@ public class File1Test {
 		MCProblem mcp = new MCProblem();
 		
 		
-		mcp.putValue(alt, crt, 2.0f);
-		mcp.putValue(alt2, crt2, 13.3f);
-		mcp.putValue(alt3, crt3, 18042018f);
+		mcp.putEvaluation(alt, crt, 2.0f);
+		mcp.putEvaluation(alt2, crt2, 13.3f);
+		mcp.putEvaluation(alt3, crt3, 18042018f);
 		
 		MCProblemMarshaller tm = new MCProblemMarshaller(mcp);
 		
