@@ -57,7 +57,7 @@ public class App {
 		MCProblemUnmarshaller u = new MCProblemUnmarshaller();
 		
 		try (InputStream in = java.nio.file.Files.newInputStream(filepath)) {
-			MCProblem unmarshalledMcp = u.unmarshalAndStore(in);
+			MCProblem unmarshalledMcp = u.readMCProblemFromXml(in);
 			LOGGER.debug("Unmarshalling invoked");
 			
 		}

@@ -30,58 +30,59 @@ public class MCProblemUnmarshaller {
 	private MCProblem mcp = new MCProblem();
 
 	/**
-	 * @return
+	 * This method reads a multi-criteria problem in the form of an XML
+	 * file abiding by the XMCDA standard.
+	 * 
+	 * @param in the InputStream corresponding to the XML file containing the multi-criteria problem
+	 * @return the MCProblem object corresponding to the XML file transmitted
 	 * @throws JAXBException
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 * 
 	 */
-	public MCProblem unmarshalAndStore(InputStream in) throws JAXBException, FileNotFoundException, IOException {
-		
+	public MCProblem readMCProblemFromXml(InputStream in) throws JAXBException, FileNotFoundException, IOException {
 		
 		final JAXBContext jc = JAXBContext.newInstance(XMCDA.class);
 		final Unmarshaller unmarshaller = jc.createUnmarshaller();
-		// final ObjectFactory f = new ObjectFactory();
-		
-		
+		final XMCDA xmcda = (XMCDA) unmarshaller.unmarshal(in);
+		final List<JAXBElement<?>> xmcdaSubElements = xmcda.getProjectReferenceOrMethodMessagesOrMethodParameters();
 			
-			final XMCDA xmcda = (XMCDA) unmarshaller.unmarshal(in);
-			final List<JAXBElement<?>> xmcdaSubElements = xmcda.getProjectReferenceOrMethodMessagesOrMethodParameters();
+		// Read X2Alternatives
+		X2Alternatives alts = getX2Alternatives(xmcdaSubElements);
+		List<Object> x2AltsList = alts.getDescriptionOrAlternative();
+		for (int i = 0; i < x2AltsList.size(); i++) {
+			Alternative a = extractAltFromX2Alternatives(i, x2AltsList);
+			mcp.addAlt(a);
+		}
 			
-			//////// FOR ALTERNATIVES ///////
-			X2Alternatives alts = getX2Alternatives(xmcdaSubElements);
-			List<Object> x2AltsList = alts.getDescriptionOrAlternative();
-			for (int i = 0; i < x2AltsList.size(); i++) {
-				Alternative a = extractAltFromX2Alternatives(i, x2AltsList);
-				mcp.addAlt(a);
-			}
-			
-			//////// FOR CRITERIA ///////
-			X2Criteria crits = getX2Criteria(xmcdaSubElements);
-			List<X2Criterion> critsList = crits.getCriterion();
-			for (int i = 0; i < critsList.size(); i++) {
-				Criterion c = extractCritFromX2Criteria(i, critsList);
-				mcp.addCrit(c);
-			}
+		// Read X2Criteria
+		X2Criteria crits = getX2Criteria(xmcdaSubElements);
+		List<X2Criterion> critsList = crits.getCriterion();
+		for (int i = 0; i < critsList.size(); i++) {
+			Criterion c = extractCritFromX2Criteria(i, critsList);
+			mcp.addCrit(c);
+		}
 
-			//////// FOR PERFORMANCE ///////
-			X2PerformanceTable perfTable = getX2PerformanceTable(xmcdaSubElements);
-			// Get the list of X2Alternative performances
-			List<X2AlternativeOnCriteriaPerformances> altsOnCritsPerf = perfTable.getAlternativePerformances();
+		// Read X2PerformanceTable
+		X2PerformanceTable perfTable = getX2PerformanceTable(xmcdaSubElements);
+		List<X2AlternativeOnCriteriaPerformances> altsOnCritsPerf = perfTable.getAlternativePerformances();
+		for (int i = 0; i < altsOnCritsPerf.size(); i++) {
+			getListOfX2AlternativePerformancesOnCriteriaAndPutInMcp(i, altsOnCritsPerf);
+		}
 			
-			for (int i = 0; i < altsOnCritsPerf.size(); i++) {
-				getListOfX2AlternativePerformancesOnCriteriaAndPutInMcp(i, altsOnCritsPerf);
-			}
-			
-		
-		
 		return mcp;
 				
-	} // end marshalAndStore
+	} 
 	
 	
+	/*
+	 * This method finds and reads the X2Alternatives item from an unmarshalled XML file
+	 * abiding by the XMCDA standard.
+	 * 
+	 * @param xmcdaSubElements the unmarshalled project references of the XMCDA file
+	 * @return the list of X2Alternatives to be read
+	 */
 	public X2Alternatives getX2Alternatives(List<JAXBElement<?>> xmcdaSubElements) {
-		// Find the index of the xmcdaSubElements list where there are the X2Alternatives
 		int altsIndex = 0;
 		while (altsIndex < xmcdaSubElements.size()) {
 			if ( xmcdaSubElements.get(altsIndex).getName().toString().equalsIgnoreCase("alternatives") ) {
@@ -89,17 +90,32 @@ public class MCProblemUnmarshaller {
 			}
 			altsIndex++;
 		} 
-		X2Alternatives alts = (X2Alternatives) xmcdaSubElements.get(altsIndex).getValue();
-		return alts;
+		X2Alternatives x2Alts = (X2Alternatives) xmcdaSubElements.get(altsIndex).getValue();
+		return x2Alts;
 	}
 	
+	/*
+	 * This method extracts the ID of a specific X2Alternative from 
+	 * a list of X2Alternatives and create a corresponding Alternative object.
+	 * 
+	 * @param i the index of the X2Alternative's ID to be extracted
+	 * @param x2AltsList the raw X2Alternatives list to be navigated
+	 * @return the Alternative object created with the extracted ID
+	 */
 	public Alternative extractAltFromX2Alternatives(int i, List<Object> x2AltsList) {
 		X2Alternative x2Alt = (X2Alternative) x2AltsList.get(i);
 		String x2AltId = x2Alt.getId();
 		Alternative a = new Alternative(Integer.parseInt(x2AltId.substring(1)));
 		return a;
 	}
-	
+
+	/*
+	 * This method finds and reads the X2Criteria item from an unmarshalled XML file
+	 * abiding by the XMCDA standard.
+	 * 
+	 * @param xmcdaSubElements the unmarshalled project references of the XMCDA file
+	 * @return the list of X2Criteria to be read
+	 */
 	public X2Criteria getX2Criteria(List<JAXBElement<?>> xmcdaSubElements) {
 		// Find the index of the xmcdaSubElements list where there are the X2Criteria
 		int critsIndex = 0;
@@ -113,6 +129,14 @@ public class MCProblemUnmarshaller {
 		return crits;
 	}
 	
+	/*
+	 * This method extracts the ID of a specific X2Criterion from 
+	 * a list of X2Criteria and create a corresponding Criterion object.
+	 * 
+	 * @param i the index of the X2Criterion's ID to be extracted
+	 * @param x2CritsList the raw  X2Criteria list to be navigated
+	 * @return the Criterion object created with the extracted ID
+	 */
 	public Criterion extractCritFromX2Criteria(int i, List<X2Criterion> x2CritsList) {
 		X2Criterion x2Crit = x2CritsList.get(i);
 		String x2CritId = x2Crit.getId();
@@ -120,8 +144,14 @@ public class MCProblemUnmarshaller {
 		return c;
 	}
 	
+	/*
+	 * This method finds and reads the X2PerformanceTable item from an unmarshalled XML file
+	 * abiding by the XMCDA standard.
+	 * 
+	 * @param xmcdaSubElements the unmarshalled project references of the XMCDA file
+	 * @return the X2PerformanceTable to be read
+	 */
 	public X2PerformanceTable getX2PerformanceTable(List<JAXBElement<?>> xmcdaSubElements) {
-		// Find the index of the xmcdaSubElements list where there is the performances table
 		int perfsIndex = 0;
 		while (perfsIndex < xmcdaSubElements.size()) {
 			if ( xmcdaSubElements.get(perfsIndex).getName().toString().equalsIgnoreCase("performanceTable") ) {
@@ -129,28 +159,33 @@ public class MCProblemUnmarshaller {
 				}
 			perfsIndex++;
 			} 
-		// Visual verification on console		
-		// System.out.println(xmcdaSubElements.get(perfsIndex).getName());
-		// Get X2PerformanceTable
 		X2PerformanceTable perfTable = (X2PerformanceTable) xmcdaSubElements.get(perfsIndex).getValue();		
 		return perfTable;
 	}
 	
-	public void getListOfX2AlternativePerformancesOnCriteriaAndPutInMcp(int i, List<X2AlternativeOnCriteriaPerformances> altsOnCritsPerf) {
-		X2AlternativeOnCriteriaPerformances firstEvalAlt = altsOnCritsPerf.get(i);
-		// Get the id of the first evaluated X2Alternative
-		String firstEvalAltId = firstEvalAlt.getAlternativeID();
-		Alternative a = new Alternative(Integer.parseInt(firstEvalAltId.substring(1)));
-		List<X2AlternativeOnCriteriaPerformances.Performance> EvaluatedAltPerfs = firstEvalAlt.getPerformance();		
+	/*
+	 * This method extracts the values of a specific X2Alternative's performance on every X2Criterion
+	 * and put every performance value in a MCProblem object, using Alternative's and Criterion's unique ID.
+	 * 
+	 * @param i the index of the specific X2Alternative in the list, from which performance values will be extracted
+	 * @param altsOnCriteriaPerfs is the list of X2Alternative objects evaluated on all criteria
+	 */
+	public void getListOfX2AlternativePerformancesOnCriteriaAndPutInMcp(int i, List<X2AlternativeOnCriteriaPerformances> altsOnCriteriaPerfs) {
+		X2AlternativeOnCriteriaPerformances evaluatedX2Alt = altsOnCriteriaPerfs.get(i);
+		String evaluatedX2AltId = evaluatedX2Alt.getAlternativeID();
+		Alternative evaluatedAlternative = new Alternative(Integer.parseInt(evaluatedX2AltId.substring(1)));
+		List<X2AlternativeOnCriteriaPerformances.Performance> evaluatedX2AltPerfs = evaluatedX2Alt.getPerformance();		
 
-		for (int j = 0; j < EvaluatedAltPerfs.size(); j++) {
-			X2AlternativeOnCriteriaPerformances.Performance firstEvalAltPerfOnCrit = EvaluatedAltPerfs.get(j);
-			String firstEvalAltPerfOnCritId = firstEvalAltPerfOnCrit.getCriterionID();
-			X2Value firstEvalAltPerfOnCritIdValue = firstEvalAltPerfOnCrit.getValue();
-			// Put the Alternative-Criteria pair in the tableEval with value of performance
-			Criterion c = new Criterion(Integer.parseInt(firstEvalAltPerfOnCritId.substring(1)));
-			double v = firstEvalAltPerfOnCritIdValue.getReal();
-			mcp.putValue(a, c, (float) v);
+		for (int j = 0; j < evaluatedX2AltPerfs.size(); j++) {
+			
+			X2AlternativeOnCriteriaPerformances.Performance evaluatedX2AltPerfOnX2Crit = evaluatedX2AltPerfs.get(j);
+			String x2CritIdOfEvaluatedX2AltPerf = evaluatedX2AltPerfOnX2Crit.getCriterionID();
+			X2Value valueOfEvaluatedX2AltPerfOnX2Crit = evaluatedX2AltPerfOnX2Crit.getValue();
+			
+			double performanceValue = valueOfEvaluatedX2AltPerfOnX2Crit.getReal();
+			Criterion evaluatedCriterion = new Criterion(Integer.parseInt(x2CritIdOfEvaluatedX2AltPerf.substring(1)));
+
+			mcp.putValue(evaluatedAlternative, evaluatedCriterion, (float) performanceValue);
 		}
 		
 	}
