@@ -21,13 +21,13 @@ public class BasicObjectsMarshallerToX2 {
 
 	public static X2Alternative basicAlternativeToX2(Alternative a) {
 		final X2Alternative alt = MCProblemMarshaller.f.createX2Alternative();
-		alt.setId("a" + a.getId());
+		alt.setId(" " + a.getId());
 		return alt;
 	}
 
 	public static X2Criterion basicCriterionToX2(Criterion c) {
 		final X2Criterion crit = MCProblemMarshaller.f.createX2Criterion();
-		crit.setId("c" + c.getId());
+		crit.setId(" " + c.getId());
 		return crit;
 
 	}

@@ -183,7 +183,7 @@ public class MCProblemUnmarshaller {
 			double performanceValue = valueOfEvaluatedX2AltPerfOnX2Crit.getReal();
 			Criterion evaluatedCriterion = new Criterion(Integer.parseInt(x2CritIdOfEvaluatedX2AltPerf.substring(1)));
 
-			mcp.putValue(evaluatedAlternative, evaluatedCriterion, (float) performanceValue);
+			mcp.putEvaluation(evaluatedAlternative, evaluatedCriterion, (float) performanceValue);
 		}
 		
 	}

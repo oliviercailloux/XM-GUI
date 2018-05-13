@@ -47,11 +47,11 @@ public class App {
 		Alternative alt2 = new Alternative(2);
 		Alternative alt3 = new Alternative(3);
 		MCProblem mcp = new MCProblem();
-		mcp.putValue(alt, crt, 2.0f);
-		mcp.putValue(alt2, crt2, 13.3f);
-		mcp.putValue(alt3, crt3, 6f);
-		mcp.putValue(alt3, crt4, 12f);
-		mcp.putValue(alt3, crt5, 120f);
+		mcp.putEvaluation(alt, crt, 2.0f);
+		mcp.putEvaluation(alt2, crt2, 13.3f);
+		mcp.putEvaluation(alt3, crt3, 6f);
+		mcp.putEvaluation(alt3, crt4, 12f);
+		mcp.putEvaluation(alt3, crt5, 120f);
 		LOGGER.info("MCP instance created");
 		
 		MCProblemMarshaller mcpMarshaller = new MCProblemMarshaller(mcp);

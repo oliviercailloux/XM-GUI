@@ -80,7 +80,7 @@ public class MCProblemMarshaller {
 			UnmodifiableIterator<Entry<Criterion, Float>> itCritsPerf=mcp.getTableEval().row(a).entrySet().iterator();
 			while(itCritsPerf.hasNext()){
 				performances.getPerformance().add(CreatePerformance.createPerformance(itCritsPerf.next()));
-				performances.setAlternativeID("a" + a.getId());
+				performances.setAlternativeID(" " + a.getId());
 			}
 				perfTable.getAlternativePerformances().add(performances);
 		}
