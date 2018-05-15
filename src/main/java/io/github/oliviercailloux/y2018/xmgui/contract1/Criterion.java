@@ -1,5 +1,7 @@
 package io.github.oliviercailloux.y2018.xmgui.contract1;
 
+import java.util.Objects;
+
 /**
  * An object of this immutable class Criterion contains a simple identifier of type int
  */
@@ -27,11 +29,11 @@ public final class Criterion {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof Criterion) {
-			Criterion c = (Criterion) o;
-			return (this.id == c.id);
+		if (!(o instanceof Criterion)) {
+			return false;
 		}
-		return false;
+		Criterion c = (Criterion) o;
+		return (this.id == c.id);
 	}
 	
 	/** 
@@ -40,7 +42,7 @@ public final class Criterion {
 	 */
 	@Override
 	public int hashCode() {
-		return this.id;
+		return Objects.hash(id);
 	}
 	
 	@Override

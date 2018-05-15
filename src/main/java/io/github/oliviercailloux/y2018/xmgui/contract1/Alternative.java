@@ -1,5 +1,7 @@
 package io.github.oliviercailloux.y2018.xmgui.contract1;
 
+import java.util.Objects;
+
 /**
  * An object of this immutable class Alternative contains a simple identifier of type int
  */
@@ -28,11 +30,11 @@ public final class Alternative {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof Alternative) {
-			Alternative a = (Alternative) o;
-			return (this.id == a.id);
+		if (!(o instanceof Alternative)) {
+			return false;
 		}
-		return false;
+		Alternative a = (Alternative) o;
+		return (this.id == a.id);
 	}
 	
 	/** 
@@ -41,7 +43,7 @@ public final class Alternative {
 	 */
 	@Override
 	public int hashCode() {
-		return this.id;
+		return Objects.hash(id);
 	}
 	
 	@Override
