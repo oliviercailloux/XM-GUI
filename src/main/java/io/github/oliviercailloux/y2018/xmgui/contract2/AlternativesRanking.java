@@ -102,4 +102,16 @@ public class AlternativesRanking {
 		}
 		return s;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+	    if (obj == null) return false;
+	    if (obj == this) return true;
+	    if (!(obj instanceof AlternativesRanking)) return false;
+	    
+	    AlternativesRanking altR = (AlternativesRanking) obj;
+
+        return altR.map.equals(map);
+	}
+
 }

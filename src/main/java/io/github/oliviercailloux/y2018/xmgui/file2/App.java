@@ -12,9 +12,6 @@ import javax.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSetMultimap;
-
 import io.github.oliviercailloux.y2018.xmgui.contract1.Alternative;
 import io.github.oliviercailloux.y2018.xmgui.contract2.AlternativesRanking;
 
@@ -39,6 +36,7 @@ public class App {
 		AltR1.putAltRank(3,alt4);
 		AltR1.putAltRank(4,alt5);
 		AltR1.putAltRank(5,alt6);
+		LOGGER.debug("AlternativesRanking instanced");
 		
 		//ecriture de file2
 		AlternativesRankingMarshaller AltRMarshaller = new AlternativesRankingMarshaller(AltR1);
@@ -48,20 +46,17 @@ public class App {
 		}
 
 		//lecture de file2
-		AlternativesRanking AltR2;
 		AlternativesRankingUnmarshaller AltRUnmarshaller = new AlternativesRankingUnmarshaller();
+		AlternativesRanking AltR2;
 		try (InputStream in = java.nio.file.Files.newInputStream(filepath)) {
 			AltR2 = AltRUnmarshaller.readAlternativesRankingFromXml(in);
 			LOGGER.debug("Unmarshalling invoked");
 		}
-		
-		ImmutableSetMultimap<Integer, Alternative> map = AltR2.getAltSet();
-		for (int Rank : map.keySet()) {
-			System.out.println("Rang numéro :" + Rank);
-			ImmutableSet<Alternative> allAlt = map.get(Rank);
-			for (Alternative Alt : allAlt){
-				System.out.println("Alternative :" + Alt.getId());
-			}
+	
+		if(AltR2.equals(AltR1)){
+			LOGGER.debug("Marshalling/Unmarshalling is correct");
+		}else{
+			LOGGER.debug("Marshalling/Unmarshalling isn't correct");
 		}
 	}
 
