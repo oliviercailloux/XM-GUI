@@ -1,5 +1,7 @@
 package io.github.oliviercailloux.y2018.xmgui.file2;
 
+import static org.junit.Assert.*;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -9,18 +11,15 @@ import java.nio.file.Paths;
 
 import javax.xml.bind.JAXBException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.junit.Test;
 
 import io.github.oliviercailloux.y2018.xmgui.contract1.Alternative;
 import io.github.oliviercailloux.y2018.xmgui.contract2.AlternativesRanking;
 
-public class App {
+public class File2Test {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(App.class);
-	
-	public static void main(String[] args) throws FileNotFoundException, JAXBException, IOException {
-		
+	@Test
+	public void test() throws FileNotFoundException, JAXBException, IOException {
 		String path="AlternativesRankingFile.xml";
 		Path filepath= Paths.get(path);
 		
@@ -36,28 +35,22 @@ public class App {
 		AltR1.putAltRank(3,alt4);
 		AltR1.putAltRank(4,alt5);
 		AltR1.putAltRank(5,alt6);
-		LOGGER.debug("AlternativesRanking instanced");
 		
 		//ecriture de AlternativesRankingFile.xml
 		AlternativesRankingMarshaller AltRMarshaller = new AlternativesRankingMarshaller(AltR1);
 		try (final FileOutputStream fos = new FileOutputStream(path)) {
 			AltRMarshaller.writeAlternativeValueFromAlternativesRanking(fos);
-			LOGGER.debug("Marshalling invoked");
 		}
-
+	
 		//lecture de AlternativesRankingFile.xml
 		AlternativesRankingUnmarshaller AltRUnmarshaller = new AlternativesRankingUnmarshaller();
 		AlternativesRanking AltR2;
 		try (InputStream in = java.nio.file.Files.newInputStream(filepath)) {
 			AltR2 = AltRUnmarshaller.readAlternativesRankingFromXml(in);
-			LOGGER.debug("Unmarshalling invoked");
 		}
 	
-		if(AltR2.equals(AltR1)){
-			LOGGER.debug("Marshalling/Unmarshalling is correct");
-		}else{
-			LOGGER.debug("Marshalling/Unmarshalling isn't correct");
-		}
+		assertEquals(AltR1,AltR2);
+	
 	}
-
+	
 }
