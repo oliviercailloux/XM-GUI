@@ -49,9 +49,27 @@
     			<version>2.0.1</version>
 		</dependency>	
 		<dependency>
-   			 <groupId>swt</groupId>
-    			<artifactId>swt-macosx</artifactId>
-    			<version>3.0m7</version>
+			<groupId>org.eclipse.platform</groupId>
+			<artifactId>org.eclipse.swt.gtk.linux.x86_64</artifactId>
+			<version>3.106.3</version>
+			<optional>true</optional>
+			<exclusions>
+				<exclusion>
+					<groupId>org.eclipse.platform</groupId>
+					<artifactId>org.eclipse.swt</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.platform</groupId>
+			<artifactId>org.eclipse.jface</artifactId>
+			<version>3.13.2</version>
+			<exclusions>
+					<exclusion>
+						<groupId>org.eclipse.platform</groupId>
+						<artifactId>org.eclipse.swt</artifactId>
+			</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 </project>
