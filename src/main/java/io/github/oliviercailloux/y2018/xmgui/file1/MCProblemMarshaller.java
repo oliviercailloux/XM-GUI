@@ -86,12 +86,14 @@ public class MCProblemMarshaller {
 		}
 
 		// Output the corresponding XMCDA file
+		//Proposer aussi de créer un fichier "alternatives" manuellement
 		final XMCDA xmcda = f.createXMCDA();
 		final List<JAXBElement<?>> xmcdaSubElements = xmcda.getProjectReferenceOrMethodMessagesOrMethodParameters();
 		xmcdaSubElements.add(f.createXMCDAAlternatives(alternatives));
 		xmcdaSubElements.add(f.createXMCDACriteria(criteria));
 		xmcdaSubElements.add(f.createXMCDAPerformanceTable(perfTable));
 		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+		// Proposer aussi le marshalling vers un NODE plutot qu'un output stream
 		marshaller.marshal(xmcda, fos);
 	}
 }

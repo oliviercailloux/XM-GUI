@@ -14,16 +14,21 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.github.oliviercailloux.y2018.xmgui.contract1.Alternative;
 import io.github.oliviercailloux.y2018.xmgui.contract1.Criterion;
 import io.github.oliviercailloux.y2018.xmgui.contract1.MCProblem;
+import io.github.oliviercailloux.y2018.xmgui.file1.App;
 import io.github.oliviercailloux.y2018.xmgui.file1.MCProblemMarshaller;
 
 import org.eclipse.swt.layout.*;
 
 public class AltsCritsGUI {
 
+	private final Logger logger = LoggerFactory.getLogger(AltsCritsGUI.class);
+	
     private final Display display = Display.getDefault();
     private final Shell shell = new Shell(display);
     
@@ -262,7 +267,6 @@ public class AltsCritsGUI {
 	    	        	id.setText(criteriaList.get(i)); 
 	    	        }
 	    		}
-	    		
 	        criteria.layout();
     }
     
@@ -272,32 +276,29 @@ public class AltsCritsGUI {
     	for (int i =0; i < alternativesList.size(); i++) {
 			if (alternativesList.get(i) != null) {
 				mcp.addAlt(new Alternative(Integer.parseInt(alternativesList.get(i))));
-				System.out.println(mcp.getAlternatives());
+				logger.info("Alternatives in the MCP: {}." + mcp.getAlternatives());
 			}
 		}
     	for (int i =0; i < criteriaList.size(); i++) {
 			if (criteriaList.get(i) != null) {
 				mcp.addCrit(new Criterion(Integer.parseInt(criteriaList.get(i))));
-				System.out.println(mcp.getCriteria());
+				logger.info("Criteria in the MCP: {}." + mcp.getCriteria());
 			}
 		}
-    	try (final FileOutputStream fos = new FileOutputStream("MCPGuiFile.xml")) {
+    	try (final FileOutputStream fos = new FileOutputStream("MCPFile.xml")) {
 			marshaller.marshalAndWrite(fos);
 		}
     }
     
     protected void updateAlternativeList(Text altId) throws FileNotFoundException, JAXBException, IOException {
     	alternativesList.set(Integer.parseInt(altId.getData().toString()), altId.getText());
-    	//System.out.println(alternativesList);
     	marshall();
     }
     
     protected void updateCriteriaList(Text critId) throws FileNotFoundException, JAXBException, IOException {
     	criteriaList.set(Integer.parseInt(critId.getData().toString()), critId.getText());
-    	System.out.println(criteriaList);
     	marshall();
     }
-    
     
 	public static void main(String[] args) {
     	
@@ -310,6 +311,5 @@ public class AltsCritsGUI {
         createInitialCritsFields(gui);
         displayLoop(gui);
     }
-    
 }
 

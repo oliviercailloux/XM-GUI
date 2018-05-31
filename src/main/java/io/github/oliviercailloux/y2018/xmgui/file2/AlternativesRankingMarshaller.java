@@ -47,6 +47,7 @@ public class AlternativesRankingMarshaller {
 		final JAXBContext jc = JAXBContext.newInstance(XMCDA.class);
 		final Marshaller marshaller = jc.createMarshaller();
 		final ObjectFactory f = new ObjectFactory();
+		// Proposer aussi de créer un fichier "overallvalues" manuellement
 		final XMCDA xmcda = f.createXMCDA();
 		final List<JAXBElement<?>> xmcdaSubElements = xmcda.getProjectReferenceOrMethodMessagesOrMethodParameters();
 		
@@ -56,13 +57,14 @@ public class AlternativesRankingMarshaller {
 			ImmutableSet<Alternative> allAlt = map.get(Rank);
 			for (Alternative Alt : allAlt){
 				X2AlternativeValue X2AltV = f.createX2AlternativeValue();
-				X2AltV.setAlternativeID("" + Alt.getId());
+				X2AltV.setAlternativeID(Integer.toString(Alt.getId()));
 				X2AltV.getValueOrValues().add(putX2Value(Rank));
 				xmcdaSubElements.add(f.createXMCDAAlternativeValue(X2AltV));
 			}
 		}
 		
 		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+		// Proposer aussi le marshalling vers un NODE plutot qu'un output stream
 		marshaller.marshal(xmcda, fos);
 
 	}

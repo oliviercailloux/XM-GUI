@@ -103,7 +103,7 @@ public class MCProblemUnmarshaller {
 	public Alternative extractAltFromX2Alternatives(int i, List<Object> x2AltsList) {
 		X2Alternative x2Alt = (X2Alternative) x2AltsList.get(i);
 		String x2AltId = x2Alt.getId();
-		Alternative a = new Alternative(Integer.parseInt(x2AltId.substring(1)));
+		Alternative a = new Alternative(Integer.parseInt(x2AltId));
 		return a;
 	}
 
@@ -138,7 +138,7 @@ public class MCProblemUnmarshaller {
 	public Criterion extractCritFromX2Criteria(int i, List<X2Criterion> x2CritsList) {
 		X2Criterion x2Crit = x2CritsList.get(i);
 		String x2CritId = x2Crit.getId();
-		Criterion c = new Criterion(Integer.parseInt(x2CritId.substring(1)));		
+		Criterion c = new Criterion(Integer.parseInt(x2CritId));	
 		return c;
 	}
 	
@@ -171,7 +171,7 @@ public class MCProblemUnmarshaller {
 	public void getListOfX2AlternativePerformancesOnCriteriaAndPutInMcp(int i, List<X2AlternativeOnCriteriaPerformances> altsOnCriteriaPerfs) {
 		X2AlternativeOnCriteriaPerformances evaluatedX2Alt = altsOnCriteriaPerfs.get(i);
 		String evaluatedX2AltId = evaluatedX2Alt.getAlternativeID();
-		Alternative evaluatedAlternative = new Alternative(Integer.parseInt(evaluatedX2AltId.substring(1)));
+		Alternative evaluatedAlternative = new Alternative(Integer.parseInt(evaluatedX2AltId));
 		List<X2AlternativeOnCriteriaPerformances.Performance> evaluatedX2AltPerfs = evaluatedX2Alt.getPerformance();		
 
 		for (int j = 0; j < evaluatedX2AltPerfs.size(); j++) {
@@ -181,8 +181,7 @@ public class MCProblemUnmarshaller {
 			X2Value valueOfEvaluatedX2AltPerfOnX2Crit = evaluatedX2AltPerfOnX2Crit.getValue();
 			
 			double performanceValue = valueOfEvaluatedX2AltPerfOnX2Crit.getReal();
-			Criterion evaluatedCriterion = new Criterion(Integer.parseInt(x2CritIdOfEvaluatedX2AltPerf.substring(1)));
-
+			Criterion evaluatedCriterion = new Criterion(Integer.parseInt(x2CritIdOfEvaluatedX2AltPerf));	
 			mcp.putEvaluation(evaluatedAlternative, evaluatedCriterion, (float) performanceValue);
 		}
 		
