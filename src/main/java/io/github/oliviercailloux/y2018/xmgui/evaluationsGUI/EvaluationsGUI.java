@@ -1,136 +1,90 @@
 package io.github.oliviercailloux.y2018.xmgui.evaluationsGUI;
 
-
-
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import org.eclipse.swt.custom.TableEditor;
 
 public class EvaluationsGUI {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(EvaluationsGUI.class);
 	
   public static void main(String[] args) {
 	  
     Display display = new Display();
     Shell shell = new Shell(display);
-    shell.setSize(500, 500);
-    shell.setText("Grille d'évaluation des alternatives");
+    shell.setSize(700, 700);
+    shell.setText("Alternatives and criteria evaluations");
+    
+    /* LABEL EN TETE */
+    
+    Label label = new Label(shell, SWT.NULL);
+	label.setSize(400,25);
+	label.setLocation(25, 25);
+	label.setText("Saisir vos en-têtes de colonne dans la première ligne du tableau.");
     
     /* INITIALISATION TABLE */
+    
     Table table = new Table(shell,SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-    table.setHeaderVisible(true);
     table.setLinesVisible(true);
     
-    String[] titles = {"","AlternativeID"};
-
-    for (int loopIndex = 0; loopIndex < titles.length; loopIndex++) {
-      TableColumn column = new TableColumn(table, SWT.NULL);
-      column.setWidth(50);
-      column.setText(titles[loopIndex]);
-    }
-
-    table.setBounds(25, 25, 400, 400);
+    TableColumn colAlt = new TableColumn(table, SWT.NULL);
+    colAlt.setWidth(100);
+    TableColumn column = new TableColumn(table, SWT.NULL);
+    column.setWidth(50);
     
+    TableItem itemHeader = new TableItem(table, SWT.NULL);
+	itemHeader.setText(0,"AlternativeID");
+	TableItem item = new TableItem(table, SWT.NULL);
+	  
+    table.setBounds(25, 50, colAlt.getWidth() + column.getWidth(), item.getBounds(0).height*2);
     
-   
+    /* BUTTON ROW - Add Alternative */
     
-    /* BOUTON COLONNE */
+    final Button buttonRow = new Button(shell, SWT.PUSH);
+    buttonRow.setText("Add Alternative");
+    buttonRow.setBounds(25, table.getBounds().y + table.getBounds().height + 5, 25, 25);
+    buttonRow.pack();
+    
+    /* BUTTON COLUMN - Add Criteria */
     
     final Button buttonCol = new Button(shell, SWT.PUSH);
-    buttonCol.setText("Ajouter un critère");
-    buttonCol.setBounds(425, 25, 25, 25);
+    buttonCol.setText("Add Criteria");
+    buttonCol.setBounds(buttonRow.getBounds().x + buttonRow.getBounds().width + 5, table.getBounds().y + table.getBounds().height + 5, 25, 25);
     buttonCol.pack();
    
+    /* Listener button row */
+    buttonRow.addSelectionListener(new SelectionListener() {
+
+      public void widgetSelected(SelectionEvent event) {
+    	  TableItem item = new TableItem(table, SWT.NULL);
+    	  int hRow = item.getBounds(0).height;
+          table.setSize(table.getSize().x, table.getSize().y + hRow);
+          buttonRow.setBounds(25, buttonRow.getBounds().y + hRow, 25, 25);
+          buttonRow.pack();
+          buttonCol.setBounds(buttonRow.getBounds().x + buttonRow.getBounds().width + 5, buttonCol.getBounds().y + hRow, 25, 25);
+          buttonCol.pack();
+      }
+
+      public void widgetDefaultSelected(SelectionEvent event) {
+      }
+    });
+    
+    /* Listener button column */
     buttonCol.addSelectionListener(new SelectionListener() {
 
       public void widgetSelected(SelectionEvent event) {
     	TableColumn column = new TableColumn(table, SWT.NULL);
     	column.setWidth(50);
-        column.setText("Critère" + (table.getColumnCount() - 1));
+        table.setSize(table.getSize().x + column.getWidth(), table.getSize().y);
       }
 
       public void widgetDefaultSelected(SelectionEvent event) {
-      }
-    });
-    
-    
-    
-    /* BOUTON LIGNE */
-    
-    final Button buttonRow = new Button(shell, SWT.PUSH);
-    buttonRow.setText("Ajouter une alternative");
-    buttonRow.setBounds(25, 425, 25, 25);
-    buttonRow.pack();
-   
-    buttonRow.addSelectionListener(new SelectionListener() {
-
-      public void widgetSelected(SelectionEvent event) {
-    	  TableItem item = new TableItem(table, SWT.NULL);
-    	  System.out.println(table.getItemCount());
-    	  item.setText(0,"" + table.getItemCount());
-    	  final TableEditor editor = new TableEditor(table);
-      }
-
-      public void widgetDefaultSelected(SelectionEvent event) {
-    	  
       }
     });
     
     /* MODIF CELLULE */
-    
-    /* A PROG : mise à jour du MCProblem au fur et à mesure des insertions de l'U */
-    /*
-    final TableEditor editor = new TableEditor(table);
-    editor.horizontalAlignment = SWT.LEFT;
-    editor.grabHorizontal = true;
-    editor.minimumWidth = 50;
-    
-    final int EDITABLECOLUMN = 1;
-
-    table.addSelectionListener(new SelectionAdapter() {
-    	
-            public void widgetSelected(SelectionEvent e) {
-            		
-                    // suppression ancien control
-                    Control oldEditor = editor.getEditor();
-                    if (oldEditor != null) oldEditor.dispose();
-
-                    // Identification Ligne
-                    TableItem item = (TableItem) e.item;
-                    if (item == null) return;
-                    
-                   
-                  
-                    LOGGER.info("x: {}.", e.x);
-                    LOGGER.info("y: {}.", e.y);
-                    LOGGER.info("data: {}.", e.data);   
-                    LOGGER.info("getSource: {}.", e.getSource());     
-                    LOGGER.info("widget: {}.", e.widget);
-                    
-                    // The control that will be the editor must be a child of the Table
-                    Text newEditor = new Text(table, SWT.NONE);
-                    
-                    newEditor.setText(item.getText(EDITABLECOLUMN));
-                    
-                    newEditor.addModifyListener(new ModifyListener() {
-                            public void modifyText(ModifyEvent e) {
-                                    Text text = (Text)editor.getEditor();
-                                    editor.getItem().setText(EDITABLECOLUMN, text.getText());
-                            }
-                    });
-                    newEditor.selectAll();
-                    newEditor.setFocus();
-                    editor.setEditor(newEditor, item, EDITABLECOLUMN);
-            }
-    });*/
     
     final TableEditor editor = new TableEditor(table);
     editor.horizontalAlignment = SWT.LEFT;
