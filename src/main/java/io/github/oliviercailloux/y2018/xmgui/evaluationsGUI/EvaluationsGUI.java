@@ -1,11 +1,21 @@
 package io.github.oliviercailloux.y2018.xmgui.evaluationsGUI;
 
+
+
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.eclipse.swt.custom.TableEditor;
 
 public class EvaluationsGUI {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(EvaluationsGUI.class);
 	
   public static void main(String[] args) {
 	  
@@ -14,14 +24,12 @@ public class EvaluationsGUI {
     shell.setSize(500, 500);
     shell.setText("Grille d'évaluation des alternatives");
     
-    final Text text = new Text(shell, SWT.BORDER);
-    text.setBounds(25, 450, 220, 25);
-
-    Table table = new Table(shell, SWT.CHECK | SWT.BORDER | SWT.V_SCROLL
-        | SWT.H_SCROLL);
+    /* INITIALISATION TABLE */
+    Table table = new Table(shell,SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
     table.setHeaderVisible(true);
-    String[] titles = { 
-    		"Col 1", "Col 2", "Col 3", "Col 4" };
+    table.setLinesVisible(true);
+    
+    String[] titles = {"","AlternativeID"};
 
     for (int loopIndex = 0; loopIndex < titles.length; loopIndex++) {
       TableColumn column = new TableColumn(table, SWT.NULL);
@@ -29,57 +37,89 @@ public class EvaluationsGUI {
       column.setText(titles[loopIndex]);
     }
 
-    for (int loopIndex = 0; loopIndex < 24; loopIndex++) {
-      TableItem item = new TableItem(table, SWT.NULL);
-      item.setText("Item " + loopIndex);
-      item.setText(0, "Item " + loopIndex);
-      item.setText(1, "Yes");
-      item.setText(2, "No");
-      item.setText(3, "A table item");
-    }
-
-    for (int loopIndex = 0; loopIndex < titles.length; loopIndex++) {
-      table.getColumn(loopIndex).pack();
-    }
-
     table.setBounds(25, 25, 400, 400);
+    
+    
+   
+    
+    /* BOUTON COLONNE */
+    
+    final Button buttonCol = new Button(shell, SWT.PUSH);
+    buttonCol.setText("Ajouter un critère");
+    buttonCol.setBounds(425, 25, 25, 25);
+    buttonCol.pack();
+   
+    buttonCol.addSelectionListener(new SelectionListener() {
 
-    table.addListener(SWT.Selection, new Listener() {
-      public void handleEvent(Event event) {
-        if (event.detail == SWT.CHECK) {
-          text.setText("You checked " + event.item);
-        } else {
-          text.setText("You selected " + event.item);
-        }
+      public void widgetSelected(SelectionEvent event) {
+    	TableColumn column = new TableColumn(table, SWT.NULL);
+    	column.setWidth(50);
+        column.setText("Critère" + (table.getColumnCount() - 1));
+      }
+
+      public void widgetDefaultSelected(SelectionEvent event) {
       }
     });
     
     
     
+    /* BOUTON LIGNE */
     
+    final Button buttonRow = new Button(shell, SWT.PUSH);
+    buttonRow.setText("Ajouter une alternative");
+    buttonRow.setBounds(25, 425, 25, 25);
+    buttonRow.pack();
+   
+    buttonRow.addSelectionListener(new SelectionListener() {
+
+      public void widgetSelected(SelectionEvent event) {
+    	  TableItem item = new TableItem(table, SWT.NULL);
+    	  System.out.println(table.getItemCount());
+    	  item.setText(0,"" + table.getItemCount());
+    	  final TableEditor editor = new TableEditor(table);
+      }
+
+      public void widgetDefaultSelected(SelectionEvent event) {
+    	  
+      }
+    });
+    
+    /* MODIF CELLULE */
+    
+    /* A PROG : mise à jour du MCProblem au fur et à mesure des insertions de l'U */
+    /*
     final TableEditor editor = new TableEditor(table);
-    //The editor must have the same size as the cell and must
-    //not be any smaller than 50 pixels.
     editor.horizontalAlignment = SWT.LEFT;
     editor.grabHorizontal = true;
     editor.minimumWidth = 50;
-    // editing the second column
-	final int EDITABLECOLUMN = 3;
+    
+    final int EDITABLECOLUMN = 1;
 
     table.addSelectionListener(new SelectionAdapter() {
+    	
             public void widgetSelected(SelectionEvent e) {
-            	
-                    // Clean up any previous editor control
+            		
+                    // suppression ancien control
                     Control oldEditor = editor.getEditor();
                     if (oldEditor != null) oldEditor.dispose();
 
-                    // Identify the selected row
+                    // Identification Ligne
                     TableItem item = (TableItem) e.item;
                     if (item == null) return;
-
+                    
+                   
+                  
+                    LOGGER.info("x: {}.", e.x);
+                    LOGGER.info("y: {}.", e.y);
+                    LOGGER.info("data: {}.", e.data);   
+                    LOGGER.info("getSource: {}.", e.getSource());     
+                    LOGGER.info("widget: {}.", e.widget);
+                    
                     // The control that will be the editor must be a child of the Table
                     Text newEditor = new Text(table, SWT.NONE);
+                    
                     newEditor.setText(item.getText(EDITABLECOLUMN));
+                    
                     newEditor.addModifyListener(new ModifyListener() {
                             public void modifyText(ModifyEvent e) {
                                     Text text = (Text)editor.getEditor();
@@ -90,58 +130,84 @@ public class EvaluationsGUI {
                     newEditor.setFocus();
                     editor.setEditor(newEditor, item, EDITABLECOLUMN);
             }
-    });
+    });*/
     
-    /* BOUTON COLONNE */
+    final TableEditor editor = new TableEditor(table);
+    editor.horizontalAlignment = SWT.LEFT;
+    editor.grabHorizontal = true;
     
-    final Button buttonCol = new Button(shell, SWT.PUSH);
-    buttonCol.setText("Click Me");
-    buttonCol.setBounds(425, 25, 25, 25);
-    buttonCol.pack();
-   
-    buttonCol.addSelectionListener(new SelectionListener() {
-
-      public void widgetSelected(SelectionEvent event) {
-    	TableColumn column = new TableColumn(table, SWT.NULL);
-    	column.setWidth(50);
-        column.setText("new col");
-        table.setHeaderVisible(true);
-        text.setText("done");
-      }
-
-      public void widgetDefaultSelected(SelectionEvent event) {
-        text.setText("No worries!");
-      }
-    });
-    
-    /* BOUTON LIGNE */
-    
-    final Button buttonRow = new Button(shell, SWT.PUSH);
-    buttonRow.setText("Click Me");
-    buttonRow.setBounds(25, 425, 25, 25);
-    buttonRow.pack();
-   
-    buttonRow.addSelectionListener(new SelectionListener() {
-
-      public void widgetSelected(SelectionEvent event) {
-    	  TableItem item = new TableItem(table, SWT.NULL);
-    	  System.out.println(table.getItemCount());
-          item.setText("Item");
-          item.setText(0, "Item");
-          item.setText(1, "Yes");
-          item.setText(2, "No");
-          item.setText(3, "A table item");
-        
-
-        for (int loopIndex = 0; loopIndex < titles.length; loopIndex++) {
-          table.getColumn(loopIndex).pack();
+    table.addListener(SWT.MouseDown, new Listener() {
+    	
+        public void handleEvent(Event event) {
+        	
+          Rectangle clientArea = table.getClientArea();
+          Point pt = new Point(event.x, event.y);
+          int index = table.getTopIndex();
+          
+          while (index < table.getItemCount()) {
+        	  
+            boolean visible = false;
+            final TableItem item = table.getItem(index);
+            
+            for (int i = 0; i < table.getColumnCount(); i++) {
+            	
+              Rectangle rect = item.getBounds(i);
+              
+              if (rect.contains(pt)) {
+            	  
+                final int column = i;
+                final Text text = new Text(table, SWT.NONE);
+                
+                Listener textListener = new Listener() {
+                	
+                  public void handleEvent(final Event e) {
+                	  
+                    switch (e.type) {
+                    
+                    case SWT.FocusOut:
+                      item.setText(column, text.getText());
+                      text.dispose();
+                      break;
+                      
+                    case SWT.Traverse:
+                      switch (e.detail) {
+                      
+                      case SWT.TRAVERSE_RETURN:
+                        item.setText(column, text.getText());
+                        
+                      case SWT.TRAVERSE_ESCAPE:
+                        text.dispose();
+                        e.doit = false;
+                      }
+                      
+                      break;
+                      
+                    }
+                  }
+                };
+                
+                text.addListener(SWT.FocusOut, textListener);
+                text.addListener(SWT.Traverse, textListener);
+                editor.setEditor(text, item, i);
+                text.setText(item.getText(i));
+                text.selectAll();
+                text.setFocus();
+                return;
+                
+              }
+              
+              if (!visible && rect.intersects(clientArea)) {
+                visible = true;
+              }
+              
+            }
+            
+            if (!visible)
+              return;
+            index++;
+          }
         }
-      }
-
-      public void widgetDefaultSelected(SelectionEvent event) {
-        text.setText("No worries!");
-      }
-    });
+      });
 
     shell.open();
     while (!shell.isDisposed()) {
