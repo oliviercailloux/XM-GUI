@@ -1,6 +1,5 @@
 package io.github.oliviercailloux.y2018.xmgui.basicGUI;
 
-
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -22,34 +21,32 @@ import io.github.oliviercailloux.y2018.xmgui.file1.MCProblemMarshaller;
 
 import org.eclipse.swt.layout.*;
 
-
-
 public class AltsCritsGUI {
 
+    private final Display display = Display.getDefault();
+    private final Shell shell = new Shell(display);
+    
 	private MCProblem mcp;
 	private Alternative alt1;
 	private MCProblemMarshaller marshaller;
 	private ArrayList<String> alternativesList = new ArrayList<>();
 	
-	private int textPositionIncrementor = 0;
 	private Composite alternatives;
 	private Composite criteria;
-    private ModifyListener textListener;
-    private ModifyListener altListener;
-    private Text crit1;
-    static Listener TextListener;
-    private Button validateNbAlts; 
-    private SelectionListener validateListener;
     private Composite alternativesIdPanel;
+
+    private ModifyListener textListener;
+    private SelectionListener validateListener;
+
+    private Label nbAltsDirection;
+    private Button validateNbAlts; 
     private int initialNbOfAlts;
     private int nbOfAltsIncrementor = 0;
-    
-    private Label nbAltsDirection;
+	private int textPositionIncrementor = 30;
+    private Label altIdInputDirection;
     private Text nbAlts;
     private Text id;
     
-    private final Display display = Display.getDefault();
-    private final Shell shell = new Shell(display);
     
     public AltsCritsGUI() {
     	    	
@@ -64,9 +61,8 @@ public class AltsCritsGUI {
 				}
 				catch(Exception wrongInput)
 				{
-				MessageDialog.openError(shell, "Error", "Please input an integer");	
+				MessageDialog.openError(shell, "Error", "Please enter an integer");	
 				}
-
             }
         };
         	
@@ -77,92 +73,102 @@ public class AltsCritsGUI {
 					if (!nbAlts.isDisposed()) {
 						initialNbOfAlts = Integer.parseInt(nbAlts.getText());
 						nbAlts.dispose();
-						nbAltsDirection.setText("Click the button to add a new alt");
+						nbAltsDirection.setText("Click to add a new alternative");
 						for (int i = 0 ; i < initialNbOfAlts; i ++)
 			    	        alternativesList.add(i, null);
 					}
 					createAltsTextBoxes(initialNbOfAlts);
-					validateNbAlts.setBounds(0 ,20, 150, 20);
+					validateNbAlts.setBounds(10, 35, 150, 26);
 					validateNbAlts.setText("Add alternative");
 					alternativesList.add(initialNbOfAlts + nbOfAltsIncrementor, null);
 					nbOfAltsIncrementor += 1;
-
+				}
 			}
-			}
+			
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// TODO Auto-generated method stub
-				
-			}
+				}
             };
 	}
     
- 
-
-
 	public static void main(String[] args) {
     	
     	AltsCritsGUI gui = new AltsCritsGUI();
-    	
-    	
-    	gui.shell.setSize(500, 500);
+    	createShell(gui);
+        TabFolder tabfolder = createTabFolder(gui);
+        createTabItemAlternatives(gui, tabfolder);
+        createTabItemCriteria(gui, tabfolder);
+        createInitialAltsFields(gui);
+        displayLoop(gui);
+    }
+
+	private static void createShell(AltsCritsGUI gui) {
+		gui.shell.setSize(500, 500);
         gui.shell.setText("Multi Criteria Problem Edition");
-        
-        TabFolder tabfolder = new TabFolder(gui.shell, SWT.NONE);
+	}
+
+	private static TabFolder createTabFolder(AltsCritsGUI gui) {
+		TabFolder tabfolder = new TabFolder(gui.shell, SWT.NONE);
         tabfolder.setSize(480, 480);
-        gui.alternatives = new Composite(tabfolder, SWT.BORDER);
-        gui.alternatives.setSize(450, 450);
+        gui.alternatives = new Composite(tabfolder, SWT.NONE);
+        gui.alternatives.setBounds(10, 100, 500, 500);
         gui.criteria = new Composite(tabfolder, SWT.NONE);
         gui.criteria.setSize(450, 450);
-        
-        
-        TabItem altTab = new TabItem(tabfolder, SWT.NONE);
-        altTab.setText("Alternatives");
+		return tabfolder;
+	}
+
+	private static void createTabItemAlternatives(AltsCritsGUI gui, TabFolder tabfolder) {
+		TabItem altTab = new TabItem(tabfolder, SWT.NONE);
+        altTab.setText("ALTERNATIVES");
         altTab.setControl(gui.alternatives);
-        
-      
-        gui.nbAltsDirection = new Label(gui.alternatives, SWT.NONE);
+	}
+
+	private static void createTabItemCriteria(AltsCritsGUI gui, TabFolder tabfolder) {
+		TabItem critTab = new TabItem(tabfolder, SWT.NONE);
+        critTab.setText("CRITERIA");
+        critTab.setControl(gui.criteria);
+	}
+
+	private static void createInitialAltsFields(AltsCritsGUI gui) {
+		gui.nbAltsDirection = new Label(gui.alternatives, SWT.NONE);
         gui.nbAltsDirection.setText("How many alternatives do you need?");
-        gui.nbAltsDirection.setBounds(0, 0, 250, 20);
-        
+        gui.nbAltsDirection.setBounds(10, 10, 250, 20);
         gui.nbAlts = new Text(gui.alternatives, SWT.NONE);
-        gui.nbAlts.setBounds(0, 20, 250, 20);
-        
+        gui.nbAlts.setBounds(10, 35, 100, 26);
         gui.validateNbAlts = new Button(gui.alternatives, SWT.PUSH);
         gui.validateNbAlts.setText("Create");
-        gui.validateNbAlts.setBounds(251,20, 70, 20);
+        gui.validateNbAlts.setBounds(120, 35, 80, 26);
         gui.validateNbAlts.addSelectionListener(gui.validateListener);
-        
-        
-        
-        TabItem critTab = new TabItem(tabfolder, SWT.NONE);
-        critTab.setText("Criteria");
-        critTab.setControl(gui.criteria);
+	}
 
-        
-        gui.shell.open();
+	private static void displayLoop(AltsCritsGUI gui) {
+		gui.shell.open();
         gui.shell.layout();
         while (!gui.shell.isDisposed()) {
             if (!gui.display.readAndDispatch()) {
                 gui.display.sleep();
             }
         }
-    }
+	}
 
     protected void createAltsTextBoxes(int initialNbOfAlts) {
         
         if(alternativesIdPanel!=null) {
         	mcp = new MCProblem();
         	alternativesIdPanel.dispose();
-        	textPositionIncrementor=0;
+        	textPositionIncrementor=30;
         }
-    	alternativesIdPanel = new Composite(alternatives, SWT.BORDER);
-    	alternativesIdPanel.setBounds(0, 50, 250, 400);
+    	alternativesIdPanel = new Composite(alternatives, SWT.NONE);
+    	alternativesIdPanel.setBounds(0, 80, 400, 400);
+    	altIdInputDirection = new Label(alternativesIdPanel, SWT.NONE);
+    	altIdInputDirection.setBounds(10, 0, 300, 20);
+    	altIdInputDirection.setText("Enter your alternatives' id (integer only) :");
 	    		for(int i=0; i < initialNbOfAlts + nbOfAltsIncrementor ; i++) {
 	    			id = new Text(alternativesIdPanel, SWT.BORDER);
-	    	    	textPositionIncrementor += 50;
 	    	    	id.setData(i);
-	    	    	id.setBounds(0, textPositionIncrementor, 100, 100);
+	    	    	id.setBounds(10, textPositionIncrementor, 100, 26);
+	    	    	textPositionIncrementor += 50;
 	    	        id.addModifyListener(textListener);
 	    	        if (alternativesList.get(i) != null) {
 	    	        	id.setText(alternativesList.get(i)); 
@@ -170,7 +176,6 @@ public class AltsCritsGUI {
 	    		}
 	    		
 	        alternatives.layout();
-
     }
     
     protected void marshall() throws JAXBException, FileNotFoundException, IOException {
