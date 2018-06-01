@@ -9,6 +9,7 @@ import javax.xml.bind.JAXBException;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.*;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -77,10 +78,11 @@ public class AltsCritsGUI {
     			try {
 					Integer.parseInt(text.getText());
 					updateAlternativeList(text);
+					text.setBackground(display.getSystemColor(SWT.COLOR_GREEN));
 				}
 				catch(Exception wrongInput)
 				{
-				MessageDialog.openError(shell, "Error", "Please enter an integer");	
+					text.setBackground(display.getSystemColor(SWT.COLOR_RED));	
 				}
             }
         };
@@ -92,10 +94,11 @@ public class AltsCritsGUI {
     			try {
 					Integer.parseInt(text.getText());
 					updateCriteriaList(text);
+					text.setBackground(display.getSystemColor(SWT.COLOR_GREEN));
 				}
 				catch(Exception wrongInput)
 				{
-				MessageDialog.openError(shell, "Error", "Please enter an integer");	
+					text.setBackground(display.getSystemColor(SWT.COLOR_RED));	
 				}
             }
         };
@@ -110,7 +113,7 @@ public class AltsCritsGUI {
 						}
 						catch(Exception wrongInput)
 						{
-						MessageDialog.openError(shell, "Error", "Please enter an integer");	
+							MessageDialog.openError(shell, "Error", "Please enter an integer");	
 						}
 						
 						nbAlts.dispose();
@@ -132,7 +135,7 @@ public class AltsCritsGUI {
 						}
 						catch(Exception wrongInput)
 						{
-						MessageDialog.openError(shell, "Error", "Please enter an integer");	
+							MessageDialog.openError(shell, "Error", "Please enter an integer");	
 						}
 						
 						nbCrit.dispose();
@@ -159,6 +162,7 @@ public class AltsCritsGUI {
 
 	private static void createShell(AltsCritsGUI gui) {
 		gui.shell.setSize(500, 500);
+		gui.shell.setMinimumSize(500, 500);
         gui.shell.setText("Multi Criteria Problem Edition");
 	}
 
@@ -188,7 +192,7 @@ public class AltsCritsGUI {
 		gui.nbAltsDirection = new Label(gui.alternatives, SWT.NONE);
         gui.nbAltsDirection.setText("How many alternatives do you need?");
         gui.nbAltsDirection.setBounds(10, 10, 250, 20);
-        gui.nbAlts = new Text(gui.alternatives, SWT.NONE);
+        gui.nbAlts = new Text(gui.alternatives, SWT.BORDER);
         gui.nbAlts.setBounds(10, 35, 100, 26);
         gui.validateNbAlts = new Button(gui.alternatives, SWT.PUSH);
         gui.validateNbAlts.setText("Create");
@@ -201,7 +205,7 @@ public class AltsCritsGUI {
 		gui.nbCritDirection = new Label(gui.criteria, SWT.NONE);
 	    gui.nbCritDirection.setText("How many criteria do you need?");
 	    gui.nbCritDirection.setBounds(10, 10, 250, 20);
-	    gui.nbCrit = new Text(gui.criteria, SWT.NONE);
+	    gui.nbCrit = new Text(gui.criteria, SWT.BORDER);
 	    gui.nbCrit.setBounds(10, 35, 100, 26);
 	    gui.validateNbCrit = new Button(gui.criteria, SWT.PUSH);
 	    gui.validateNbCrit.setText("Create");
