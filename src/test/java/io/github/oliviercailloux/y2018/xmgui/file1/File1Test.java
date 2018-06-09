@@ -29,7 +29,7 @@ public class File1Test {
 	public void test() throws FileNotFoundException, JAXBException, IOException {
 		String path="MCPFile.xml";
 		Path filepath= Paths.get(path);
-		Alternative alt= new Alternative(100000);
+		Alternative alt= new Alternative(1);
 		Criterion crt =new Criterion(1);
 		Criterion crt2 = new Criterion(2);
 		Criterion crt3 = new Criterion(3);
