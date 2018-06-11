@@ -112,26 +112,23 @@ public class MCProblemMarshaller {
 	 * Method that outputs a set of alternatives, clean for WSCallRank
 	 */
 	public Element altsNodeForWSCall(MCProblem mcp, Document doc) throws JAXBException {
-		
 		// Add X2Alternative objects
+		Element XMCDANode = doc.createElement("xmcda:XMCDA");
+		Element alternativesNode = doc.createElement("alternatives");
+		XMCDANode.appendChild(alternativesNode);
+		
 		final X2Alternatives alternatives = f.createX2Alternatives();
 		UnmodifiableIterator<Alternative> itAlts = mcp.getAlternatives().iterator();
 		while (itAlts.hasNext()) {
 			Alternative a = itAlts.next();
-			alternatives.getDescriptionOrAlternative().add(BasicObjectsMarshallerToX2.basicAlternativeToX2(a));
-
+			Element alternativeNode=doc.createElement("alternative");
+			Attr altId = doc.createAttribute("alternativeid");
+			altId.setValue(Integer.toString(a.getId()));
+			alternativeNode.setAttributeNode(altId);
+			alternativesNode.appendChild(alternativeNode);
 		}
 		
-		Element XMCDANode = doc.createElement("xmcda:XMCDA");
-		Element alternativesNode = doc.createElement("alternatives");
-		Attr altId = doc.createAttribute("alternative id");
-		
 		XMCDANode.setAttribute("xmlns:xmcda", "http://www.decision-deck.org/2012/XMCDA-2.2.1"); //adds an attribute
-		XMCDANode.appendChild(alternativesNode); 
-		altId.setValue("1");
-		
-		alternativesNode.setAttributeNode(altId);
-		
 		return XMCDANode;
 		
 		

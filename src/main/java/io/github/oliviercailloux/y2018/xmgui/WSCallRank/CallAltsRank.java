@@ -40,12 +40,14 @@ import com.google.common.io.Resources;
 import io.github.oliviercailloux.y2018.xmgui.contract1.Alternative;
 import io.github.oliviercailloux.y2018.xmgui.contract1.Criterion;
 import io.github.oliviercailloux.y2018.xmgui.contract1.MCProblem;
+import io.github.oliviercailloux.y2018.xmgui.contract2.AlternativesRanking;
 import io.github.oliviercailloux.y2018.xmgui.file1.MCProblemMarshaller;
+import io.github.oliviercailloux.y2018.xmgui.file2.AlternativesRankingMarshaller;
 
 
 public class CallAltsRank {
 	
-	private MCProblem mcp;
+	
 	
 	private static final String ENDPOINT_ADDRESS = "http://webservices.decision-deck.org/soap/rankAlternativesValues-RXMCDA.py";
 
@@ -136,6 +138,15 @@ public class CallAltsRank {
 
 		final String ticket;
 		{
+			MCProblem mcp = new MCProblem();
+			Alternative alt= new Alternative(1);
+			Alternative alt1= new Alternative(2);
+			Criterion crt =new Criterion(1);
+			mcp.putEvaluation(alt, crt, 2.0f);
+			mcp.putEvaluation(alt1, crt, 22.0f);
+			MCProblemMarshaller mcpMarshaller= new MCProblemMarshaller(mcp);
+			AlternativesRanking altr = new AlternativesRanking(1,alt1);
+			AlternativesRankingMarshaller altrMarshaller= new AlternativesRankingMarshaller(altr);
 			final Document doc = builder.newDocument();
 			final Element submit = doc.createElement("submitProblem");
 			submit.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xsd", "http://www.w3.org/2001/XMLSchema");
@@ -145,10 +156,9 @@ public class CallAltsRank {
 			doc.appendChild(submit);
 			submit.appendChild(sub1); 
 			submit.appendChild(sub2);
-			// ne pas utiliser les deux lignes suivantes car on aura déjà transmis notre node
+			sub1.appendChild(altrMarshaller.altsRankingNodeForWSCall(altr, doc));
+			sub2.appendChild(mcpMarshaller.altsNodeForWSCall(mcp, doc));
 			
-			//setFileContentToNodeValue("AltFile.xml", sub2);
-			//setFileContentToNodeValue("AlternativesRankingFile.xml", sub1);
 			final Attr attrType1 = doc.createAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:type");
 			attrType1.setValue("xsd:string");
 			sub1.setAttributeNodeNS(attrType1);
