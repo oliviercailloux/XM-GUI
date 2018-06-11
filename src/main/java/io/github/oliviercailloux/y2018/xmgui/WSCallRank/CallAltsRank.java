@@ -37,8 +37,15 @@ import org.w3c.dom.Text;
 
 import com.google.common.io.Resources;
 
+import io.github.oliviercailloux.y2018.xmgui.contract1.Alternative;
+import io.github.oliviercailloux.y2018.xmgui.contract1.Criterion;
+import io.github.oliviercailloux.y2018.xmgui.contract1.MCProblem;
+import io.github.oliviercailloux.y2018.xmgui.file1.MCProblemMarshaller;
+
 
 public class CallAltsRank {
+	
+	private MCProblem mcp;
 	
 	private static final String ENDPOINT_ADDRESS = "http://webservices.decision-deck.org/soap/rankAlternativesValues-RXMCDA.py";
 
@@ -136,11 +143,12 @@ public class CallAltsRank {
 			final Element sub1 = doc.createElement("overallValues");
 			final Element sub2 = doc.createElement("alternatives");
 			doc.appendChild(submit);
-			submit.appendChild(sub1);
+			submit.appendChild(sub1); 
 			submit.appendChild(sub2);
 			// ne pas utiliser les deux lignes suivantes car on aura déjà transmis notre node
-			setFileContentToNodeValue("AlternativesRankingFile.xml", sub1);
-			setFileContentToNodeValue("AlternativesForWS.xml", sub2);
+			
+			//setFileContentToNodeValue("AltFile.xml", sub2);
+			//setFileContentToNodeValue("AlternativesRankingFile.xml", sub1);
 			final Attr attrType1 = doc.createAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:type");
 			attrType1.setValue("xsd:string");
 			sub1.setAttributeNodeNS(attrType1);

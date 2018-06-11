@@ -13,6 +13,12 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.PropertyException;
+
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableMap;
@@ -38,10 +44,17 @@ public class MCProblemMarshaller {
 	/*
 	 * The Multi-Criteria Problem to be marshalled.
 	 */
+	final JAXBContext jc;
+	final Marshaller marshaller;
 	private MCProblem mcp;
-	public MCProblemMarshaller(MCProblem mcp) {
+	
+	
+	public MCProblemMarshaller(MCProblem mcp) throws JAXBException {
 		Objects.requireNonNull(mcp);
 		this.mcp = mcp;
+		jc=JAXBContext.newInstance(XMCDA.class);
+		marshaller=jc.createMarshaller();
+;
 	}
 	
 	protected static final ObjectFactory f = new ObjectFactory();
@@ -54,8 +67,7 @@ public class MCProblemMarshaller {
 	 * @throws JAXBException
 	 */
 	public void marshalAndWrite(FileOutputStream fos) throws JAXBException {
-		final JAXBContext jc = JAXBContext.newInstance(XMCDA.class);
-		final Marshaller marshaller = jc.createMarshaller();
+		
 		
 		// Add X2Alternative objects
 		final X2Alternatives alternatives = f.createX2Alternatives();
@@ -86,7 +98,6 @@ public class MCProblemMarshaller {
 		}
 
 		// Output the corresponding XMCDA file
-		//Proposer aussi de créer un fichier "alternatives" manuellement
 		final XMCDA xmcda = f.createXMCDA();
 		final List<JAXBElement<?>> xmcdaSubElements = xmcda.getProjectReferenceOrMethodMessagesOrMethodParameters();
 		xmcdaSubElements.add(f.createXMCDAAlternatives(alternatives));
@@ -96,4 +107,34 @@ public class MCProblemMarshaller {
 		// Proposer aussi le marshalling vers un NODE plutot qu'un output stream
 		marshaller.marshal(xmcda, fos);
 	}
+	
+	/*
+	 * Method that outputs a set of alternatives, clean for WSCallRank
+	 */
+	public Element altsNodeForWSCall(MCProblem mcp, Document doc) throws JAXBException {
+		
+		// Add X2Alternative objects
+		final X2Alternatives alternatives = f.createX2Alternatives();
+		UnmodifiableIterator<Alternative> itAlts = mcp.getAlternatives().iterator();
+		while (itAlts.hasNext()) {
+			Alternative a = itAlts.next();
+			alternatives.getDescriptionOrAlternative().add(BasicObjectsMarshallerToX2.basicAlternativeToX2(a));
+
+		}
+		
+		Element XMCDANode = doc.createElement("xmcda:XMCDA");
+		Element alternativesNode = doc.createElement("alternatives");
+		Attr altId = doc.createAttribute("alternative id");
+		
+		XMCDANode.setAttribute("xmlns:xmcda", "http://www.decision-deck.org/2012/XMCDA-2.2.1"); //adds an attribute
+		XMCDANode.appendChild(alternativesNode); 
+		altId.setValue("1");
+		
+		alternativesNode.setAttributeNode(altId);
+		
+		return XMCDANode;
+		
+		
+	}
+	
 }
