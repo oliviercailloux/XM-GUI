@@ -146,6 +146,10 @@ public class CallAltsRank {
 			mcp.putEvaluation(alt1, crt, 22.0f);
 			MCProblemMarshaller mcpMarshaller= new MCProblemMarshaller(mcp);
 			AlternativesRanking altr = new AlternativesRanking(1,alt1);
+			Alternative alt2= new Alternative(2);
+			Alternative alt3= new Alternative(3);
+			altr.putAltRank(1,alt2);
+			altr.putAltRank(2,alt3);
 			AlternativesRankingMarshaller altrMarshaller= new AlternativesRankingMarshaller(altr);
 			final Document doc = builder.newDocument();
 			final Element submit = doc.createElement("submitProblem");

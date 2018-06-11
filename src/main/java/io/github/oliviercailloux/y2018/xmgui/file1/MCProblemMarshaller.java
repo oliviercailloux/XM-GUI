@@ -122,7 +122,7 @@ public class MCProblemMarshaller {
 		while (itAlts.hasNext()) {
 			Alternative a = itAlts.next();
 			Element alternativeNode=doc.createElement("alternative");
-			Attr altId = doc.createAttribute("alternativeid");
+			Attr altId = doc.createAttribute("id");
 			altId.setValue(Integer.toString(a.getId()));
 			alternativeNode.setAttributeNode(altId);
 			alternativesNode.appendChild(alternativeNode);

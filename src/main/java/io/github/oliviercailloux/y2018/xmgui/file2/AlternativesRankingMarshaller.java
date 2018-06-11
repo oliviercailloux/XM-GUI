@@ -12,6 +12,7 @@ import io.github.oliviercailloux.y2018.xmgui.contract2.AlternativesRanking;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -81,10 +82,10 @@ public class AlternativesRankingMarshaller {
 		Element alternativesValuesNode = doc.createElement("alternativesValues");
 		Attr overValues = doc.createAttribute("mcdaConcept");
 		overValues.setValue("overallValues");
+		alternativesValuesNode.setAttributeNode(overValues);
 		
-		XMCDANode.appendChild(alternativesValuesNode);
 		
-		ImmutableSetMultimap<Integer, Alternative> map = altr.getAltSet();
+		ImmutableSetMultimap<Integer, Alternative> map = AltR.getAltSet();
 		for (int Rank : map.keySet()) {
 			ImmutableSet<Alternative> allAlt = map.get(Rank);
 			for (Alternative Alt : allAlt){
@@ -93,21 +94,29 @@ public class AlternativesRankingMarshaller {
 				X2AltV.getValueOrValues().add(putX2Value(Rank));
 				Element alternativeNode=doc.createElement("alternativeValue");
 				Element altIdNode=doc.createElement("alternativeID");
-				altIdNode.setNodeValue(X2AltV.getAlternativeID());
+				
+				altIdNode.appendChild(doc.createTextNode(X2AltV.getAlternativeID()));
+				
 				Element valueNode=doc.createElement("value");
 				Element realNode=doc.createElement("real");
 				
+				
+				
+				realNode.appendChild(doc.createTextNode(Integer.toString(Rank)));
+				
+				
+					
 				//realNode.setNodeValue(X2AltV.getValueOrValues().get(Rank));
 				
 				valueNode.appendChild(realNode);
-				altIdNode.appendChild(valueNode);
 				alternativeNode.appendChild(altIdNode);
-				
+				alternativeNode.appendChild(valueNode);
+				alternativesValuesNode.appendChild(alternativeNode);
 				
 				
 			}
 		}
-		
+		XMCDANode.appendChild(alternativesValuesNode);
 		XMCDANode.setAttribute("xmlns:xmcda", "http://www.decision-deck.org/2012/XMCDA-2.2.1"); //adds an attribute
 		return XMCDANode;
 		
