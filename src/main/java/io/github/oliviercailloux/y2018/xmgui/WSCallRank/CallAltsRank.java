@@ -44,29 +44,25 @@ import io.github.oliviercailloux.y2018.xmgui.contract2.AlternativesRanking;
 import io.github.oliviercailloux.y2018.xmgui.file1.MCProblemMarshaller;
 import io.github.oliviercailloux.y2018.xmgui.file2.AlternativesRankingMarshaller;
 
-
+/*
+ * This class performs basic web services calls from decision-deck to
+ * first test the web services availabilty and then rank Alternatives according to their values.
+ */
 public class CallAltsRank {
 	
-	
-	
 	private static final String ENDPOINT_ADDRESS = "http://webservices.decision-deck.org/soap/rankAlternativesValues-RXMCDA.py";
-
 	@SuppressWarnings("unused")
 	private static final String FAILURE = "The problem submission was unsuccessful";
-
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(CallAltsRank.class);
-
 	private static final String SUCCESS = "The problem submission was successful!";
-
 	private Transformer transformer;
 
 	public CallAltsRank() {
 		transformer = null;
 	}
 
-	public String asString(Node node)
-			throws TransformerException, TransformerFactoryConfigurationError, TransformerConfigurationException {
+	public String asString(Node node) throws TransformerException, TransformerFactoryConfigurationError, TransformerConfigurationException {
 		final StringWriter asString = new StringWriter();
 		getTransformer().transform(new DOMSource(node), new StreamResult(asString));
 		return asString.toString();
@@ -82,8 +78,7 @@ public class CallAltsRank {
 		return transformer;
 	}
 
-	public Node invoke(Dispatch<Source> dispatch, Source src)
-			throws TransformerException, TransformerFactoryConfigurationError, TransformerConfigurationException {
+	public Node invoke(Dispatch<Source> dispatch, Source src) throws TransformerException, TransformerFactoryConfigurationError, TransformerConfigurationException {
 		final Source ret = dispatch.invoke(src);
 		final DOMResult result = new DOMResult();
 		getTransformer().transform(ret, result);
@@ -98,6 +93,9 @@ public class CallAltsRank {
 		destNode.appendChild(textNode);
 	}
 
+	/*
+	 * This method tests the availability of the decision-deck's web services.
+	 */
 	@Test
 	public void testHello() throws Exception {
 		final Service svc = Service.create(new QName("ServiceNamespace", "ServiceLocalPart"));
@@ -124,19 +122,22 @@ public class CallAltsRank {
 		final Node firstSubChild = subChildren.item(0);
 		assertEquals("message", firstSubChild.getNodeName());
 	}
-
+	
+	/*
+	 * This method tests a simple request submission to the decision-deck's webservices
+	 * in order to rank alternatives according to their values.
+	 */
 	@Test
 	public void testSubmitAndRequest() throws Exception {
 		final Service svc = Service.create(new QName("ServiceNamespace", "ServiceLocalPart"));
 		final QName portQName = new QName("PortNamespace", "PortLocalPart");
 		svc.addPort(portQName, SOAPBinding.SOAP11HTTP_BINDING, ENDPOINT_ADDRESS);
 		final Dispatch<Source> dispatch = svc.createDispatch(portQName, Source.class, Mode.PAYLOAD);
-
 		final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);
 		final DocumentBuilder builder = factory.newDocumentBuilder();
-
 		final String ticket;
+		
 		{
 			MCProblem mcp = new MCProblem();
 			Alternative alt= new Alternative(1);
@@ -150,11 +151,11 @@ public class CallAltsRank {
 			Alternative alt3= new Alternative(3);
 			altr.putAltRank(1,alt2);
 			altr.putAltRank(2,alt3);
-			AlternativesRankingMarshaller altrMarshaller= new AlternativesRankingMarshaller(altr);
+			AlternativesRankingMarshaller altrMarshaller = new AlternativesRankingMarshaller(altr);
+			
 			final Document doc = builder.newDocument();
 			final Element submit = doc.createElement("submitProblem");
 			submit.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xsd", "http://www.w3.org/2001/XMLSchema");
-			// ICI : on transmet nos NODES
 			final Element sub1 = doc.createElement("overallValues");
 			final Element sub2 = doc.createElement("alternatives");
 			doc.appendChild(submit);
@@ -162,12 +163,12 @@ public class CallAltsRank {
 			submit.appendChild(sub2);
 			sub1.appendChild(altrMarshaller.altsRankingNodeForWSCall(altr, doc));
 			sub2.appendChild(mcpMarshaller.altsNodeForWSCall(mcp, doc));
-			
 			final Attr attrType1 = doc.createAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:type");
 			attrType1.setValue("xsd:string");
 			sub1.setAttributeNodeNS(attrType1);
 			final Attr attrType2 = (Attr) attrType1.cloneNode(true);
 			sub2.setAttributeNodeNS(attrType2);
+			
 			LOGGER.info("Sending: {}.", asString(doc));
 
 			final Node ret = invoke(dispatch, new DOMSource(doc));
@@ -189,22 +190,22 @@ public class CallAltsRank {
 			final Node secondSubChild = subChildren.item(1);
 			assertEquals("ticket", secondSubChild.getNodeName());
 			ticket = secondSubChild.getFirstChild().getTextContent();
+			
 			LOGGER.info("Ticket: {}.", ticket);
 		}
 
 		final Document requestSolutionDoc = builder.newDocument();
 		final Element requestSolution = requestSolutionDoc.createElement("requestSolution");
-		requestSolution.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xsd",
-				"http://www.w3.org/2001/XMLSchema");
+		requestSolution.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xsd","http://www.w3.org/2001/XMLSchema");
 		final Element ticketEl = requestSolutionDoc.createElement("ticket");
 		requestSolutionDoc.appendChild(requestSolution);
 		requestSolution.appendChild(ticketEl);
 		final Text ticketTextNode = requestSolutionDoc.createTextNode(ticket);
 		ticketEl.appendChild(ticketTextNode);
-		final Attr attrType1 = requestSolutionDoc.createAttributeNS("http://www.w3.org/2001/XMLSchema-instance",
-				"xsi:type");
+		final Attr attrType1 = requestSolutionDoc.createAttributeNS("http://www.w3.org/2001/XMLSchema-instance","xsi:type");
 		attrType1.setValue("xsd:string");
 		ticketEl.setAttributeNodeNS(attrType1);
+		
 		LOGGER.info("Sending: {}.", asString(requestSolutionDoc));
 
 		final Node solution = invoke(dispatch, new DOMSource(requestSolutionDoc));

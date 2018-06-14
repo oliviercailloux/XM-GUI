@@ -54,7 +54,6 @@ public class MCProblemMarshaller {
 		this.mcp = mcp;
 		jc=JAXBContext.newInstance(XMCDA.class);
 		marshaller=jc.createMarshaller();
-;
 	}
 	
 	protected static final ObjectFactory f = new ObjectFactory();
@@ -68,14 +67,12 @@ public class MCProblemMarshaller {
 	 */
 	public void marshalAndWrite(FileOutputStream fos) throws JAXBException {
 		
-		
 		// Add X2Alternative objects
 		final X2Alternatives alternatives = f.createX2Alternatives();
 		UnmodifiableIterator<Alternative> itAlts = mcp.getAlternatives().iterator();
 		while (itAlts.hasNext()) {
 			Alternative a = itAlts.next();
 			alternatives.getDescriptionOrAlternative().add(BasicObjectsMarshallerToX2.basicAlternativeToX2(a));
-
 		}
 		
 		// Add X2Criterion objects
@@ -104,34 +101,34 @@ public class MCProblemMarshaller {
 		xmcdaSubElements.add(f.createXMCDACriteria(criteria));
 		xmcdaSubElements.add(f.createXMCDAPerformanceTable(perfTable));
 		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-		// Proposer aussi le marshalling vers un NODE plutot qu'un output stream
 		marshaller.marshal(xmcda, fos);
 	}
 	
 	/*
-	 * Method that outputs a set of alternatives, clean for WSCallRank
+	 * This method outputs a set of alternatives in a Node format 
+	 * to be used in Diviz's web services call through the CallAltsRank class.
+	 * 
+	 * @param mcp the MCProblem from which the alternatives set is extracted
+	 * @param doc the document used in the CallAltsRank class
+	 * @return the XMCDA node to be used in the CallAltsRank class
 	 */
-	public Element altsNodeForWSCall(MCProblem mcp, Document doc) throws JAXBException {
-		// Add X2Alternative objects
+	public Element altsNodeForWSCall(MCProblem mcpNode, Document doc) {
 		Element XMCDANode = doc.createElement("xmcda:XMCDA");
 		Element alternativesNode = doc.createElement("alternatives");
 		XMCDANode.appendChild(alternativesNode);
 		
-		final X2Alternatives alternatives = f.createX2Alternatives();
-		UnmodifiableIterator<Alternative> itAlts = mcp.getAlternatives().iterator();
+		UnmodifiableIterator<Alternative> itAlts = mcpNode.getAlternatives().iterator();
 		while (itAlts.hasNext()) {
 			Alternative a = itAlts.next();
-			Element alternativeNode=doc.createElement("alternative");
+			Element alternativeNode = doc.createElement("alternative");
 			Attr altId = doc.createAttribute("id");
 			altId.setValue(Integer.toString(a.getId()));
 			alternativeNode.setAttributeNode(altId);
 			alternativesNode.appendChild(alternativeNode);
 		}
 		
-		XMCDANode.setAttribute("xmlns:xmcda", "http://www.decision-deck.org/2012/XMCDA-2.2.1"); //adds an attribute
+		XMCDANode.setAttribute("xmlns:xmcda", "http://www.decision-deck.org/2012/XMCDA-2.2.1"); 
 		return XMCDANode;
-		
-		
 	}
 	
 }

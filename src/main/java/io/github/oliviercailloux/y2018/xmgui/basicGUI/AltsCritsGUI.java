@@ -26,6 +26,9 @@ import io.github.oliviercailloux.y2018.xmgui.file1.MCProblemMarshaller;
 
 import org.eclipse.swt.layout.*;
 
+/*
+ * This class is a basic graphical user interface for Alternatives and Criteria creation and edition (id).
+ */
 public class AltsCritsGUI {
 
 	private final Logger logger = LoggerFactory.getLogger(AltsCritsGUI.class);
@@ -34,12 +37,13 @@ public class AltsCritsGUI {
     private final Shell shell = new Shell(display);
     
 	private MCProblem mcp;
-	private Alternative alt1;
 	private MCProblemMarshaller marshaller;
+	
+	// List used to keep an up-to-date collection of the created and/or edited alternatives
 	private ArrayList<String> alternativesList = new ArrayList<>();
+	// List used to keep an up-to-date collection of the created and/or edited alternatives
 	private ArrayList<String> criteriaList = new ArrayList<>();
 
-	
 	private Composite alternatives;
 	private Composite criteria;
     private Composite alternativesIdPanel;
@@ -68,9 +72,12 @@ public class AltsCritsGUI {
     private int critTextPositionIncrementor = 30;
     
     
-    
+    /*
+     * This method contains the various listeners used in this GUI to create Alternatives, Criteria, and validate their entered id value.
+     */
     public AltsCritsGUI() {
-    	    	
+    	
+    	// Listener used to get the value of the desired id entered by the user to create criteria   	    	
     	altTextListener = new ModifyListener() {
     		@Override
             public void modifyText(ModifyEvent e) {
@@ -86,7 +93,8 @@ public class AltsCritsGUI {
 				}
             }
         };
-    	
+        
+    		// Listener used to get the value of the desired id entered by the user to create criteria
         critTextListener = new ModifyListener() {
     		@Override
             public void modifyText(ModifyEvent e) {
@@ -103,6 +111,7 @@ public class AltsCritsGUI {
             }
         };
         	
+        // Listener used to validate the desired id entered by the user to create alternatives or criteria
         validateListener = new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -153,13 +162,10 @@ public class AltsCritsGUI {
 			
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub
 				}
             };
 	}
     
-
-
 	private static void createShell(AltsCritsGUI gui) {
 		gui.shell.setSize(500, 500);
 		gui.shell.setMinimumSize(500, 500);
@@ -187,7 +193,10 @@ public class AltsCritsGUI {
         critTab.setText("CRITERIA");
         critTab.setControl(gui.criteria);
 	}
-
+	
+	/*
+	 * This method creates the field to ask the user how many alternatives he initially wants to create, and listens to it.
+	 */
 	private static void createInitialAltsFields(AltsCritsGUI gui) {
 		gui.nbAltsDirection = new Label(gui.alternatives, SWT.NONE);
         gui.nbAltsDirection.setText("How many alternatives do you need?");
@@ -198,9 +207,11 @@ public class AltsCritsGUI {
         gui.validateNbAlts.setText("Create");
         gui.validateNbAlts.setBounds(120, 35, 80, 26);
         gui.validateNbAlts.addSelectionListener(gui.validateListener);
-		
 	}
 	
+	/*
+	 * This method creates the field to ask the user how many criteria he initially wants to create, and listens to it.
+	 */
 	private static void createInitialCritsFields(AltsCritsGUI gui) {
 		gui.nbCritDirection = new Label(gui.criteria, SWT.NONE);
 	    gui.nbCritDirection.setText("How many criteria do you need?");
@@ -222,68 +233,81 @@ public class AltsCritsGUI {
             }
         }
 	}
-
-    protected void createAltsTextBoxes(int initialNbOfAlts) {
-        
-        if(alternativesIdPanel!=null) {
-        	mcp = new MCProblem();
-        	alternativesIdPanel.dispose();
-        	altTextPositionIncrementor=30;
+	
+    /*
+     * This method creates text areas to enter the id of the alternatives that are to be created and marshalled.
+     * 
+     * @param initialNbOfCrits the initial number of alteratives to be created as entered by the user
+     */
+    protected void createAltsTextBoxes(int initialNbOfAlt) {
+        if (alternativesIdPanel!=null) {
+        		mcp = new MCProblem();
+        		alternativesIdPanel.dispose();
+        		altTextPositionIncrementor=30;
         }
-    	alternativesIdPanel = new Composite(alternatives, SWT.NONE);
-    	alternativesIdPanel.setBounds(0, 80, 400, 400);
-    	altIdInputDirection = new Label(alternativesIdPanel, SWT.NONE);
-    	altIdInputDirection.setBounds(10, 0, 300, 20);
-    	altIdInputDirection.setText("Enter your alternatives' id (integer only) :");
-	    		for(int i=0; i < initialNbOfAlts + nbOfAltsIncrementor ; i++) {
+        
+        alternativesIdPanel = new Composite(alternatives, SWT.NONE);
+        alternativesIdPanel.setBounds(0, 80, 400, 400);
+        altIdInputDirection = new Label(alternativesIdPanel, SWT.NONE);
+        altIdInputDirection.setBounds(10, 0, 300, 20);
+        altIdInputDirection.setText("Enter your alternatives' id (integer only) :");
+        
+	    		for (int i=0; i < initialNbOfAlt + nbOfAltsIncrementor ; i++) {
 	    			id = new Text(alternativesIdPanel, SWT.BORDER);
-	    	    	id.setData(i);
-	    	    	id.setBounds(10, altTextPositionIncrementor, 100, 26);
-	    	    	altTextPositionIncrementor += 50;
+	    			id.setData(i);
+	    			id.setBounds(10, altTextPositionIncrementor, 100, 26);
+	    			altTextPositionIncrementor += 50;
 	    	        id.addModifyListener(altTextListener);
 	    	        if (alternativesList.get(i) != null) {
-	    	        	id.setText(alternativesList.get(i)); 
+	    	        		id.setText(alternativesList.get(i)); 
 	    	        }
 	    		}
-	    		
-	        alternatives.layout();
+	   alternatives.layout();
     }
     
-    protected void createCritTextBoxes(int initialNbOfCrit) {
-        
-        if(criteriaIdPanel!=null) {
-        	mcp = new MCProblem();
-        	criteriaIdPanel.dispose();
-        	critTextPositionIncrementor=30;
+    /*
+     * This method creates text areas to enter the id of the criteria that are to be created and marshalled.
+     * 
+     * @param initialNbOfCrits the initial number of criteria to be created as entered by the user
+     */
+    protected void createCritTextBoxes(int initialNbOfCrits) {
+        if (criteriaIdPanel!=null) {
+        		mcp = new MCProblem();
+        		criteriaIdPanel.dispose();
+        		critTextPositionIncrementor=30;
         }
-    	criteriaIdPanel = new Composite(criteria, SWT.NONE);
-    	criteriaIdPanel.setBounds(0, 80, 400, 400);
-    	critIdInputDirection = new Label(criteriaIdPanel, SWT.NONE);
-    	critIdInputDirection.setBounds(10, 0, 300, 20);
-    	critIdInputDirection.setText("Enter your criteria' id (integer only) :");
-	    		for(int i=0; i < initialNbOfCrit + nbOfCritIncrementor ; i++) {
+        
+        criteriaIdPanel = new Composite(criteria, SWT.NONE);
+        criteriaIdPanel.setBounds(0, 80, 400, 400);
+    		critIdInputDirection = new Label(criteriaIdPanel, SWT.NONE);
+    		critIdInputDirection.setBounds(10, 0, 300, 20);
+    		critIdInputDirection.setText("Enter your criteria' id (integer only) :");
+	    	
+    		for (int i=0; i < initialNbOfCrits + nbOfCritIncrementor ; i++) {
 	    			id = new Text(criteriaIdPanel, SWT.BORDER);
-	    	    	id.setData(i);
-	    	    	id.setBounds(10, critTextPositionIncrementor, 100, 26);
-	    	    	critTextPositionIncrementor += 50;
+	    			id.setData(i);
+	    	    		id.setBounds(10, critTextPositionIncrementor, 100, 26);
+	    	    		critTextPositionIncrementor += 50;
 	    	        id.addModifyListener(critTextListener);
 	    	        if (criteriaList.get(i) != null) {
-	    	        	id.setText(criteriaList.get(i)); 
+	    	        		id.setText(criteriaList.get(i)); 
 	    	        }
 	    		}
-	        criteria.layout();
+    		criteria.layout();
     }
-    
+    /*
+     * This method marshalls Alternatives and Criteria based on their stored and updated lists.
+     */
     protected void marshall() throws JAXBException, FileNotFoundException, IOException {
-    	mcp = new MCProblem();
-    	marshaller = new MCProblemMarshaller(mcp);
-    	for (int i =0; i < alternativesList.size(); i++) {
+    		mcp = new MCProblem();
+    		marshaller = new MCProblemMarshaller(mcp);
+    		for (int i =0; i < alternativesList.size(); i++) {
 			if (alternativesList.get(i) != null) {
 				mcp.addAlt(new Alternative(Integer.parseInt(alternativesList.get(i))));
 				logger.info("Alternatives in the MCP: {}." + mcp.getAlternatives());
 			}
 		}
-    	for (int i =0; i < criteriaList.size(); i++) {
+    		for (int i =0; i < criteriaList.size(); i++) {
 			if (criteriaList.get(i) != null) {
 				mcp.addCrit(new Criterion(Integer.parseInt(criteriaList.get(i))));
 				logger.info("Criteria in the MCP: {}." + mcp.getCriteria());
@@ -295,25 +319,24 @@ public class AltsCritsGUI {
     }
     
     protected void updateAlternativeList(Text altId) throws FileNotFoundException, JAXBException, IOException {
-    	alternativesList.set(Integer.parseInt(altId.getData().toString()), altId.getText());
-    	marshall();
+    		alternativesList.set(Integer.parseInt(altId.getData().toString()), altId.getText());
+    		marshall();
     }
     
     protected void updateCriteriaList(Text critId) throws FileNotFoundException, JAXBException, IOException {
-    	criteriaList.set(Integer.parseInt(critId.getData().toString()), critId.getText());
-    	marshall();
+    		criteriaList.set(Integer.parseInt(critId.getData().toString()), critId.getText());
+    		marshall();
     }
     
 	public static void main(String[] args) {
-    	
     	AltsCritsGUI gui = new AltsCritsGUI();
     	createShell(gui);
-        TabFolder tabfolder = createTabFolder(gui);
-        createTabItemAlternatives(gui, tabfolder);
-        createTabItemCriteria(gui, tabfolder);
-        createInitialAltsFields(gui);
-        createInitialCritsFields(gui);
-        displayLoop(gui);
+    	TabFolder tabfolder = createTabFolder(gui);
+    createTabItemAlternatives(gui, tabfolder);
+    createTabItemCriteria(gui, tabfolder);
+    createInitialAltsFields(gui);
+    createInitialCritsFields(gui);
+    displayLoop(gui);
     }
 }
 

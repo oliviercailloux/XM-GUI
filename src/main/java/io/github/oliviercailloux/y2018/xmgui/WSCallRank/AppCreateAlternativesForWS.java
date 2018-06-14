@@ -19,18 +19,15 @@ import io.github.oliviercailloux.y2018.xmgui.contract2.AlternativesRanking;
 import io.github.oliviercailloux.y2018.xmgui.file1.MCProblemMarshaller;
 import io.github.oliviercailloux.y2018.xmgui.file2.AlternativesRankingMarshaller;
 
-
-
-
 /*
- * This class test the File1 functionality: marshalling and unmarshalling of an MCProblem.
+ * This class is used to create clean Alternatives and their ranking 
+ * in order to be used by the AltsCallRank class.
  */
 public class AppCreateAlternativesForWS {
 	
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(AppCreateAlternativesForWS.class);
-	
-	
+
 	public static void main(String[] args) throws FileNotFoundException, JAXBException, IOException {
 		
 		String pathAlts="AlternativesForWS.xml";
@@ -47,13 +44,9 @@ public class AppCreateAlternativesForWS {
 		mcp.addAlt(alt2);
 		mcp.addAlt(alt3);
 		AlternativesRanking AltR1 = new AlternativesRanking(1,alt2);
-		
 		AltR1.putAltRank(2,alt1);
 		AltR1.putAltRank(3,alt3);
-		
 	
-		LOGGER.info("MCP instance created");
-		
 		MCProblemMarshaller mcpMarshaller = new MCProblemMarshaller(mcp);
 		try (final FileOutputStream fos = new FileOutputStream(pathAlts)) {
 			mcpMarshaller.marshalAndWrite(fos);

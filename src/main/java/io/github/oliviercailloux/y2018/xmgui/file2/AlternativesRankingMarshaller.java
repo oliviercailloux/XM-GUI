@@ -33,8 +33,8 @@ public class AlternativesRankingMarshaller {
 	
 	private AlternativesRanking AltR;
 	final ObjectFactory f = new ObjectFactory();
-	// Proposer aussi de créer un fichier "overallvalues" manuellement
 	final XMCDA xmcda = f.createXMCDA();
+	
 	public AlternativesRankingMarshaller(AlternativesRanking AltR) {
 		Objects.requireNonNull(AltR);
 		this.AltR = AltR;
@@ -47,18 +47,17 @@ public class AlternativesRankingMarshaller {
 	}
 
 	/**
+	 * This method marshalls AlternativesRanking objects to output an XML file abiding by the XMCDA standard.
+	 * 
 	 * @throws JAXBException
 	 * @throws FileNotFoundException
 	 * @throws IOException
-	 * ecrit dans un fichier XML le ranking des alternatives
 	 */
-	public void writeAlternativeValueFromAlternativesRanking(FileOutputStream fos) throws JAXBException, FileNotFoundException, IOException {
-		
+	public void writeAlternativeValueFromAlternativesRanking(FileOutputStream fos) throws JAXBException {
+	
 		final JAXBContext jc = JAXBContext.newInstance(XMCDA.class);
 		final Marshaller marshaller = jc.createMarshaller();
-		
 		final List<JAXBElement<?>> xmcdaSubElements = xmcda.getProjectReferenceOrMethodMessagesOrMethodParameters();
-		
 		ImmutableSetMultimap<Integer, Alternative> map = AltR.getAltSet();
 
 		for (int Rank : map.keySet()) {
@@ -72,20 +71,26 @@ public class AlternativesRankingMarshaller {
 		}
 		
 		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-		// Proposer aussi le marshalling vers un NODE plutot qu'un output stream
 		marshaller.marshal(xmcda, fos);
-
 	}
-	public Element altsRankingNodeForWSCall(AlternativesRanking altr, Document doc) throws JAXBException {
+	
+	/*
+	 * This method outputs AlternativesRanking's values in a Node format 
+	 * to be used in Diviz's web services call through the CallAltsRank class.
+	 * 
+	 * @param altr the AlternativesRanking from which the alternatives and values are extracted
+	 * @param doc the document used in the CallAltsRank class
+	 * @return the XMCDA node to be used in the CallAltsRank class
+	 */
+	public Element altsRankingNodeForWSCall(AlternativesRanking altr, Document doc) {
 		
 		Element XMCDANode = doc.createElement("xmcda:XMCDA");
 		Element alternativesValuesNode = doc.createElement("alternativesValues");
 		Attr overValues = doc.createAttribute("mcdaConcept");
 		overValues.setValue("overallValues");
 		alternativesValuesNode.setAttributeNode(overValues);
+		ImmutableSetMultimap<Integer, Alternative> map = AltR.getAltSet(); // AltR shouldn't be called from the class but passed as a parameter.
 		
-		
-		ImmutableSetMultimap<Integer, Alternative> map = AltR.getAltSet();
 		for (int Rank : map.keySet()) {
 			ImmutableSet<Alternative> allAlt = map.get(Rank);
 			for (Alternative Alt : allAlt){
@@ -94,32 +99,19 @@ public class AlternativesRankingMarshaller {
 				X2AltV.getValueOrValues().add(putX2Value(Rank));
 				Element alternativeNode=doc.createElement("alternativeValue");
 				Element altIdNode=doc.createElement("alternativeID");
-				
 				altIdNode.appendChild(doc.createTextNode(X2AltV.getAlternativeID()));
-				
 				Element valueNode=doc.createElement("value");
 				Element realNode=doc.createElement("real");
-				
-				
-				
 				realNode.appendChild(doc.createTextNode(Integer.toString(Rank)));
-				
-				
-					
-				//realNode.setNodeValue(X2AltV.getValueOrValues().get(Rank));
-				
 				valueNode.appendChild(realNode);
 				alternativeNode.appendChild(altIdNode);
 				alternativeNode.appendChild(valueNode);
 				alternativesValuesNode.appendChild(alternativeNode);
-				
-				
 			}
 		}
+		
 		XMCDANode.appendChild(alternativesValuesNode);
-		XMCDANode.setAttribute("xmlns:xmcda", "http://www.decision-deck.org/2012/XMCDA-2.2.1"); //adds an attribute
+		XMCDANode.setAttribute("xmlns:xmcda", "http://www.decision-deck.org/2012/XMCDA-2.2.1");
 		return XMCDANode;
-		
-		
 	}
 }
