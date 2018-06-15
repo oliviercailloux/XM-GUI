@@ -82,7 +82,7 @@ public class AlternativesRankingMarshaller {
 	 * @param doc the document used in the CallAltsRank class
 	 * @return the XMCDA node to be used in the CallAltsRank class
 	 */
-	public Element altsRankingNodeForWSCall(AlternativesRanking altr, Document doc) {
+	public Element altsRankingNodeForWSCall(AlternativesRankingMarshaller altr, Document doc) {
 		
 		Element XMCDANode = doc.createElement("xmcda:XMCDA");
 		Element alternativesValuesNode = doc.createElement("alternativesValues");

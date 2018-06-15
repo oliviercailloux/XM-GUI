@@ -29,6 +29,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
+import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -139,30 +140,32 @@ public class CallAltsRank {
 		final String ticket;
 		
 		{
+			// For the time being we create a raw MCP here, but in the future, the GUI will create and pass thi data.
 			MCProblem mcp = new MCProblem();
-			Alternative alt= new Alternative(1);
-			Alternative alt1= new Alternative(2);
-			Criterion crt =new Criterion(1);
-			mcp.putEvaluation(alt, crt, 2.0f);
-			mcp.putEvaluation(alt1, crt, 22.0f);
+			Alternative alt0= new Alternative(0);
+			Alternative alt1= new Alternative(1);
+			Criterion crt =new Criterion(0);
+			mcp.putEvaluation(alt0, crt, 0.0f);
+			mcp.putEvaluation(alt1, crt, 1.0f);
 			MCProblemMarshaller mcpMarshaller= new MCProblemMarshaller(mcp);
-			AlternativesRanking altr = new AlternativesRanking(1,alt1);
-			Alternative alt2= new Alternative(2);
-			Alternative alt3= new Alternative(3);
-			altr.putAltRank(1,alt2);
-			altr.putAltRank(2,alt3);
+			AlternativesRanking altr = new AlternativesRanking(1,alt0);
+			altr.putAltRank(2,alt1);
 			AlternativesRankingMarshaller altrMarshaller = new AlternativesRankingMarshaller(altr);
 			
 			final Document doc = builder.newDocument();
 			final Element submit = doc.createElement("submitProblem");
 			submit.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xsd", "http://www.w3.org/2001/XMLSchema");
+			
 			final Element sub1 = doc.createElement("overallValues");
-			final Element sub2 = doc.createElement("alternatives");
+			CDATASection cdataOverVal = doc.createCDATASection(asString(altrMarshaller.altsRankingNodeForWSCall(altrMarshaller, doc)));
+			sub1.appendChild(cdataOverVal);
 			doc.appendChild(submit);
 			submit.appendChild(sub1); 
+			
+			final Element sub2 = doc.createElement("alternatives");
 			submit.appendChild(sub2);
-			sub1.appendChild(altrMarshaller.altsRankingNodeForWSCall(altr, doc));
-			sub2.appendChild(mcpMarshaller.altsNodeForWSCall(mcp, doc));
+			CDATASection cdataAlt = doc.createCDATASection(asString(mcpMarshaller.altsNodeForWSCall(mcp, doc)));
+			sub2.appendChild(cdataAlt);
 			final Attr attrType1 = doc.createAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:type");
 			attrType1.setValue("xsd:string");
 			sub1.setAttributeNodeNS(attrType1);
