@@ -148,7 +148,7 @@ public class CallAltsRank {
 			mcp.putEvaluation(alt0, crt, 0.0f);
 			mcp.putEvaluation(alt1, crt, 1.0f);
 			MCProblemMarshaller mcpMarshaller= new MCProblemMarshaller(mcp);
-			AlternativesRanking altr = new AlternativesRanking(1,alt0);
+			AlternativesRanking altr = new AlternativesRanking(1000,alt0);
 			altr.putAltRank(2,alt1);
 			AlternativesRankingMarshaller altrMarshaller = new AlternativesRankingMarshaller(altr);
 			
