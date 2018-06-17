@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:XMCDA xmlns:ns2="http://www.decision-deck.org/2012/XMCDA-2.2.1">
+    <alternatives>
+        <alternative id="1"/>
+        <alternative id="2"/>
+        <alternative id="3"/>
+    </alternatives>
+    <criteria/>
+    <performanceTable>
+        <alternativePerformances/>
+        <alternativePerformances/>
+        <alternativePerformances/>
+    </performanceTable>
+</ns2:XMCDA>
