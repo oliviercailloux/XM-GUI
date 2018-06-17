@@ -103,6 +103,9 @@ public class AlternativesRanking {
 		return s;
 	}
 	
+	/*
+	 * Commented equals() overload on 17/06/2018 because unused.
+	 * 
 	@Override
 	public boolean equals(Object obj) {
 	    if (obj == null) return false;
@@ -113,5 +116,6 @@ public class AlternativesRanking {
 
         return altR.map.equals(map);
 	}
+	*/
 
 }
