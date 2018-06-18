@@ -55,7 +55,7 @@ public class AppCreateAlternativesForWS {
 
 		AlternativesRankingMarshaller AltRMarshaller = new AlternativesRankingMarshaller(AltR1);
 		try (final FileOutputStream fos = new FileOutputStream(pathAltsRank)) {
-			AltRMarshaller.writeAlternativeValueFromAlternativesRanking(fos);
+			AltRMarshaller.writeAlternativeValue(fos);
 			LOGGER.debug("Marshalling invoked");
 		}
 	
