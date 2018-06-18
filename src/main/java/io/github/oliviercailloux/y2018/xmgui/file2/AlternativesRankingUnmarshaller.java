@@ -53,7 +53,7 @@ public class AlternativesRankingUnmarshaller{
 					
 	} 
 		
-		/*
+		/**
 		 * This method finds and reads the X2AlternativeValue item from an unmarshalled XML file
 		 * abiding by the XMCDA standard.
 		 * 
@@ -73,7 +73,7 @@ public class AlternativesRankingUnmarshaller{
 			return X2AltVList;
 		}
 		
-		/*
+		/**
 		 * This method extracts the ID of the Alternative from 
 		 * a list of X2AlternativeValue and create a corresponding Alternative object.
 		 * 
@@ -87,7 +87,7 @@ public class AlternativesRankingUnmarshaller{
 			return Alt;
 		}
 
-		/*
+		/**
 		 * This method finds and reads the X2Criteria item from an unmarshalled XML file
 		 * abiding by the XMCDA standard.
 		 * 

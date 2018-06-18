@@ -70,7 +70,7 @@ public class AlternativesRankingMarshaller {
 		marshaller.marshal(xmcda, fos);
 	}
 	
-	/*
+	/**
 	 * This method outputs AlternativesRanking's values in a Node format 
 	 * to be used in Diviz's web services call through the CallAltsRank class.
 	 * 
