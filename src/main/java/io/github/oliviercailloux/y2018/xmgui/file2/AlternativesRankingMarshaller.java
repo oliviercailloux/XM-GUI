@@ -1,19 +1,15 @@
 package io.github.oliviercailloux.y2018.xmgui.file2;
 
 import io.github.oliviercailloux.xmcda_2_2_1_jaxb.ObjectFactory;
-import io.github.oliviercailloux.xmcda_2_2_1_jaxb.X2Alternatives;
 import io.github.oliviercailloux.xmcda_2_2_1_jaxb.XMCDA;
 import io.github.oliviercailloux.xmcda_2_2_1_jaxb.X2AlternativeValue;
 import io.github.oliviercailloux.xmcda_2_2_1_jaxb.X2Value;
 import io.github.oliviercailloux.y2018.xmgui.contract1.Alternative;
-import io.github.oliviercailloux.y2018.xmgui.contract1.MCProblem;
 import io.github.oliviercailloux.y2018.xmgui.contract2.AlternativesRanking;
 
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,7 +24,6 @@ import org.w3c.dom.Element;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
-import com.google.common.collect.UnmodifiableIterator;
 
 public class AlternativesRankingMarshaller {
 	
