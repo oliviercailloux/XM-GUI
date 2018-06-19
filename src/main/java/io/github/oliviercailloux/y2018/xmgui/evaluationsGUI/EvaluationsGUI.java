@@ -360,25 +360,19 @@ public class EvaluationsGUI {
 	    	try {
 				Integer.parseInt(text.getText());
 				updateAlternativeList(text);
-				text.setBackground(display.getSystemColor(SWT.COLOR_GREEN));
 			}
 			catch(Exception isNull)
 			{	
-				isNull.getMessage();
-				text.setBackground(display.getSystemColor(SWT.COLOR_RED));	
 			}
         }
         
         if(column!=0 && index == 0){
 	    	try {
 				Integer.parseInt(text.getText());
-				text.setBackground(display.getSystemColor(SWT.COLOR_GREEN));
 				updateCriteriaList(text);
 			}
 			catch(Exception isNull)
 			{
-				isNull.getMessage();
-				text.setBackground(display.getSystemColor(SWT.COLOR_RED));	
 			}
         }
         
@@ -386,11 +380,9 @@ public class EvaluationsGUI {
 	    	try {
 				Float.parseFloat(text.getText());
 				updatePerformanceMat(index,column,text);
-				text.setBackground(display.getSystemColor(SWT.COLOR_GREEN));
 			}
-			catch(Exception wrongInput)
+			catch(Exception isNull)
 			{
-				text.setBackground(display.getSystemColor(SWT.COLOR_RED));	
 			}
         }
     	
