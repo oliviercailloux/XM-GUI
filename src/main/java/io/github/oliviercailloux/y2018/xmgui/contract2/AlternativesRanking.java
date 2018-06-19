@@ -119,7 +119,7 @@ public class AlternativesRanking {
 	
 	/** 
 	 * Overriding hashCode() because we
-	 * overrid equals()
+	 * override equals()
 	 */
 	@Override
 	public int hashCode() {

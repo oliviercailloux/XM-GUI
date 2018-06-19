@@ -15,7 +15,6 @@ import io.github.oliviercailloux.y2018.xmgui.file1.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.custom.TableEditor;
 import org.slf4j.Logger;
@@ -32,6 +31,7 @@ public class EvaluationsGUI {
 	private MCProblemMarshaller marshaller;
 	private ArrayList<String> alternativesList = new ArrayList<>();
 	private ArrayList<String> criteriaList = new ArrayList<>();
+	private ArrayList<ArrayList> performanceMat = new ArrayList<ArrayList>();
 
     private Label label;
     
@@ -45,181 +45,17 @@ public class EvaluationsGUI {
 	private SelectionListener addAlternativeListener;
     
 	private Listener alterTableListener;
-	private Listener putPerformanceListener;
-	private ModifyListener perfTextListener;
-	private ModifyListener altTextListener;
-	private ModifyListener critTextListener;
+	private Listener putTableValueListener;
+	private ModifyListener textListener;
 	
     public EvaluationsGUI() {
-    		
-		alterTableListener = new Listener() {
-
-			@Override
-			public void handleEvent(Event event) {
-			
-				Rectangle clientArea = table.getClientArea();
-		        Point pt = new Point(event.x, event.y);
-		        int index = table.getTopIndex();
-		        
-		        while (index < table.getItemCount()) {
-		        	  
-		            boolean visible = false;
-		            final TableItem item = table.getItem(index);
-		            
-		            for (int i = 0; i < table.getColumnCount(); i++) {
-		            	
-		            	Rectangle rect = item.getBounds(i);
-		              
-		            	if (rect.contains(pt)) {
-
-	                        final int column = i;
-		            		final int row = index;
-		            		final Text text = new Text(table, SWT.BORDER);  
-		            		
-		            		putPerformanceListener = new Listener() {
-
-		            			@Override
-		            			public void handleEvent(Event event) {
-		            				
-		            				switch (event.type) {
-		                            
-		                            	case SWT.FocusOut:
-		                            		item.setText(column, text.getText());
-		                            		text.dispose();
-		                            		break;
-		                              
-			                            case SWT.Traverse:
-			                            	switch (event.detail) {
-			                              
-				                            	case SWT.TRAVERSE_RETURN:
-				                            		item.setText(column, text.getText());
-				                                
-				                            	case SWT.TRAVERSE_ESCAPE:
-				                            		text.dispose();
-				                            		event.doit = false;
-				                            }
-			                            	break;	
-		            				}
-		            			}			
-		            		};
-		            		
-		            		altTextListener = new ModifyListener() {
-		            			
-		            			@Override
-		            		    public void modifyText(ModifyEvent e) {
-		            				Text input = (Text) e.widget;
-		            				try {
-				            			Integer.parseInt(input.getText());
-				            			if(row != 0 && column == 0){
-				            				updateAlternativeList(input.getText());
-				            			}
-				            			if(row != 0 && column == 0){
-				            				updateAlternativeList(input.getText());
-				            			}
-									}
-	            					catch(Exception wrongInput)
-	            					{
-	            					}
-		            		    }
-		            		};
-		            		
-		            		critTextListener = new ModifyListener() {
-		            			@Override
-		            		    public void modifyText(ModifyEvent e) {
-		            				Text input = (Text) e.widget;
-		            				try {
-			            				Integer.parseInt(input.getText());
-				            			if(row == 0 && column != 0){
-				            				updateCriteriaList(input.getText());
-				            			}
-									}
-		            				catch(Exception wrongInput)
-		            				{	
-		            				}
-		            			}
-		            		};
-		            		
-		            		perfTextListener = new ModifyListener() {
-		            			@Override
-		            		    public void modifyText(ModifyEvent e) {
-		            				Text input = (Text) e.widget;
-		            				try {
-			            				Integer.parseInt(input.getText());
-				            			if(row != 0 && column != 0){
-				            				updatePerformanceList(item.getText(column), table.getItem(0).getText(column), input);
-				            			}
-									}
-		            				catch(Exception wrongInput)
-		            				{	
-		            				}
-		            			}
-		            		};
-
-		            		text.addListener(SWT.FocusOut, putPerformanceListener);
-		            		text.addListener(SWT.Traverse, putPerformanceListener);
-		            		text.addModifyListener(altTextListener);
-		            		text.addModifyListener(critTextListener);
-		            		text.addModifyListener(perfTextListener);
-		            		editor.setEditor(text, item, i);
-		            		text.setText(item.getText(i));
-		            		text.selectAll();
-		            		text.setFocus();
-		            		return;
-		            	}
-		              
-		            	if (!visible && rect.intersects(clientArea)) {
-		            		visible = true;
-		            	}
-		              
-		            }
-		            
-		            if (!visible) return;
-		            index++;
-		            
-		          }    
-		            
-		    }
-
-			
-        };
-
+    	
+    	// Compilation of the different Listener
+        createAlterTableListener();
+        createAlternativeListener();
+        createCriteriaListener();
         
-        addAlternativeListener = new SelectionListener() {
-        	
-        	@Override
-			public void widgetSelected(SelectionEvent event) {
-        		
-          	  	TableItem item = new TableItem(table, SWT.NULL);
-        		setTableSize(event.getSource());
-        		setButtonPosition(event.getSource());
-        		setShellSize(event.getSource());
-        	}
-			
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				
-			}
-        }; 
-            
-        addCriteriaListener = new SelectionListener() {
-        	
-        	@Override
-			public void widgetSelected(SelectionEvent event) {
-        		
-        		TableColumn column = new TableColumn(table, SWT.NULL);
-            	column.setWidth(50);
-		    	setTableSize(event.getSource());
-		    	setShellSize(event.getSource());
-		          
-        	}
-			
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				
-			}
-        }; 
-        
-   
+        // Compilation of the SWT window
         createShell();
     	createTableInstruction();
         createTable();
@@ -276,7 +112,11 @@ public class EvaluationsGUI {
 		TableItem item = new TableItem(table, SWT.NULL);
 		 
 		System.out.println(item.getBounds(0).height);
-	    table.setBounds(25, 50, colAlt.getWidth() + column.getWidth(), 36); 
+	    table.setBounds(25, 50, 150, 36); 
+	    
+		alternativesList.add(0, null);
+		criteriaList.add(0, null);
+	    createPerformanceMat();
 	    
 	    table.addListener(SWT.MouseDown, alterTableListener);
 	    
@@ -295,7 +135,7 @@ public class EvaluationsGUI {
 		
 	    addAlternative = new Button(shell, SWT.PUSH);
 	    addAlternative.setText("Add Alternative");
-	    addAlternative.setBounds(25, table.getBounds().y + table.getBounds().height + 5, 25, 25);
+	    addAlternative.setBounds(25, 91, 25, 25);
 	    addAlternative.pack();
         addAlternative.addSelectionListener(addAlternativeListener);
 		
@@ -305,8 +145,7 @@ public class EvaluationsGUI {
 		
 	    addCriteria = new Button(shell, SWT.PUSH);
 	    addCriteria.setText("Add Criteria");
-	    addCriteria.setBounds(addAlternative.getBounds().x + addAlternative.getBounds().width + 5,
-	    				 		  table.getBounds().y + table.getBounds().height + 5, 25, 25);
+	    addCriteria.setBounds(30 + addAlternative.getBounds().width, 91, 25, 25);
 	    addCriteria.pack();
         addCriteria.addSelectionListener(addCriteriaListener);
 		
@@ -314,16 +153,14 @@ public class EvaluationsGUI {
 	
 	private void setShellSize(Object object) {
 		
-		int width = shell.getSize().x;
-		int height = shell.getSize().y;
-		int widthNeeded = table.getSize().x + 25;
+		int widthNeeded = getTableWidth() + 25;
 		
 		if(object == addAlternative){
-	        shell.setSize(width,height + 18);
+	        shell.setSize(getShellWidth(),getShellHeight() + 18);
 		}
 		if(object == addCriteria){
-			if( widthNeeded >= width){
-				shell.setSize(width + 50,height);
+			if( widthNeeded >= getShellWidth()){
+				shell.setSize(getShellWidth() + 50, getShellHeight());
 			}
 		}
 		
@@ -332,10 +169,10 @@ public class EvaluationsGUI {
 	private void setTableSize(Object object) {
 		
 		if(object == addAlternative){
-	        table.setSize(table.getSize().x, table.getBounds().height + 18);
+	        table.setSize(getTableWidth(), getTableHeight() + 18);
 		}
 		if(object == addCriteria){
-	        table.setSize(table.getSize().x + 50, table.getSize().y);
+	        table.setSize(getTableWidth() + 50, getTableHeight());
 		}
 		
 	}
@@ -351,9 +188,296 @@ public class EvaluationsGUI {
 		}
 	}
 	
-    protected void marshall() throws FileNotFoundException, JAXBException, IOException {
+    
+    
+    private int getTableWidth(){
+    	return table.getBounds().width;
+    }
+    
+    private int getTableHeight(){
+    	return table.getBounds().height;
+    }
+    
+    private int getShellWidth(){
+    	return shell.getBounds().width;
+    }
+    
+    private int getShellHeight(){
+    	return shell.getBounds().height;
+    }
+    
+    private int getTableIndex(Point pt){
+    	int position;
+    	
+    	position = pt.y;
+    	for(int i=0; i <= table.getItemCount()-1; i++){
+    		position -= table.getItem(i).getBounds().height;
+    		if(position <= 0){
+    			return i;
+    		}
+    	}
+    	return 0;
+    }
+    
+    private int getTableColumn(Point pt){
+    	int position;
+    	
+    	position = pt.x;
+    	for(int i=0; i <= table.getColumnCount()-1; i++){
+    		position -= table.getColumn(i).getWidth();
+    		if(position <= 0){
+    			return i;
+    		}
+    	}
+    	return 0;
+    }
+    
+    private void createAlterTableListener(){
+    	
+    	alterTableListener = new Listener() {
+
+			@Override
+			public void handleEvent(Event event) {
+			
+		        Point pt = new Point(event.x, event.y);
+	            int column = getTableColumn(pt);
+		        int index = getTableIndex(pt);
+		        TableItem item = table.getItem(index);
+	            final Text text = new Text(table, SWT.BORDER);
+	            
+	            // Can't choose the header cell "AlternativeID"
+	            if(column == 0 && index ==0){
+	            	return;
+	            }
+	            
+		        putTableValueListener = new Listener() {
+		        	@Override
+		            public void handleEvent(Event event) {
+		        		putTableValue(event,item, index, column, text);
+		            }
+		        };
+		        
+		        textListener = new ModifyListener() {
+		    		@Override
+		            public void modifyText(ModifyEvent event) {
+		    			Text text = (Text) event.widget;
+			    		putMCPValue(item,index, column,text);
+		            }
+		        };
+		            		
+		        text.addListener(SWT.FocusOut, putTableValueListener);
+		        text.addListener(SWT.Traverse, putTableValueListener);
+		        text.addModifyListener(textListener);
+		        editor.setEditor(text, item, column);
+		        text.setText(item.getText(column));
+		        text.selectAll();
+		        text.setFocus();
+		        
+		        return;
+
+			}
+        };
+
+    }
+    
+    private void createAlternativeListener(){
+    	
+        addAlternativeListener = new SelectionListener() {
+        	
+        	@Override
+			public void widgetSelected(SelectionEvent event) {
+        		new TableItem(table, SWT.NULL);
+  
+        		alternativesList.add(null);
+        		addPerformanceMatAlt();
+        		setTableSize(event.getSource());
+        		setButtonPosition(event.getSource());
+        		setShellSize(event.getSource());
+        	}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				
+			}
+        }; 
+
+    }
+    
+    private void createCriteriaListener(){
+        addCriteriaListener = new SelectionListener() {
+        	
+        	@Override
+			public void widgetSelected(SelectionEvent event) {
+        		TableColumn column = new TableColumn(table, SWT.NULL);
+            	column.setWidth(50);
+        		
+        		criteriaList.add(null);
+        		addPerformanceMatCrit();
+            	setTableSize(event.getSource());
+            	setShellSize(event.getSource());
+        	}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				
+			}
+        }; 
+ 
+    }
+    
+    private void putTableValue(Event event, TableItem item, int index, int column, Text text){
+    	
+    	switch (event.type) {
+	    	case SWT.FocusOut:
+	    		item.setText(column, text.getText());
+	            text.dispose();
+	            break;
+	                  
+	        case SWT.Traverse:
+	            switch (event.detail) {
+	                      
+	            	case SWT.TRAVERSE_RETURN:
+	            		item.setText(column, text.getText());
+	                            
+	                case SWT.TRAVERSE_ESCAPE:
+	                    text.dispose();
+	                    event.doit = false;
+	            }
+	        break;	
+    	}
+    }
+    
+    private void putMCPValue(TableItem item,int index, int column, Text text){
+    	 
+        if(column == 0){
+        	text.setData(index);
+        }
+        if(index == 0){
+        	text.setData(column);
+        }
+        
+        if(column==0 && index != 0){
+	    	try {
+				Integer.parseInt(text.getText());
+				updateAlternativeList(text);
+				text.setBackground(display.getSystemColor(SWT.COLOR_GREEN));
+			}
+			catch(Exception isNull)
+			{	
+				isNull.getMessage();
+				text.setBackground(display.getSystemColor(SWT.COLOR_RED));	
+			}
+        }
+        
+        if(column!=0 && index == 0){
+	    	try {
+				Integer.parseInt(text.getText());
+				text.setBackground(display.getSystemColor(SWT.COLOR_GREEN));
+				updateCriteriaList(text);
+			}
+			catch(Exception isNull)
+			{
+				isNull.getMessage();
+				text.setBackground(display.getSystemColor(SWT.COLOR_RED));	
+			}
+        }
+        
+        if(column!=0 && index != 0){
+	    	try {
+				Float.parseFloat(text.getText());
+				updatePerformanceMat(index,column,text);
+				text.setBackground(display.getSystemColor(SWT.COLOR_GREEN));
+			}
+			catch(Exception wrongInput)
+			{
+				text.setBackground(display.getSystemColor(SWT.COLOR_RED));	
+			}
+        }
+    	
+    }
+
+    private void createPerformanceMat(){
+    	
+    	ArrayList<Float> performanceList = new ArrayList<>();
+    	
+    	for(int i=0; i < alternativesList.size();i++){
+	    	for(int j=0; j<criteriaList.size();j++){
+	    		performanceList.add(j,null);
+	    	}
+	    	performanceMat.add(i,performanceList);
+    	}
+    	
+    	logger.info("create : " + performanceMat.toString());
+    	
+    }
+    
+    private void addPerformanceMatAlt(){
+    	
+    	ArrayList<Float> performanceList = new ArrayList<>();
+    	
+    	for(int i=0; i < criteriaList.size();i++){
+    		performanceList.add(i,null);
+    	}
+		performanceMat.add(performanceList);
+    	logger.info("update alt : " + performanceMat.toString());
+    	
+    }
+    
+    private void addPerformanceMatCrit(){
+    	
+    	ArrayList<Float> performanceList = new ArrayList<>();
+    	
+    	for(int i=0; i<alternativesList.size();i++){
+    		performanceList = performanceMat.get(i);
+    		performanceList.add(i,null);
+    		performanceMat.set(i, performanceList);
+    	}
+    	logger.info("update crit : " + performanceMat.toString());
+    	
+    }
+    
+    private void setPerformanceMat(int alt, int crit, Float perf){
+    	
+    	ArrayList<Float> performanceList = new ArrayList<>();
+    		
+    	for(int i=0; i<criteriaList.size();i++){
+    		if(criteriaList.get(i) == null){
+    			performanceList.add(i,null);
+    		}
+    		if(criteriaList.get(i) != null && i != crit){
+    			performanceList.add(i, Float.parseFloat(table.getItem(alt+1).getText(i+1).toString()));
+    		}
+    		if(criteriaList.get(i) != null && i == crit){
+    			performanceList.add(crit, perf);
+    		}
+    	}
+    	
+    	performanceMat.set(alt,performanceList);
+    	logger.info(" set : " + performanceMat.toString());
+    	
+    }
+    
+    private void updateAlternativeList(Text altId) throws FileNotFoundException, JAXBException, IOException {
+    	alternativesList.set(Integer.parseInt(altId.getData().toString())-1, altId.getText());
+    	logger.info(" alternativesList : " + alternativesList.toString());
+		marshall();
+	}
+	
+	private void updateCriteriaList(Text critId) throws FileNotFoundException, JAXBException, IOException {
+		criteriaList.set(Integer.parseInt(critId.getData().toString())-1, critId.getText());
+    	logger.info(" criteriaList : " + criteriaList.toString());
+		marshall();
+	}
+	
+	private void updatePerformanceMat(int altId, int critId, Text perf) throws FileNotFoundException, JAXBException, IOException {
+		setPerformanceMat(altId-1, critId-1, Float.parseFloat(perf.getText()));
+		marshall();
+	}
+    
+    private void marshall() throws FileNotFoundException, JAXBException, IOException {
     	mcp = new MCProblem();
     	marshaller = new MCProblemMarshaller(mcp);
+    	
     	for (int i =0; i < alternativesList.size(); i++) {
 			if (alternativesList.get(i) != null) {
 				mcp.addAlt(new Alternative(Integer.parseInt(alternativesList.get(i))));
@@ -366,46 +490,28 @@ public class EvaluationsGUI {
 				logger.info("Criteria in the MCP: {}." + mcp.getCriteria());
 			}
 		}
+
+    	for (int i =0; i < alternativesList.size(); i++) {
+			if (alternativesList.get(i) != null) {
+	    		Alternative alt = new Alternative(Integer.parseInt(alternativesList.get(i)));
+	    		for(int j=0; j < criteriaList.size(); j++){
+	    			if (criteriaList.get(j) != null) {
+		    			Criterion crit = new Criterion(Integer.parseInt(criteriaList.get(j)));
+		    			try{
+			    			mcp.putEvaluation(alt,crit,Float.parseFloat(performanceMat.get(i).get(j).toString()));
+							logger.info("Performance in the MCP: {}." + mcp.getTableEval());
+		    			}catch(Exception wrongInput){
+		    			}
+	    			}
+				}
+	    	}
+		}
+    	
+    	
     	try (final FileOutputStream fos = new FileOutputStream("MCPEvaluationsGUI.xml")) {
 			marshaller.marshalAndWrite(fos);
 			System.out.println("Marshalled");
 		}
-    }
-	
-    protected void updateAlternativeList(String altId) throws FileNotFoundException, JAXBException, IOException{
-    	System.out.println(alternativesList.get(Integer.parseInt(altId)));
-    	alternativesList.set(Integer.parseInt(altId), altId);
-    	marshall();
-    }
-    
-    protected void updateCriteriaList(String critId) throws FileNotFoundException, JAXBException, IOException{
-    	System.out.println(criteriaList.get(Integer.parseInt(critId)));
-    	criteriaList.set(Integer.parseInt(critId), critId);
-    	marshall();
-    }
-    
-    protected void marshall(int altId, int critId, float perf) throws JAXBException, FileNotFoundException, IOException {
-    	mcp = new MCProblem();
-    	marshaller = new MCProblemMarshaller(mcp);
-    	
-    	Alternative alt = new Alternative(Integer.parseInt(alternativesList.get(altId)));
-    	Criterion crit = new Criterion(Integer.parseInt(criteriaList.get(critId)));
-    	
-		mcp.putEvaluation(alt,crit,perf);
-		
-    	try (final FileOutputStream fos = new FileOutputStream("MCPEvaluationsGUI.xml")) {
-			marshaller.marshalAndWrite(fos);
-			System.out.println("Marshalled");
-		}
-    	
-    }
-    
-    protected void updatePerformanceList(String alt, String crit, Text value) throws FileNotFoundException, JAXBException, IOException {
-    	int altId = Integer.parseInt(alt);
-    	int critId = Integer.parseInt(crit);
-    	float perf = Float.parseFloat(value.getData().toString());
-    
-    	marshall(altId, critId, perf);
     }
     
 }
