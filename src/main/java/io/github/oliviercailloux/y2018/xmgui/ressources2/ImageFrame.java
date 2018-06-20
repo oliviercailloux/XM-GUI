@@ -20,6 +20,13 @@ public class ImageFrame {
 	private int height;
 	private int width;
     
+	/**
+	 * Create a window showing an image.
+	 * 
+	 * @param title of the window
+	 * @param path of the image
+	 * @throws IOException
+	 */
     public ImageFrame(String title, Path path) throws IOException{
     	
     	importImage(path);
@@ -28,7 +35,11 @@ public class ImageFrame {
     	shell.setText(title);
     	
     }
-     
+    
+    /**
+	 * Open the window of an imageFrame instance and keep it open
+	 * while it is not closed.
+	 */
  	public void activeLoop() {
 		shell.open();
         shell.layout();
@@ -39,6 +50,13 @@ public class ImageFrame {
         }
 	}
     
+ 	/**
+ 	 * Import the image located at the path given.
+ 	 * Set the image, its width and height.
+ 	 * 
+ 	 * @param path can not be null
+ 	 * @throws IOException
+ 	 */
     private void importImage(Path path) throws IOException{    	
     	try (InputStream input = java.nio.file.Files.newInputStream(path)) {
     		image = new Image(display, input);
@@ -48,6 +66,10 @@ public class ImageFrame {
     	}
     }
     
+    /**
+     * Set the image as the shell's background.
+     * Set the shell's dimensions with those of the image. 
+     */
     private void setImage(){
     	shell.setBackgroundImage(image);
     	shell.setSize(width, height);
