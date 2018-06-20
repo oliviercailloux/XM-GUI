@@ -3,6 +3,8 @@ package io.github.oliviercailloux.y2018.xmgui.evaluationsGUI;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import javax.xml.bind.JAXBException;
@@ -650,6 +652,8 @@ public class EvaluationsGUI {
     	mcp = new MCProblem();
     	marshaller = new MCProblemMarshaller(mcp);
     	
+    	String path="MCPFile.xml";
+    	
     	for (int i =0; i < alternativesList.size(); i++) {
 			if (alternativesList.get(i) != null) {
 				mcp.addAlt(new Alternative(Integer.parseInt(alternativesList.get(i))));
@@ -680,7 +684,7 @@ public class EvaluationsGUI {
 		}
     	
     	
-    	try (final FileOutputStream fos = new FileOutputStream("MCPEvaluationsGUI.xml")) {
+    	try (final FileOutputStream fos = new FileOutputStream(path)) {
 			marshaller.marshalAndWrite(fos);
 			System.out.println("Marshalled");
 		}
