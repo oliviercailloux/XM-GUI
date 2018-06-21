@@ -147,8 +147,8 @@ public class EvaluationsGUI {
 	}
 	
 	/**
-	 * Create the table's performance matrice.
-	 * This matrice keep actualized the criteria performances of 
+	 * Create the table's performance matrix.
+	 * This matrix keep actualized the criteria performances of 
 	 * the different alternatives in the table.
 	 */
     private void createPerformanceMat(){
