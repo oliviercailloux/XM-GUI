@@ -39,7 +39,7 @@ public class File2Test {
 		//ecriture de AlternativesRankingFile.xml
 		AlternativesRankingMarshaller AltRMarshaller = new AlternativesRankingMarshaller(AltR1);
 		try (final FileOutputStream fos = new FileOutputStream(path)) {
-			AltRMarshaller.writeAlternativeValueFromAlternativesRanking(fos);
+			AltRMarshaller.writeAlternativeValue(fos);
 		}
 	
 		//lecture de AlternativesRankingFile.xml

@@ -41,7 +41,7 @@ public class App {
 		//ecriture de AlternativesRankingFile.xml
 		AlternativesRankingMarshaller AltRMarshaller = new AlternativesRankingMarshaller(AltR1);
 		try (final FileOutputStream fos = new FileOutputStream(path)) {
-			AltRMarshaller.writeAlternativeValueFromAlternativesRanking(fos);
+			AltRMarshaller.writeAlternativeValue(fos);
 			LOGGER.debug("Marshalling invoked");
 		}
 

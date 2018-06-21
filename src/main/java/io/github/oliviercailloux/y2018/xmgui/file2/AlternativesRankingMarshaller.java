@@ -1,18 +1,15 @@
 package io.github.oliviercailloux.y2018.xmgui.file2;
 
 import io.github.oliviercailloux.xmcda_2_2_1_jaxb.ObjectFactory;
-import io.github.oliviercailloux.xmcda_2_2_1_jaxb.X2Alternatives;
 import io.github.oliviercailloux.xmcda_2_2_1_jaxb.XMCDA;
 import io.github.oliviercailloux.xmcda_2_2_1_jaxb.X2AlternativeValue;
 import io.github.oliviercailloux.xmcda_2_2_1_jaxb.X2Value;
 import io.github.oliviercailloux.y2018.xmgui.contract1.Alternative;
-import io.github.oliviercailloux.y2018.xmgui.contract1.MCProblem;
 import io.github.oliviercailloux.y2018.xmgui.contract2.AlternativesRanking;
 
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Iterator;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,7 +24,6 @@ import org.w3c.dom.Element;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
-import com.google.common.collect.UnmodifiableIterator;
 
 public class AlternativesRankingMarshaller {
 	
@@ -40,7 +36,7 @@ public class AlternativesRankingMarshaller {
 		this.AltR = AltR;
 	}
     
-	public X2Value putX2Value(int Value){
+	public X2Value createX2Value(int Value){
 		X2Value X2Value = new X2Value();
 		X2Value.setInteger(Value);
 		return X2Value;
@@ -53,7 +49,7 @@ public class AlternativesRankingMarshaller {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public void writeAlternativeValueFromAlternativesRanking(FileOutputStream fos) throws JAXBException {
+	public void writeAlternativeValue(OutputStream fos) throws JAXBException {
 	
 		final JAXBContext jc = JAXBContext.newInstance(XMCDA.class);
 		final Marshaller marshaller = jc.createMarshaller();
@@ -65,7 +61,7 @@ public class AlternativesRankingMarshaller {
 			for (Alternative Alt : allAlt){
 				X2AlternativeValue X2AltV = f.createX2AlternativeValue();
 				X2AltV.setAlternativeID(Integer.toString(Alt.getId()));
-				X2AltV.getValueOrValues().add(putX2Value(Rank));
+				X2AltV.getValueOrValues().add(createX2Value(Rank));
 				xmcdaSubElements.add(f.createXMCDAAlternativeValue(X2AltV));
 			}
 		}
@@ -74,7 +70,7 @@ public class AlternativesRankingMarshaller {
 		marshaller.marshal(xmcda, fos);
 	}
 	
-	/*
+	/**
 	 * This method outputs AlternativesRanking's values in a Node format 
 	 * to be used in Diviz's web services call through the CallAltsRank class.
 	 * 
@@ -96,7 +92,7 @@ public class AlternativesRankingMarshaller {
 			for (Alternative Alt : allAlt){
 				X2AlternativeValue X2AltV = f.createX2AlternativeValue();
 				X2AltV.setAlternativeID(Integer.toString(Alt.getId()));
-				X2AltV.getValueOrValues().add(putX2Value(Rank));
+				X2AltV.getValueOrValues().add(createX2Value(Rank));
 				Element alternativeNode=doc.createElement("alternativeValue");
 				Element altIdNode=doc.createElement("alternativeID");
 				altIdNode.appendChild(doc.createTextNode(X2AltV.getAlternativeID()));

@@ -41,8 +41,8 @@ public class AlternativesRankingUnmarshaller{
 			// Read X2AlternativeValue
 			List<X2AlternativeValue> X2AltVList = getX2AlternativeValue(xmcdaSubElements);
 			for (X2AlternativeValue X2AltV : X2AltVList) {
-				Alternative Alt = extractAltFromX2AlternativeValue(X2AltV);
-				Integer Rank = extractRankFromX2AlternativeValue(X2AltV);
+				Alternative Alt = getAlt(X2AltV);
+				Integer Rank = getRank(X2AltV);
 				if(Rank == 1){
 					AltR = new AlternativesRanking(Rank,Alt);
 				}
@@ -53,7 +53,7 @@ public class AlternativesRankingUnmarshaller{
 					
 	} 
 		
-		/*
+		/**
 		 * This method finds and reads the X2AlternativeValue item from an unmarshalled XML file
 		 * abiding by the XMCDA standard.
 		 * 
@@ -73,7 +73,7 @@ public class AlternativesRankingUnmarshaller{
 			return X2AltVList;
 		}
 		
-		/*
+		/**
 		 * This method extracts the ID of the Alternative from 
 		 * a list of X2AlternativeValue and create a corresponding Alternative object.
 		 * 
@@ -81,20 +81,20 @@ public class AlternativesRankingUnmarshaller{
 		 * @param x2AltsList the raw X2Alternatives list to be navigated
 		 * @return the Alternative object created with the extracted ID
 		 */
-		public Alternative extractAltFromX2AlternativeValue(X2AlternativeValue X2AltV) {
+		public Alternative getAlt(X2AlternativeValue X2AltV) {
 			String AltID = X2AltV.getAlternativeID();
 			Alternative Alt = new Alternative(Integer.parseInt(AltID));
 			return Alt;
 		}
 
-		/*
+		/**
 		 * This method finds and reads the X2Criteria item from an unmarshalled XML file
 		 * abiding by the XMCDA standard.
 		 * 
 		 * @param xmcdaSubElements the unmarshalled project references of the XMCDA file
 		 * @return the list of X2Criteria to be read
 		 */
-		public Integer extractRankFromX2AlternativeValue(X2AlternativeValue X2AltV) {
+		public Integer getRank(X2AlternativeValue X2AltV) {
 			int Rank = 0;
 			List<Object> X2ValueList = X2AltV.getValueOrValues();
 			for(Object X2Value : X2ValueList){
