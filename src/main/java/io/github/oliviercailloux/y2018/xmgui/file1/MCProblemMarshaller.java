@@ -131,4 +131,76 @@ public class MCProblemMarshaller {
 		return XMCDANode;
 	}
 	
+	
+	
+	
+	public Element critNodeForWSCall(MCProblem mcpNode, Document doc) {
+		Element XMCDANode = doc.createElement("xmcda:XMCDA");
+		Element criteriaNode = doc.createElement("criteria");
+		XMCDANode.appendChild(criteriaNode);
+		
+
+		UnmodifiableIterator<Criterion> itCrits = mcp.getCriteria().iterator();
+		
+		while (itCrits.hasNext()) {
+			Element criterionNode = doc.createElement("criterion");
+			Criterion crit= itCrits.next();
+			Attr critId = doc.createAttribute("id");
+			critId.setValue(Integer.toString(crit.getId()));
+			criterionNode.setAttributeNode(critId);
+			criteriaNode.appendChild(criterionNode);
+			criteriaNode.appendChild(criterionNode);
+		}
+		
+		
+		XMCDANode.setAttribute("xmlns:xmcda", "http://www.decision-deck.org/2012/XMCDA-2.2.1"); 
+		return XMCDANode;
+	}
+	
+	
+	public Element perfTableNodeForWSCall(MCProblem mcpNode, Document doc) {
+		Element XMCDANode = doc.createElement("xmcda:XMCDA");
+		Element perfTableNode = doc.createElement("performanceTable");
+		XMCDANode.appendChild(perfTableNode);
+		
+		for (Alternative a : mcp.getAlternatives()) {
+				int altid = a.getId();
+				UnmodifiableIterator<Entry<Criterion, Float>> itCritsPerf=mcp.getTableEval().row(a).entrySet().iterator();
+				Element alternativePerfNode = doc.createElement("alternativePerformances");
+				Element altIdNode=doc.createElement("alternativeID");
+				alternativePerfNode.appendChild(altIdNode);
+				altIdNode.appendChild(doc.createTextNode(Integer.toString(altid)));
+			while(itCritsPerf.hasNext()){
+				Entry<Criterion, Float> critAndVal = itCritsPerf.next();
+				
+				Element criterionIDNode = doc.createElement("criterionID");
+				criterionIDNode.appendChild(doc.createTextNode(Integer.toString(critAndVal.getKey().getId())));
+				
+				
+				Element perfNode = doc.createElement("performance");
+				
+					
+				
+				
+				Element valueNode=doc.createElement("value");
+				Element realNode=doc.createElement("real");
+				realNode.appendChild(doc.createTextNode(Float.toString(critAndVal.getValue())));
+				valueNode.appendChild(realNode);
+				perfNode.appendChild(criterionIDNode);
+				perfNode.appendChild(valueNode);
+				alternativePerfNode.appendChild(perfNode);
+				
+			}
+			
+			
+			perfTableNode.appendChild(alternativePerfNode);
+		}
+		
+		
+	
+		
+		XMCDANode.setAttribute("xmlns:xmcda", "http://www.decision-deck.org/2012/XMCDA-2.2.1"); 
+		return XMCDANode;
+	}
+	
 }

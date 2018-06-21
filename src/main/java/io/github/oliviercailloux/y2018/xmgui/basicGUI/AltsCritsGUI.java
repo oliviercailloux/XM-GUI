@@ -318,6 +318,10 @@ public class AltsCritsGUI {
 		}
     }
     
+    
+    protected MCProblem getMCP(){
+    	return this.mcp;
+    }
     protected void updateAlternativeList(Text altId) throws FileNotFoundException, JAXBException, IOException {
     		alternativesList.set(Integer.parseInt(altId.getData().toString()), altId.getText());
     		marshall();

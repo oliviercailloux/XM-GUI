@@ -51,7 +51,7 @@ import io.github.oliviercailloux.y2018.xmgui.file2.AlternativesRankingMarshaller
  */
 public class CallAltsRank {
 	
-	private static final String ENDPOINT_ADDRESS = "http://webservices.decision-deck.org/soap/rankAlternativesValues-RXMCDA.py";
+	private static final String ENDPOINT_ADDRESS = "http://webservices.decision-deck.org/soap/plotNumericPerformanceTable-ITTB.py";
 	@SuppressWarnings("unused")
 	private static final String FAILURE = "The problem submission was unsuccessful";
 	@SuppressWarnings("unused")
@@ -142,11 +142,13 @@ public class CallAltsRank {
 		{
 			// For the time being we create a raw MCP here, but in the future, the GUI will create and pass thi data.
 			MCProblem mcp = new MCProblem();
-			Alternative alt0= new Alternative(0);
-			Alternative alt1= new Alternative(1);
-			Criterion crt =new Criterion(0);
+			Alternative alt0= new Alternative(1);
+			Alternative alt1= new Alternative(2);
+			Criterion crt =new Criterion(1);
+			Criterion crt2 =new Criterion(4);
 			mcp.putEvaluation(alt0, crt, 0.0f);
-			mcp.putEvaluation(alt1, crt, 1.0f);
+			mcp.putEvaluation(alt1, crt2, 1.0f);
+			
 			MCProblemMarshaller mcpMarshaller= new MCProblemMarshaller(mcp);
 			AlternativesRanking altr = new AlternativesRanking(1000,alt0);
 			altr.putAltRank(2,alt1);
@@ -160,17 +162,43 @@ public class CallAltsRank {
 			CDATASection cdataOverVal = doc.createCDATASection(asString(altrMarshaller.altsRankingNodeForWSCall(altrMarshaller, doc)));
 			sub1.appendChild(cdataOverVal);
 			doc.appendChild(submit);
-			submit.appendChild(sub1); 
+			//submit.appendChild(sub1); 
 			
 			final Element sub2 = doc.createElement("alternatives");
 			submit.appendChild(sub2);
 			CDATASection cdataAlt = doc.createCDATASection(asString(mcpMarshaller.altsNodeForWSCall(mcp, doc)));
 			sub2.appendChild(cdataAlt);
+			
+			final Element sub4 = doc.createElement("criteria");
+			submit.appendChild(sub4);
+			CDATASection cdataCriteria = doc.createCDATASection(asString(mcpMarshaller.critNodeForWSCall(mcp, doc)));
+			sub4.appendChild(cdataCriteria);
+			
+			final Element sub3 = doc.createElement("performanceTable");
+			submit.appendChild(sub3);
+			CDATASection cdataPerfTable = doc.createCDATASection(asString(mcpMarshaller.perfTableNodeForWSCall(mcp, doc)));
+			sub3.appendChild(cdataPerfTable);
+			
+			
+			
+			
 			final Attr attrType1 = doc.createAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:type");
 			attrType1.setValue("xsd:string");
-			sub1.setAttributeNodeNS(attrType1);
+			sub2.setAttributeNodeNS(attrType1);
 			final Attr attrType2 = (Attr) attrType1.cloneNode(true);
-			sub2.setAttributeNodeNS(attrType2);
+			sub3.setAttributeNodeNS(attrType2);
+			
+			final Attr attrType3 = (Attr) attrType1.cloneNode(true);
+			sub4.setAttributeNodeNS(attrType3);
+			
+			final Attr attrType4 = (Attr) attrType1.cloneNode(true);
+			sub3.setAttributeNodeNS(attrType4);
+			
+			
+			
+			
+			
+			
 			
 			LOGGER.info("Sending: {}.", asString(doc));
 
