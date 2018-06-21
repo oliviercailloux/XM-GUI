@@ -140,7 +140,7 @@ public class EvaluationsGUI {
 	    
 		alternativesList.add(0, null);
 		criteriaList.add(0, null);
-	    createPerformanceMat();
+	    initPerformanceMat();
 	    
 	    table.addListener(SWT.MouseDown, alterTableListener);
 	    
@@ -151,7 +151,7 @@ public class EvaluationsGUI {
 	 * This matrix keep actualized the criteria performances of 
 	 * the different alternatives in the table.
 	 */
-    private void createPerformanceMat(){
+    private void initPerformanceMat(){
     	
     	ArrayList<Float> performanceList = new ArrayList<>();
     	
