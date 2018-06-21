@@ -47,7 +47,7 @@
  
  /*
   * This class performs basic web services calls from decision-deck to
-  * first test the web services availabilty and then rank Alternatives according to their values.
+  * first test the web services availability and then rank Alternatives according to their values.
   */
  public class CallAltsRankCorrected {
  	
@@ -125,7 +125,7 @@
  	}
  	
  	/*
- 	 * This method tests a simple request submission to the decision-deck's webservices
+ 	 * This method tests a simple request submission to the decision-deck's web services
  	 * in order to rank alternatives according to their values.
  	 */
  	@Test
@@ -176,7 +176,6 @@
  			final Attr attrType2 = (Attr) attrType1.cloneNode(true);
 			sub2.setAttributeNodeNS(attrType2);
 
- 			
  			LOGGER.info("Sending: {}.", asString(doc));
  
  			final Node ret = invoke(dispatch, new DOMSource(doc));

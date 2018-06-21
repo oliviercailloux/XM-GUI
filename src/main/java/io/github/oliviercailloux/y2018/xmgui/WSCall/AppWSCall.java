@@ -43,8 +43,7 @@ import io.github.oliviercailloux.y2018.xmgui.file2.AlternativesRankingMarshaller
 
 public class AppWSCall {
 	
-	private static final String WEBSERVICE ="plotNumericPerformanceTable.py";
-	private static final String ENDPOINT_ADDRESS = "http://webservices.decision-deck.org/soap/" + WEBSERVICE;
+	private static final String ENDPOINT_ADDRESS = "http://webservices.decision-deck.org/soap/plotNumericPerformanceTable.py";
 	@SuppressWarnings("unused")
 	private static final String FAILURE = "The problem submission was unsuccessful";
 	@SuppressWarnings("unused")
