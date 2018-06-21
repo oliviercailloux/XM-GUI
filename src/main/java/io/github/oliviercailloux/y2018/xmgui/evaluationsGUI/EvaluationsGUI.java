@@ -3,8 +3,6 @@ package io.github.oliviercailloux.y2018.xmgui.evaluationsGUI;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import javax.xml.bind.JAXBException;
@@ -33,7 +31,7 @@ public class EvaluationsGUI {
 	private MCProblemMarshaller marshaller;
 	private ArrayList<String> alternativesList = new ArrayList<>();
 	private ArrayList<String> criteriaList = new ArrayList<>();
-	private ArrayList<ArrayList> performanceMat = new ArrayList<ArrayList>();
+	private ArrayList<ArrayList<Float>> performanceMat = new ArrayList<>();
 
     private Label label;
     
@@ -247,15 +245,6 @@ public class EvaluationsGUI {
 	 */
     private int getAddAltWidth(){
     	return addAlternative.getBounds().width;
-    }
-    
-	/** 
-	 * Get the current height of the addAlternative button.
-	 * 
-	 * @return addAlternative height.
-	 */
-    private int getAddAltHeight(){
-    	return addAlternative.getBounds().height;
     }
     
     // MODIFIER FOR ITEMS DIMENSION // 
