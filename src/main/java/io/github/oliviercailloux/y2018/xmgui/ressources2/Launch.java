@@ -10,7 +10,7 @@ public class Launch {
 	
     public static void main(String[] args) throws IOException {
     	
-    	String path="plot.png";
+    	String path="performanceTableplot.png";
 		Path imagePath= Paths.get(path);
 		
     	ImageFrame plot = new ImageFrame("Image Frame of a plot", imagePath);
