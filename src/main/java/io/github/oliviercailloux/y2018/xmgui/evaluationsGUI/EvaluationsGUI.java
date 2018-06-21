@@ -48,6 +48,11 @@ public class EvaluationsGUI {
 	private Listener putTableValueListener;
 	private ModifyListener textListener;
 	
+	/**
+	 * Create a window showing an evaluation table to create a MCProblem.
+	 * You can define your alternatives, criteria and performance values.
+	 * The MCProblem obtained is marshal in a XML file.
+	 */
     public EvaluationsGUI() {
     	
     	// Construction of the different Listener
