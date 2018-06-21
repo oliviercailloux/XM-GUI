@@ -252,6 +252,16 @@ public class EvaluationsGUI {
     	return addAlternative.getBounds().width;
     }
     
+	/** 
+	 * Get the current width of the addAlternative button.
+	 * 
+	 * @return addAlternative width.
+	 */
+	@SuppressWarnings("unused")
+    private int getAddAltHeight(){
+    	return addAlternative.getBounds().height;
+    }
+    
     // MODIFIER FOR ITEMS DIMENSION // 
     
     /**
