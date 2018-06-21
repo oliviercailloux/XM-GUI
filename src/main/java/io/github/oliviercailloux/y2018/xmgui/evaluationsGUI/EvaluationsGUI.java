@@ -420,7 +420,7 @@ public class EvaluationsGUI {
 		        TableItem item = table.getItem(index);
 	            final Text text = new Text(table, SWT.BORDER);
 	            
-	            // Can't choose the header's cell "AlternativeID"
+	            // Can't choose the header's cell "AlternativeID" or something out of the table
 	            if(column == 0 && index ==0){
 	            	return;
 	            }
@@ -522,9 +522,16 @@ public class EvaluationsGUI {
     }
     
     /**
-	 * Create a listener for the addCriteria button.
-	 * Handle the creation of a new column in the table.
-	 */ 
+     * Update the MCProblem with the new input on the table.
+     * Relatively to the index and the column of the item, 
+     * the value updated is different. It can be an alternative Id, 
+     * a criterion Id or a performance value. 
+     * 
+     * @param item can not be null
+     * @param index can not be null
+     * @param column can not be null 
+     * @param text can not be null
+     */
     private void putMCPValue(TableItem item,int index, int column, Text text){
     	 
         if(column == 0){
