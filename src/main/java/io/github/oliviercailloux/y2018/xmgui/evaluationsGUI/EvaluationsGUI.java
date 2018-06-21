@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
 public class EvaluationsGUI {
 	
-	private final Logger logger = LoggerFactory.getLogger(EvaluationsGUI.class);
+	private final Logger LOGGER = LoggerFactory.getLogger(EvaluationsGUI.class);
 	
     private final Display display = Display.getDefault();
     private final Shell shell = new Shell(display);
@@ -162,7 +162,7 @@ public class EvaluationsGUI {
 	    	performanceMat.add(i,performanceList);
     	}
     	
-    	logger.info("create : " + performanceMat.toString());
+    	LOGGER.info("create : " + performanceMat.toString());
     	
     }
 	
@@ -199,7 +199,7 @@ public class EvaluationsGUI {
 		
 	    addCriteria = new Button(shell, SWT.PUSH);
 	    addCriteria.setText("Add Criteria");
-	    addCriteria.setBounds(30 + addAlternative.getBounds().width, 91, 25, 25);
+	    addCriteria.setBounds(30 + getAddAltWidth(), 91, 25, 25);
 	    addCriteria.pack();
         addCriteria.addSelectionListener(addCriteriaListener);
 		
@@ -261,6 +261,24 @@ public class EvaluationsGUI {
     private int getAddAltHeight(){
     	return addAlternative.getBounds().height;
     }
+	
+	/** 
+	 * Get the current Y axis position of the addAlternative button.
+	 * 
+	 * @return addAlternative Y axis position.
+	 */
+    private int getAddAltYAxis(){
+    	return addAlternative.getBounds().y;
+    }
+    
+	/** 
+	 * Get the current Y axis position of the addCriteria button.
+	 * 
+	 * @return addCriteria Y axis position.
+	 */
+    private int getAddCritYAxis(){
+    	return addCriteria.getBounds().y;
+    }
     
     // MODIFIER FOR ITEMS DIMENSION // 
     
@@ -285,7 +303,7 @@ public class EvaluationsGUI {
 	 */
 	private void updateGUIHeight() {
 		
-		shell.setSize(getShellWidth(),getShellHeight() + 18);
+		shell.setSize(getShellWidth(), getShellHeight() + 18);
 	    table.setSize(getTableWidth(), getTableHeight() + 18);
 		
 	}
@@ -296,10 +314,10 @@ public class EvaluationsGUI {
 	 */
 	private void updateAdderPosition() {
 		
-			addAlternative.setBounds(25, addAlternative.getBounds().y + 18, 25, 25);
+			addAlternative.setBounds(25, getAddAltYAxis() + 18, 25, 25);
 	        addAlternative.pack();
 	        
-			addCriteria.setBounds(addAlternative.getBounds().x + getAddAltWidth() + 5, addCriteria.getBounds().y + 18, 25, 25);
+			addCriteria.setBounds(30 + getAddAltWidth(), getAddCritYAxis() + 18, 25, 25);
 			addCriteria.pack();
 		
 	}
@@ -375,7 +393,7 @@ public class EvaluationsGUI {
     		performanceList.add(i,null);
     	}
 		performanceMat.add(performanceList);
-    	logger.info("update alt : " + performanceMat.toString());
+    	LOGGER.info("Update alternative in performance matrix : " + performanceMat.toString());
     	
     }
     
@@ -393,7 +411,7 @@ public class EvaluationsGUI {
     		performanceList.add(i,null);
     		performanceMat.set(i, performanceList);
     	}
-    	logger.info("update crit : " + performanceMat.toString());
+    	LOGGER.info("Update criteria in performance matrix : " + performanceMat.toString());
     	
     }
     
@@ -584,7 +602,7 @@ public class EvaluationsGUI {
      */
     private void updateAlternativeList(Text altId) throws FileNotFoundException, JAXBException, IOException {
     	alternativesList.set(Integer.parseInt(altId.getData().toString())-1, altId.getText());
-    	logger.info(" alternativesList : " + alternativesList.toString());
+    	LOGGER.info("Update alternativesList : " + alternativesList.toString());
 		marshall();
 	}
 	
@@ -599,7 +617,7 @@ public class EvaluationsGUI {
      */
 	private void updateCriteriaList(Text critId) throws FileNotFoundException, JAXBException, IOException {
 		criteriaList.set(Integer.parseInt(critId.getData().toString())-1, critId.getText());
-    	logger.info(" criteriaList : " + criteriaList.toString());
+    	LOGGER.info("Update criteriaList : " + criteriaList.toString());
 		marshall();
 	}
 	
@@ -647,7 +665,7 @@ public class EvaluationsGUI {
     	}
     	
     	performanceMat.set(alt,performanceList);
-    	logger.info(" set : " + performanceMat.toString());
+    	LOGGER.info("Set performance matrix : " + performanceMat.toString());
     	
     }
 	
@@ -668,13 +686,13 @@ public class EvaluationsGUI {
     	for (int i =0; i < alternativesList.size(); i++) {
 			if (alternativesList.get(i) != null) {
 				mcp.addAlt(new Alternative(Integer.parseInt(alternativesList.get(i))));
-				logger.info("Alternatives in the MCP: {}." + mcp.getAlternatives());
+				LOGGER.info("Alternatives in the MCP: {}." + mcp.getAlternatives());
 			}
 		}
     	for (int i =0; i < criteriaList.size(); i++) {
 			if (criteriaList.get(i) != null) {
 				mcp.addCrit(new Criterion(Integer.parseInt(criteriaList.get(i))));
-				logger.info("Criteria in the MCP: {}." + mcp.getCriteria());
+				LOGGER.info("Criteria in the MCP: {}." + mcp.getCriteria());
 			}
 		}
 
@@ -686,7 +704,7 @@ public class EvaluationsGUI {
 		    			Criterion crit = new Criterion(Integer.parseInt(criteriaList.get(j)));
 		    			try{
 			    			mcp.putEvaluation(alt,crit,Float.parseFloat(performanceMat.get(i).get(j).toString()));
-							logger.info("Performance in the MCP: {}." + mcp.getTableEval());
+							LOGGER.info("Performance in the MCP: {}." + mcp.getTableEval());
 		    			}catch(Exception wrongInput){
 		    			}
 	    			}
