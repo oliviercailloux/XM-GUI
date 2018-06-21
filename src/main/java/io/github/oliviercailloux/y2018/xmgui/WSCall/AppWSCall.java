@@ -43,7 +43,8 @@ import io.github.oliviercailloux.y2018.xmgui.file2.AlternativesRankingMarshaller
 
 public class AppWSCall {
 	
-	private static final String ENDPOINT_ADDRESS = "http://webservices.decision-deck.org/soap/plotAlternativesValuesPreorder-ITTB.py";
+	private static final String WEBSERVICE ="plotNumericPerformanceTable.py";
+	private static final String ENDPOINT_ADDRESS = "http://webservices.decision-deck.org/soap/" + WEBSERVICE;
 	@SuppressWarnings("unused")
 	private static final String FAILURE = "The problem submission was unsuccessful";
 	@SuppressWarnings("unused")
@@ -105,27 +106,53 @@ public class AppWSCall {
 			mcp.putEvaluation(alt1, crt1, 11.0f);
 			mcp.putEvaluation(alt2, crt1, 22.0f);
 			MCProblemMarshaller mcpMarshaller= new MCProblemMarshaller(mcp);
+			
+			/*
+			 * NON NECESSAIRE POUR INVOQUER plotNumericPerformanceTable
+			 * 
 			// These values should be given by the WS response after we invoke WeightedSum, but for now we give them raw (testing)
-			// We will need to modify if as we won't have an AlternativesRanking but just One valu for each alt
+			// We will need to modify if as we won't have an AlternativesRanking but just One value for each alt
 			AlternativesRanking altr = new AlternativesRanking(1,alt0);
 			altr.putAltRank(2,alt1);
 			altr.putAltRank(3,alt2);
 			AlternativesRankingMarshaller altrMarshaller = new AlternativesRankingMarshaller(altr);
+			*
+			*/
 			
 			final Document doc = builder.newDocument();
 			final Element submit = doc.createElement("submitProblem");
 			submit.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xsd", "http://www.w3.org/2001/XMLSchema");
 			
-			final Element sub1 = doc.createElement("alternativesValues");
+			final Element sub1 = doc.createElement("overallValues");
+			
+			/*
+			 * NON NECESSAIRE POUR INVOQUER plotNumericPerformanceTable
+			 *
 			CDATASection cdataOverVal = doc.createCDATASection(asString(altrMarshaller.altsRankingNodeForWSCall(altrMarshaller, doc)));
 			sub1.appendChild(cdataOverVal);
+			*
+			*/
 			doc.appendChild(submit);
-			submit.appendChild(sub1); 
+			
+			final Element subMethParameters = doc.createElement("methodParameters");
+			submit.appendChild(subMethParameters);
+			CDATASection cdataMethParameters = doc.createCDATASection(asString(CreateMethodParamatersNode.plotMethodParametersNodeForWSCall(doc)));
+			subMethParameters.appendChild(cdataMethParameters);
 			
 			final Element sub2 = doc.createElement("alternatives");
 			submit.appendChild(sub2);
 			CDATASection cdataAlt = doc.createCDATASection(asString(mcpMarshaller.altsNodeForWSCall(mcp, doc)));
 			sub2.appendChild(cdataAlt);
+			
+			final Element sub4 = doc.createElement("criteria");
+			submit.appendChild(sub4);
+			CDATASection cdataCriteria = doc.createCDATASection(asString(mcpMarshaller.critNodeForWSCall(mcp, doc)));
+			sub4.appendChild(cdataCriteria);
+			
+			final Element sub3 = doc.createElement("performanceTable");
+			submit.appendChild(sub3);
+			CDATASection cdataPerfTable = doc.createCDATASection(asString(mcpMarshaller.perfTableNodeForWSCall(mcp, doc)));
+			sub3.appendChild(cdataPerfTable);
 			
 			final Attr attrType1 = doc.createAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:type");
 			attrType1.setValue("xsd:string");
@@ -136,9 +163,9 @@ public class AppWSCall {
 			LOGGER.info("Sending: {}.", asString(doc));
 
 			final Node ret = invoke(dispatch, new DOMSource(doc));
-
+			
 			LOGGER.info("Returned answer: {}.", asString(ret));
-
+			
 			final NodeList directChildren = ret.getChildNodes();
 			assertEquals(1, directChildren.getLength());
 			final Node firstChild = directChildren.item(0);
