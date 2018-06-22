@@ -10,10 +10,13 @@ import io.github.oliviercailloux.y2018.xmgui.contract1.Alternative;
 import io.github.oliviercailloux.y2018.xmgui.contract1.Criterion;
 import io.github.oliviercailloux.y2018.xmgui.contract1.MCProblem;
 
+/*
+ * This class is used to create X2Performance related to Criterion objects.
+ */
 public class CreatePerformance{
 
 	/**
-	 * This method enters creates the X2Performance for a given Criterion object, identified by its unique ID.
+	 * This method creates the X2Performance for a given Criterion object, identified by its unique ID.
 	 * 
 	 * @param entry the Criterion-Performance value pair
 	 * @return performance the X2Performance value for a Criterion object
