@@ -95,7 +95,7 @@
  	}
  
  	/*
- 	 * This method tests the availability of the decision-deck's web services.
+ 	 * This method tests the availability of the decision-deck's rankAlternativesValues-RXMCDA web service.
  	 */
  	@Test
  	public void testHello() throws Exception {

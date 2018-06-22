@@ -2,7 +2,10 @@ package io.github.oliviercailloux.y2018.xmgui.WSCall;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.io.StringWriter;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
@@ -32,6 +35,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+
+import com.google.common.io.Resources;
 
 import io.github.oliviercailloux.y2018.xmgui.contract1.Alternative;
 import io.github.oliviercailloux.y2018.xmgui.contract1.Criterion;
@@ -78,6 +83,43 @@ public class AppWSCall {
 		final Node resultNode = result.getNode();
 		return resultNode;
 	}
+	
+	public void setFileContentToNodeValue(String sourceFile, Node destNode) throws IOException {
+ 		final URL resUrl = getClass().getResource(sourceFile);
+ 		final String resStr = Resources.toString(resUrl, StandardCharsets.UTF_8);
+ 		final Text textNode = destNode.getOwnerDocument().createCDATASection(resStr);
+ 		destNode.appendChild(textNode);
+ 	}
+ 
+ 	/*
+ 	 * This method tests the availability of the decision-deck's plotting web service.
+ 	 */
+ 	@Test
+ 	public void testHello() throws Exception {
+ 		final Service svc = Service.create(new QName("ServiceNamespace", "ServiceLocalPart"));
+ 		final QName portQName = new QName("PortNamespace", "PortLocalPart");
+ 		svc.addPort(portQName, SOAPBinding.SOAP11HTTP_BINDING, ENDPOINT_ADDRESS);
+ 		final Dispatch<Source> dispatch = svc.createDispatch(portQName, Source.class, Mode.PAYLOAD);
+ 
+ 		final DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+ 		final Document doc = builder.newDocument();
+ 		final Element el = doc.createElement("hello");
+ 		doc.appendChild(el);
+ 		final DOMSource src = new DOMSource(doc);
+ 
+ 		final Node resultNode = invoke(dispatch, src);
+ 
+ 		LOGGER.info("Returned answer: {}.", asString(resultNode));
+ 
+ 		final NodeList directChildren = resultNode.getChildNodes();
+ 		assertEquals(1, directChildren.getLength());
+ 		final Node firstChild = directChildren.item(0);
+ 		assertEquals("helloResponse", firstChild.getNodeName());
+ 		final NodeList subChildren = firstChild.getChildNodes();
+ 		assertEquals(1, subChildren.getLength());
+ 		final Node firstSubChild = subChildren.item(0);
+ 		assertEquals("message", firstSubChild.getNodeName());
+ 	}
 	
 	@Test
 	public void SubmitAndRequest() throws Exception {
@@ -153,11 +195,13 @@ public class AppWSCall {
 			CDATASection cdataPerfTable = doc.createCDATASection(asString(mcpMarshaller.perfTableNodeForWSCall(mcp, doc)));
 			sub3.appendChild(cdataPerfTable);
 			
+			
 			final Attr attrType1 = doc.createAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:type");
 			attrType1.setValue("xsd:string");
 			sub1.setAttributeNodeNS(attrType1);
 			final Attr attrType2 = (Attr) attrType1.cloneNode(true);
 			sub2.setAttributeNodeNS(attrType2);
+			
 			
 			LOGGER.info("Sending: {}.", asString(doc));
 
