@@ -9,6 +9,10 @@ import com.google.common.collect.UnmodifiableIterator;
 import io.github.oliviercailloux.y2018.xmgui.contract1.Criterion;
 import io.github.oliviercailloux.y2018.xmgui.contract1.MCProblem;
 
+/*
+ * This class serves for decision-deck's plotNumericPerformanceTable web service invocation.
+ * This web service requires a methodParameters XMCDA document which this class provides as a Node.
+ */
 public class CreateMethodParamatersNode {
 
 	public static Element plotMethodParametersNodeForWSCall(Document doc) {
@@ -17,6 +21,7 @@ public class CreateMethodParamatersNode {
 		Element plotMethodParametersNode = doc.createElement("methodParameters");
 		XMCDANode.appendChild(plotMethodParametersNode);
 		
+		// Create chart_title mandatory parameter
 		Element parameter1 = doc.createElement("parameter");
 		Attr parameter1Id = doc.createAttribute("id");
 		parameter1Id.setValue("chart_title");
@@ -28,6 +33,7 @@ public class CreateMethodParamatersNode {
 		value1Node.appendChild(label1Node);
 		label1Node.appendChild(doc.createTextNode("Performance table plot"));
 		
+		// Create domain_axis mandatory parameter
 		Element parameter2 = doc.createElement("parameter");
 		Attr parameter2Id = doc.createAttribute("id");
 		parameter2Id.setValue("domain_axis");
@@ -39,6 +45,7 @@ public class CreateMethodParamatersNode {
 		value2Node.appendChild(label2Node);
 		label2Node.appendChild(doc.createTextNode("Alternatives"));
 		
+		// Create range_axis mandatory parameter
 		Element parameter3 = doc.createElement("parameter");
 		Attr parameter3Id = doc.createAttribute("id");
 		parameter3Id.setValue("range_axis");
