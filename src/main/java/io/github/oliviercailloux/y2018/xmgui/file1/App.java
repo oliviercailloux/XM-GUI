@@ -52,21 +52,23 @@ public class App {
 		mcp.putEvaluation(alt3, crt3, 6f);
 		mcp.putEvaluation(alt3, crt4, 12f);
 		mcp.putEvaluation(alt3, crt5, 120f);
+		
 		LOGGER.info("MCP instance created");
 		
 		MCProblemMarshaller mcpMarshaller = new MCProblemMarshaller(mcp);
 		try (final FileOutputStream fos = new FileOutputStream(path)) {
 			mcpMarshaller.marshalAndWrite(fos);
+			
 			LOGGER.debug("Marshalling invoked");
 		}
 		
 		MCProblemUnmarshaller mcpUnmarshaller = new MCProblemUnmarshaller();
 		try (InputStream in = java.nio.file.Files.newInputStream(filepath)) {
 			mcpUnmarshaller.readMCProblemFromXml(in);
+			
 			LOGGER.debug("Unmarshalling invoked");
 		}
 		
 		System.out.println(mcp.toStringTableEval());
 	}
-
 }
