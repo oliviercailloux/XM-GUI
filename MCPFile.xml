@@ -3,10 +3,52 @@
     <alternatives>
         <alternative id="1"/>
         <alternative id="2"/>
+        <alternative id="3"/>
     </alternatives>
-    <criteria/>
+    <criteria>
+        <criterion id="1"/>
+        <criterion id="2"/>
+        <criterion id="3"/>
+    </criteria>
     <performanceTable>
-        <alternativePerformances/>
-        <alternativePerformances/>
+        <alternativePerformances>
+            <alternativeID>1</alternativeID>
+            <performance>
+                <criterionID>1</criterionID>
+                <value>
+                    <real>2.0</real>
+                </value>
+            </performance>
+        </alternativePerformances>
+        <alternativePerformances>
+            <alternativeID>2</alternativeID>
+            <performance>
+                <criterionID>1</criterionID>
+                <value>
+                    <real>13.3</real>
+                </value>
+            </performance>
+        </alternativePerformances>
+        <alternativePerformances>
+            <alternativeID>3</alternativeID>
+            <performance>
+                <criterionID>1</criterionID>
+                <value>
+                    <real>6.0</real>
+                </value>
+            </performance>
+            <performance>
+                <criterionID>2</criterionID>
+                <value>
+                    <real>12.0</real>
+                </value>
+            </performance>
+            <performance>
+                <criterionID>3</criterionID>
+                <value>
+                    <real>120.0</real>
+                </value>
+            </performance>
+        </alternativePerformances>
     </performanceTable>
 </ns2:XMCDA>
