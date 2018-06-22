@@ -17,15 +17,16 @@ public class AlternativesRanking {
 
 	/**
 	 * Put a rank for a given alternative in order to construct and
-	 * AlternativeRanking instance This also creates a history entry for the put
+	 * AlternativeRanking instance. This also creates a history entry for the put
 	 * alternative.
 	 * 
 	 * @param rank must be positive
 	 * @param alt must not be null
 	 */
 	public AlternativesRanking(int rank, Alternative alt) {
-		if (rank <= 0 || alt == null)
+		if (rank <= 0 || alt == null) {
 			throw new IllegalArgumentException("rank must be positive and alt must not be null");
+		}
 		map.put(rank, alt);
 
 	}
@@ -41,7 +42,6 @@ public class AlternativesRanking {
 		if (rank <= 0 || alt == null) {
 			throw new IllegalArgumentException("rank must be positive and alt must not be null");
 		}
-		// Validate the rank given is not too big
 		validateRank(rank);
 		map.put(rank, alt);
 	}
@@ -111,9 +111,7 @@ public class AlternativesRanking {
 	    if (obj == null) return false;
 	    if (obj == this) return true;
 	    if (!(obj instanceof AlternativesRanking)) return false;
-	    
 	    AlternativesRanking altR = (AlternativesRanking) obj;
-
         return altR.map.equals(map);
 	}
 	
@@ -125,5 +123,4 @@ public class AlternativesRanking {
 	public int hashCode() {
 		return Objects.hash(map);
 	}
-
 }
