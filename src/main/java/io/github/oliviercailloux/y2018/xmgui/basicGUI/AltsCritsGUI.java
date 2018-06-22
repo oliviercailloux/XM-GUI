@@ -111,7 +111,7 @@ public class AltsCritsGUI {
             }
         };
         	
-        // Listener used to validate the desired id entered by the user to create alternatives or criteria
+        // Listener used to validate the id entered by the user to create an alternative or a criterion
         validateListener = new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -124,7 +124,6 @@ public class AltsCritsGUI {
 						{
 							MessageDialog.openError(shell, "Error", "Please enter an integer");	
 						}
-						
 						nbAlts.dispose();
 						nbAltsDirection.setText("Click to add a new alternative");
 						for (int i = 0 ; i < initialNbOfAlts; i ++)
@@ -195,7 +194,7 @@ public class AltsCritsGUI {
 	}
 	
 	/*
-	 * This method creates the field to ask the user how many alternatives he initially wants to create, and listens to it.
+	 * This method creates the text field for the the user to enter how many alternatives he initially wants to create, and listens to it.
 	 */
 	private static void createInitialAltsFields(AltsCritsGUI gui) {
 		gui.nbAltsDirection = new Label(gui.alternatives, SWT.NONE);
@@ -210,7 +209,7 @@ public class AltsCritsGUI {
 	}
 	
 	/*
-	 * This method creates the field to ask the user how many criteria he initially wants to create, and listens to it.
+	 * This method creates the text field for the user to enter how many criteria he initially wants to create, and listens to it.
 	 */
 	private static void createInitialCritsFields(AltsCritsGUI gui) {
 		gui.nbCritDirection = new Label(gui.criteria, SWT.NONE);
@@ -235,9 +234,9 @@ public class AltsCritsGUI {
 	}
 	
     /*
-     * This method creates text areas to enter the id of the alternatives that are to be created and marshalled.
+     * This method creates text areas for the user to enter the id of the alternatives that are to be created and marshalled.
      * 
-     * @param initialNbOfCrits the initial number of alteratives to be created as entered by the user
+     * @param initialNbOfCrits the initial number of alternatives to be created as entered by the user
      */
     protected void createAltsTextBoxes(int initialNbOfAlt) {
         if (alternativesIdPanel!=null) {
@@ -245,7 +244,6 @@ public class AltsCritsGUI {
         		alternativesIdPanel.dispose();
         		altTextPositionIncrementor=30;
         }
-        
         alternativesIdPanel = new Composite(alternatives, SWT.NONE);
         alternativesIdPanel.setBounds(0, 80, 400, 400);
         altIdInputDirection = new Label(alternativesIdPanel, SWT.NONE);
@@ -266,7 +264,7 @@ public class AltsCritsGUI {
     }
     
     /*
-     * This method creates text areas to enter the id of the criteria that are to be created and marshalled.
+     * This method creates text areas for the user to enter the id of the criteria that are to be created and marshalled.
      * 
      * @param initialNbOfCrits the initial number of criteria to be created as entered by the user
      */
@@ -276,7 +274,6 @@ public class AltsCritsGUI {
         		criteriaIdPanel.dispose();
         		critTextPositionIncrementor=30;
         }
-        
         criteriaIdPanel = new Composite(criteria, SWT.NONE);
         criteriaIdPanel.setBounds(0, 80, 400, 400);
     		critIdInputDirection = new Label(criteriaIdPanel, SWT.NONE);
@@ -295,8 +292,9 @@ public class AltsCritsGUI {
 	    		}
     		criteria.layout();
     }
+    
     /*
-     * This method marshalls Alternatives and Criteria based on their stored and updated lists.
+     * This method marshalls Alternatives and Criteria based on the updated alternativesList and criteriaList.
      */
     protected void marshall() throws JAXBException, FileNotFoundException, IOException {
     		mcp = new MCProblem();
@@ -322,6 +320,7 @@ public class AltsCritsGUI {
     protected MCProblem getMCP(){
     	return this.mcp;
     }
+    
     protected void updateAlternativeList(Text altId) throws FileNotFoundException, JAXBException, IOException {
     		alternativesList.set(Integer.parseInt(altId.getData().toString()), altId.getText());
     		marshall();
@@ -333,14 +332,15 @@ public class AltsCritsGUI {
     }
     
 	public static void main(String[] args) {
-    	AltsCritsGUI gui = new AltsCritsGUI();
-    	createShell(gui);
-    	TabFolder tabfolder = createTabFolder(gui);
-    createTabItemAlternatives(gui, tabfolder);
-    createTabItemCriteria(gui, tabfolder);
-    createInitialAltsFields(gui);
-    createInitialCritsFields(gui);
-    displayLoop(gui);
+    		AltsCritsGUI gui = new AltsCritsGUI();
+    		
+    		createShell(gui);
+    		TabFolder tabfolder = createTabFolder(gui);
+    		createTabItemAlternatives(gui, tabfolder);
+    		createTabItemCriteria(gui, tabfolder);
+    		createInitialAltsFields(gui);
+    		createInitialCritsFields(gui);
+    		displayLoop(gui);
     }
 }
 
