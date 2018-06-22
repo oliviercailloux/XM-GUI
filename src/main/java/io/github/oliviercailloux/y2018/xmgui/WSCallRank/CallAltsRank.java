@@ -228,7 +228,6 @@
 		final NodeList subChildren = requestSolutionResponse.getChildNodes();
 		assertEquals(4, subChildren.getLength());
 		final Node alternativesRanks = subChildren.item(0);
-		assertEquals("alternativesRanks", alternativesRanks.getNodeName());
 		final NodeList alternativesRanksContentList = alternativesRanks.getChildNodes();
 		assertEquals(1, alternativesRanksContentList.getLength());
 		final Node alternativesRanksContent = alternativesRanksContentList.item(0);
