@@ -1,6 +1,5 @@
 package io.github.oliviercailloux.y2018.xmgui.file1;
 
-
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -39,6 +38,9 @@ import io.github.oliviercailloux.y2018.xmgui.contract1.Alternative;
 import io.github.oliviercailloux.y2018.xmgui.contract1.Criterion;
 import io.github.oliviercailloux.y2018.xmgui.contract1.MCProblem;
 
+/*
+ * This class serves the marshalling of multi-criteria problems (MCProblem objects).
+ */
 public class MCProblemMarshaller {
 
 	/*
@@ -106,11 +108,11 @@ public class MCProblemMarshaller {
 	
 	/*
 	 * This method outputs a set of alternatives in a Node format 
-	 * to be used in Diviz's web services call through the CallAltsRank class.
+	 * to be used in Diviz's web services call through the WSCall and WSCallRank packages' classes.
 	 * 
 	 * @param mcp the MCProblem from which the alternatives set is extracted
-	 * @param doc the document used in the CallAltsRank class
-	 * @return the XMCDA node to be used in the CallAltsRank class
+	 * @param doc the document to be sent to web services
+	 * @return the XMCDA node to be used in web sevices calls
 	 */
 	public Element altsNodeForWSCall(MCProblem mcpNode, Document doc) {
 		Element XMCDANode = doc.createElement("xmcda:XMCDA");
@@ -126,22 +128,24 @@ public class MCProblemMarshaller {
 			alternativeNode.setAttributeNode(altId);
 			alternativesNode.appendChild(alternativeNode);
 		}
-		
 		XMCDANode.setAttribute("xmlns:xmcda", "http://www.decision-deck.org/2012/XMCDA-2.2.1"); 
 		return XMCDANode;
 	}
 	
-	
-	
-	
+	/*
+	 * This method outputs a set of criteria in a Node format 
+	 * to be used in Diviz's web services call through the WSCall and WSCallRank packages' classes.
+	 * 
+	 * @param mcp the MCProblem from which the alternatives set is extracted
+	 * @param doc the document to be sent to web services
+	 * @return the XMCDA node to be used in web services call
+	 */
 	public Element critNodeForWSCall(MCProblem mcpNode, Document doc) {
 		Element XMCDANode = doc.createElement("xmcda:XMCDA");
 		Element criteriaNode = doc.createElement("criteria");
 		XMCDANode.appendChild(criteriaNode);
 		
-
 		UnmodifiableIterator<Criterion> itCrits = mcp.getCriteria().iterator();
-		
 		while (itCrits.hasNext()) {
 			Element criterionNode = doc.createElement("criterion");
 			Criterion crit= itCrits.next();
@@ -151,13 +155,18 @@ public class MCProblemMarshaller {
 			criteriaNode.appendChild(criterionNode);
 			criteriaNode.appendChild(criterionNode);
 		}
-		
-		
 		XMCDANode.setAttribute("xmlns:xmcda", "http://www.decision-deck.org/2012/XMCDA-2.2.1"); 
 		return XMCDANode;
 	}
 	
-	
+	/*
+	 * This method outputs a performanceTable in a Node format 
+	 * to be used in Diviz's web services call through the WSCall and WSCallRank packages' classes.
+	 * 
+	 * @param mcp the MCProblem from which the alternatives set is extracted
+	 * @param doc the document to be sent to web services
+	 * @return the XMCDA node to be used in web services call
+	 */
 	public Element perfTableNodeForWSCall(MCProblem mcpNode, Document doc) {
 		Element XMCDANode = doc.createElement("xmcda:XMCDA");
 		Element perfTableNode = doc.createElement("performanceTable");
@@ -173,35 +182,22 @@ public class MCProblemMarshaller {
 				Element altIdNode=doc.createElement("alternativeID");
 				alternativePerfNode.appendChild(altIdNode);
 				altIdNode.appendChild(doc.createTextNode(Integer.toString(altid)));
-			while(itCritsPerf.hasNext()){
-				Entry<Criterion, Float> critAndVal = itCritsPerf.next();
-				
-				Element criterionIDNode = doc.createElement("criterionID");
-				criterionIDNode.appendChild(doc.createTextNode(Integer.toString(critAndVal.getKey().getId())));
-				
-				
-				Element perfNode = doc.createElement("performance");
-				
-					
-				
-				
-				Element valueNode=doc.createElement("value");
-				Element realNode=doc.createElement("real");
-				realNode.appendChild(doc.createTextNode(Float.toString(critAndVal.getValue())));
-				valueNode.appendChild(realNode);
-				perfNode.appendChild(criterionIDNode);
-				perfNode.appendChild(valueNode);
-				alternativePerfNode.appendChild(perfNode);
-				
+			
+				while(itCritsPerf.hasNext()){
+					Entry<Criterion, Float> critAndVal = itCritsPerf.next();
+					Element criterionIDNode = doc.createElement("criterionID");
+					criterionIDNode.appendChild(doc.createTextNode(Integer.toString(critAndVal.getKey().getId())));
+					Element perfNode = doc.createElement("performance");
+					Element valueNode=doc.createElement("value");
+					Element realNode=doc.createElement("real");
+					realNode.appendChild(doc.createTextNode(Float.toString(critAndVal.getValue())));
+					valueNode.appendChild(realNode);
+					perfNode.appendChild(criterionIDNode);
+					perfNode.appendChild(valueNode);
+					alternativePerfNode.appendChild(perfNode);
 			}
-			
-			
 			perfTableNode.appendChild(alternativePerfNode);
 		}
-		
-		
-	
-		
 		XMCDANode.setAttribute("xmlns:xmcda", "http://www.decision-deck.org/2012/XMCDA-2.2.1"); 
 		return XMCDANode;
 	}
