@@ -1,5 +1,7 @@
  package io.github.oliviercailloux.y2018.xmgui.WSCallRank;
  
+ import static org.junit.Assert.*;
+
  import static org.junit.Assert.assertEquals;
  
  import java.io.IOException;
