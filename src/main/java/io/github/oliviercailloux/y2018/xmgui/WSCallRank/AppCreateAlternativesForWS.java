@@ -20,8 +20,8 @@ import io.github.oliviercailloux.y2018.xmgui.file1.MCProblemMarshaller;
 import io.github.oliviercailloux.y2018.xmgui.file2.AlternativesRankingMarshaller;
 
 /*
- * This class is used to create clean Alternatives and their ranking 
- * in order to be used by the AltsCallRank class.
+ * This class is used to create clean Alternatives and their ranking in an AlternativeRanking object.
+ * This object is marshalled in order to be used by the AltsCallRank class.
  */
 public class AppCreateAlternativesForWS {
 	
@@ -50,15 +50,15 @@ public class AppCreateAlternativesForWS {
 		MCProblemMarshaller mcpMarshaller = new MCProblemMarshaller(mcp);
 		try (final FileOutputStream fos = new FileOutputStream(pathAlts)) {
 			mcpMarshaller.marshalAndWrite(fos);
+			
 			LOGGER.info("Marshalling invoked");
 		}
 
 		AlternativesRankingMarshaller AltRMarshaller = new AlternativesRankingMarshaller(AltR1);
 		try (final FileOutputStream fos = new FileOutputStream(pathAltsRank)) {
 			AltRMarshaller.writeAlternativeValue(fos);
+			
 			LOGGER.debug("Marshalling invoked");
 		}
-	
 	}
-
 }
