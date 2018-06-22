@@ -24,14 +24,15 @@ import io.github.oliviercailloux.y2018.xmgui.contract1.MCProblem;
 import io.github.oliviercailloux.y2018.xmgui.contract1.Alternative;
 import io.github.oliviercailloux.y2018.xmgui.contract1.Criterion;
 
-
+/*
+ * This class serves the unmarshalling of multicriteria problems, from XMCDA to MCProblem objects.
+ */
 public class MCProblemUnmarshaller {
 	
 	private MCProblem mcp = new MCProblem();
 
 	/**
-	 * This method reads a multi-criteria problem in the form of an XML
-	 * file abiding by the XMCDA standard.
+	 * This method reads a multi-criteria problem in the form of an XML file abiding by the XMCDA standard.
 	 * 
 	 * @param in the InputStream corresponding to the XML file containing the multi-criteria problem
 	 * @return the MCProblem object corresponding to the XML file transmitted
@@ -67,11 +68,9 @@ public class MCProblemUnmarshaller {
 		for (int i = 0; i < altsOnCritsPerf.size(); i++) {
 			getListOfX2AlternativePerformancesOnCriteriaAndPutInMcp(i, altsOnCritsPerf);
 		}
-			
+		
 		return mcp;
-				
 	} 
-	
 	
 	/*
 	 * This method finds and reads the X2Alternatives item from an unmarshalled XML file
@@ -184,6 +183,5 @@ public class MCProblemUnmarshaller {
 			Criterion evaluatedCriterion = new Criterion(Integer.parseInt(x2CritIdOfEvaluatedX2AltPerf));	
 			mcp.putEvaluation(evaluatedAlternative, evaluatedCriterion, (float) performanceValue);
 		}
-		
 	}
 }
