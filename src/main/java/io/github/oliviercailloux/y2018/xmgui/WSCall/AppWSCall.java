@@ -45,7 +45,10 @@ import io.github.oliviercailloux.y2018.xmgui.contract2.AlternativesRanking;
 import io.github.oliviercailloux.y2018.xmgui.file1.MCProblemMarshaller;
 import io.github.oliviercailloux.y2018.xmgui.file2.AlternativesRankingMarshaller;
 
-
+/*
+ * This class is used to invoke the decision deck's web services (currently only 'plotNumericPerformanceTable' from ITTB) with valid XMCDA documents
+ * corresponding to the methodParameters, Alternatives, Criteria and performanceTable of a multi-criteria problem (MCProblem object).
+ */
 public class AppWSCall {
 	
 	private static final String ENDPOINT_ADDRESS = "http://webservices.decision-deck.org/soap/plotNumericPerformanceTable-ITTB.py";
@@ -92,7 +95,7 @@ public class AppWSCall {
  	}
  
  	/*
- 	 * This method tests the availability of the decision-deck's plotting web service.
+ 	 * This method tests the availability of the decision-deck's plotNumericPerformanceTable web service.
  	 */
  	@Test
  	public void testHello() throws Exception {
@@ -100,7 +103,6 @@ public class AppWSCall {
  		final QName portQName = new QName("PortNamespace", "PortLocalPart");
  		svc.addPort(portQName, SOAPBinding.SOAP11HTTP_BINDING, ENDPOINT_ADDRESS);
  		final Dispatch<Source> dispatch = svc.createDispatch(portQName, Source.class, Mode.PAYLOAD);
- 
  		final DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
  		final Document doc = builder.newDocument();
  		final Element el = doc.createElement("hello");
@@ -121,6 +123,10 @@ public class AppWSCall {
  		assertEquals("message", firstSubChild.getNodeName());
  	}
 	
+ 	/*
+ 	 * This methods submits a static multi-criteria problem to the endpoint address (currently the decision-deck's plotNumericPerformanceTable web service) and request a response.
+ 	 * This MCProblem abides by the XMCDA standard and is submitted containing its methodParameters, Alternatives, Criteria and performanceTable documents.
+ 	 */
 	@Test
 	public void SubmitAndRequest() throws Exception {
 		final Service svc = Service.create(new QName("ServiceNamespace", "ServiceLocalPart"));
@@ -133,7 +139,8 @@ public class AppWSCall {
 		final String ticket;
 		
 		{
-			// For the time being we create a raw MCP here, but in the future, the GUI will create and pass this data.
+			// For now, a raw MCProblem is created to be sent to the decision-deck plotNumericPerformanceTable web service.
+			// The evaluationGUI will provide such MCProblem in the future.
 			MCProblem mcp = new MCProblem();
 			Alternative alt0 = new Alternative(0);
 			Alternative alt1 = new Alternative(1);
@@ -148,33 +155,16 @@ public class AppWSCall {
 			mcp.putEvaluation(alt2, crt1, 22.0f);
 			MCProblemMarshaller mcpMarshaller= new MCProblemMarshaller(mcp);
 			
-			/*
-			 * NON NECESSAIRE POUR INVOQUER plotNumericPerformanceTable
-			 * 
-			// These values should be given by the WS response after we invoke WeightedSum, but for now we give them raw (testing)
-			// We will need to modify if as we won't have an AlternativesRanking but just One value for each alt
-			AlternativesRanking altr = new AlternativesRanking(1,alt0);
-			altr.putAltRank(2,alt1);
-			altr.putAltRank(3,alt2);
-			AlternativesRankingMarshaller altrMarshaller = new AlternativesRankingMarshaller(altr);
-			*
-			*/
-			
 			final Document doc = builder.newDocument();
+			
+			// Create the problem to be submitted to the web service and set its attributes
 			final Element submit = doc.createElement("submitProblem");
 			submit.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xsd", "http://www.w3.org/2001/XMLSchema");
-			
-			
-			/*
-			 * NON NECESSAIRE POUR INVOQUER plotNumericPerformanceTable
-			 *
-			final Element sub1 = doc.createElement("overallValues");
-			CDATASection cdataOverVal = doc.createCDATASection(asString(altrMarshaller.altsRankingNodeForWSCall(altrMarshaller, doc)));
-			sub1.appendChild(cdataOverVal);
-			*
-			*/
+			final Attr attrType1 = doc.createAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:type");
+			attrType1.setValue("xsd:string");
 			doc.appendChild(submit);
-			
+
+			// Create the methodParameters XMCDA document and set its attributes
 			final Element subMethParameters = doc.createElement("methodParameters");
 			submit.appendChild(subMethParameters);
 			CDATASection cdataMethParameters = doc.createCDATASection(asString(CreateMethodParamatersNode.plotMethodParametersNodeForWSCall(doc)));
@@ -186,6 +176,7 @@ public class AppWSCall {
 			methParamsTag.setValue("methodParameters");
 			subMethParameters.setAttributeNode(methParamsTag);
 			
+			// Create the alternatives XMCDA document and set its attributes
 			final Element sub2 = doc.createElement("alternatives");
 			submit.appendChild(sub2);
 			CDATASection cdataAlt = doc.createCDATASection(asString(mcpMarshaller.altsNodeForWSCall(mcp, doc)));
@@ -197,6 +188,7 @@ public class AppWSCall {
 			altsTag.setValue("alternatives");
 			sub2.setAttributeNode(altsTag);
 			
+			// Create the criteria XMCDA document and set its attributes
 			final Element sub4 = doc.createElement("criteria");
 			submit.appendChild(sub4);
 			CDATASection cdataCriteria = doc.createCDATASection(asString(mcpMarshaller.critNodeForWSCall(mcp, doc)));
@@ -208,6 +200,7 @@ public class AppWSCall {
 			criteriaTag.setValue("criteria");
 			sub4.setAttributeNode(criteriaTag);
 			
+			// Create the performanceTable XMCDA document and set its attributes
 			final Element sub3 = doc.createElement("performanceTable");
 			submit.appendChild(sub3);
 			CDATASection cdataPerfTable = doc.createCDATASection(asString(mcpMarshaller.perfTableNodeForWSCall(mcp, doc)));
@@ -219,14 +212,6 @@ public class AppWSCall {
 			perfTableTag.setValue("performanceTable");
 			sub3.setAttributeNode(perfTableTag);
 
-			
-			final Attr attrType1 = doc.createAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:type");
-			attrType1.setValue("xsd:string");
-			// sub1.setAttributeNodeNS(attrType1);
-			//final Attr attrType2 = (Attr) attrType1.cloneNode(true);
-			//sub2.setAttributeNodeNS(attrType2);
-			
-			
 			LOGGER.info("Sending: {}.", asString(doc));
 
 			final Node ret = invoke(dispatch, new DOMSource(doc));
@@ -286,7 +271,6 @@ public class AppWSCall {
 	LOGGER.info("Content of returned alternativesRanks: {}.", alternativesRanksContent.getNodeValue());
 	
 	}
-
 }
 
 		
