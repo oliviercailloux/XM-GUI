@@ -245,7 +245,7 @@ public class EvaluationsGUI {
 	 * 
 	 * @return file path
 	 */
-    public String getFile(){
+    public String getFilePath(){
     	return path;
     }
     
