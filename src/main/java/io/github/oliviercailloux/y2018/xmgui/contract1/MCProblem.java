@@ -1,12 +1,10 @@
 package io.github.oliviercailloux.y2018.xmgui.contract1;
 
-//import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Objects;
 
 import com.google.common.collect.HashBasedTable;
-//import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableTable;
@@ -20,7 +18,6 @@ import com.google.common.collect.Table;
  * for decision making.
  */
 public class MCProblem {
-
 	private Set<Alternative> alternatives = new HashSet<>();
 	private Set<Criterion> criteria = new HashSet<>();
 	private Table<Alternative, Criterion, Float> tableEval = HashBasedTable.create();
