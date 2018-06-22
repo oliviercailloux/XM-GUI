@@ -27,25 +27,40 @@ public class EvaluationsGUI {
     private final Display display = Display.getDefault();
     private final Shell shell = new Shell(display);
 	
+    private String path;
+    
 	private MCProblem mcp;
 	private MCProblemMarshaller marshaller;
 	private ArrayList<String> alternativesList = new ArrayList<>();
 	private ArrayList<String> criteriaList = new ArrayList<>();
 	private ArrayList<ArrayList<Float>> performanceMat = new ArrayList<>();
+	
+	private int marginTop = 25;
+	private int marginBottom = 25;
+	private int marginLeft = 25;
+	private int marginRight = 25;
+	private int itemHeight = 18;
+	private int columnWidth = 50;
 
     private Label label;
     
 	private Table table;
     private TableEditor editor;
 	
+	private Point clickPoint;
+	private Text textEdit;
+	private TableItem activeItem;
+	private int activeIndex;
+	private int activeColumn;
+	
 	private Button addAlternative;
 	private Button addCriteria;
 
-	private SelectionListener addCriteriaListener;
-	private SelectionListener addAlternativeListener;
+    private SelectionListener adderListener;
     
 	private Listener alterTableListener;
 	private Listener putTableValueListener;
+	
 	private ModifyListener textListener;
 	
 	/**
@@ -55,22 +70,152 @@ public class EvaluationsGUI {
 	 */
     public EvaluationsGUI() {
     	
-    	// Construction of the different Listener
+    	// Listener
         createAlterTableListener();
-        createAlternativeListener();
-        createCriteriaListener();
+        createAdderListener();
         
-        // Construction of the window
-        initShell();
+        // Window
     	createTableInstruction();
         createTable();
         createEditor();
-        createAlternativeAdder();
-        createCriteriaAdder();
+        createAdder();
+        initShell();
+        
+        // Output file path (default)
+        setFilePath("MCPFile.xml");
         
     }
-	
-    // EVALUATIONS GUI ACTIVATOR //
+    
+    // GETTER FOR ITEMS DIMENSIONS //
+    
+ 	/** 
+ 	 * Get the current width of the shell.
+ 	 * 
+ 	 * @return shell width.
+ 	 */
+     private int getShellWidth(){
+     	return shell.getBounds().width;
+     }
+     
+ 	/** 
+ 	 * Get the current height of the sell.
+ 	 * 
+ 	 * @return shell height.
+ 	 */
+     private int getShellHeight(){
+     	return shell.getBounds().height;
+     }
+     
+ 	/** 
+ 	 * Get the current width of the label instruction.
+ 	 * 
+ 	 * @return label instruction width.
+ 	 */
+     private int getLabelWidth(){
+     	return label.getBounds().width;
+     }
+     
+ 	/** 
+ 	 * Get the current height of the label instruction.
+ 	 * 
+ 	 * @return label instruction height.
+ 	 */
+     private int getLabelHeight(){
+     	return label.getBounds().height;
+     }
+     
+ 	/** 
+ 	 * Get the current width of the table.
+ 	 * 
+ 	 * @return table width.
+ 	 */
+     private int getTableWidth(){
+     	return table.getBounds().width;
+     }
+     
+ 	/** 
+ 	 * Get the current height of the table.
+ 	 * 
+ 	 * @return table height.
+ 	 */
+     private int getTableHeight(){
+     	return table.getBounds().height;
+     }
+     
+ 	/** 
+ 	 * Get the current X axis position of the table.
+ 	 * 
+ 	 * @return table X axis position.
+ 	 */
+     private int getTableXAxis(){
+     	return table.getBounds().x;
+     }
+     
+ 	/** 
+ 	 * Get the current Y axis position of the table.
+ 	 * 
+ 	 * @return table Y axis position.
+ 	 */
+     private int getTableYAxis(){
+     	return table.getBounds().y;
+     }
+     
+ 	/** 
+ 	 * Get the current width of the addAlternative button.
+ 	 * 
+ 	 * @return addAlternative width.
+ 	 */
+     private int getAddAltWidth(){
+     	return addAlternative.getBounds().width;
+     }
+     
+ 	/** 
+ 	 * Get the current width of the addAlternative button.
+ 	 * 
+ 	 * @return addAlternative width.
+ 	 */
+     private int getAddAltHeight(){
+     	return addAlternative.getBounds().height;
+     }
+ 	
+ 	/** 
+ 	 * Get the current X axis position of the addAlternative button.
+ 	 * 
+ 	 * @return addAlternative X axis position.
+ 	 */
+     @SuppressWarnings("unused")
+     private int getAddAltXAxis(){
+     	return addAlternative.getBounds().x;
+     }
+ 	
+ 	/** 
+ 	 * Get the current Y axis position of the addAlternative button.
+ 	 * 
+ 	 * @return addAlternative Y axis position.
+ 	 */
+     private int getAddAltYAxis(){
+     	return addAlternative.getBounds().y;
+     }
+     
+ 	/** 
+ 	 * Get the current X axis position of the addCriteria button.
+ 	 * 
+ 	 * @return addCriteria X axis position.
+ 	 */
+     private int getAddCritXAxis(){
+     	return addCriteria.getBounds().x;
+     }
+     
+ 	/** 
+ 	 * Get the current Y axis position of the addCriteria button.
+ 	 * 
+ 	 * @return addCriteria Y axis position.
+ 	 */
+     private int getAddCritYAxis(){
+     	return addCriteria.getBounds().y;
+     }
+     
+    // EVALUATIONS GUI PUBLIC METHODS //
     
     /**
 	 * Open the window of an EvaluationsGUI instance and keep it open
@@ -86,19 +231,26 @@ public class EvaluationsGUI {
         }
 	}
 	
+    /**
+     * Set the output path for the MCProblem file (XML).
+     * 
+     * @param filePath can not be null, it's the output path wanted
+     */
+    public void setFilePath(String filePath){
+    	path = filePath;
+    }
+	
+	/**
+	 * Get the path of the MCProblem file.
+	 * 
+	 * @return file path
+	 */
+    public String getFile(){
+    	return path;
+    }
+    
 	// CREATOR AND INITIALIZER FOR ITEMS //
 	
-    /**
-	 * Initialize the dimension of the shell.
-	 */
-	private void initShell() {
-		
-	    shell.setSize(450, 150);
-		shell.setMinimumSize(450, 150);
-	    shell.setText("Alternatives and criteria evaluations");
-	    
-	}
-
     /**
 	 * Create the label containing the instructions for the user.
 	 */
@@ -106,10 +258,8 @@ public class EvaluationsGUI {
 		
 		label = new Label(shell, SWT.NULL);
 	    
-		label.setSize(400,25);
-		label.setLocation(25, 25);
+		label.setLocation(marginLeft, marginTop);
 		label.setText("You need to enter your criterias names in the first row of the table.");
-		
 		label.pack();
 		
 	}
@@ -121,28 +271,35 @@ public class EvaluationsGUI {
 	 */
 	private void createTable() {
 		
+		int width;
+		int height;
+		
 		table = new Table(shell,SWT.NULL);
+		
 	    table.setLinesVisible(true);
 	    
-	    TableColumn colAlt = new TableColumn(table, SWT.NULL);
-	    colAlt.setWidth(100);
-	    
+	    TableColumn columnAlt = new TableColumn(table, SWT.NULL);
 	    TableColumn column = new TableColumn(table, SWT.NULL);
-	    column.setWidth(50);
+
+	    columnAlt.setWidth(100);
+	    column.setWidth(columnWidth);
+	    width = 100 + columnWidth;
 	    
 	    TableItem itemHeader = new TableItem(table, SWT.NULL);
-		itemHeader.setText(0,"AlternativeID");
+		new TableItem(table, SWT.NULL);
+
+		height = 2 * itemHeight;
 		
-		TableItem item = new TableItem(table, SWT.NULL);
-		 
-		System.out.println(item.getBounds(0).height);
-	    table.setBounds(25, 50, 150, 36); 
+		itemHeader.setText(0,"AlternativeID");
+	    
+	    table.addListener(SWT.MouseDown, alterTableListener);
+	    
+	    
+	    table.setBounds(marginLeft, marginTop + getLabelHeight() + 5, width, height); 
 	    
 		alternativesList.add(0, null);
 		criteriaList.add(0, null);
 	    initPerformanceMat();
-	    
-	    table.addListener(SWT.MouseDown, alterTableListener);
 	    
 	}
 	
@@ -179,132 +336,73 @@ public class EvaluationsGUI {
 	
     /**
 	 * Create a button to add a new row on the table.
-	 * Adding a row means adding an alternative slot.
-	 */
-	private void createAlternativeAdder() {
-		
-	    addAlternative = new Button(shell, SWT.PUSH);
-	    addAlternative.setText("Add Alternative");
-	    addAlternative.setBounds(25, 91, 25, 25);
-	    addAlternative.pack();
-        addAlternative.addSelectionListener(addAlternativeListener);
-		
-	}
-
-    /**
 	 * Create a button to add a new column on the table.
+	 * Adding a row means adding an alternative slot.
 	 * Adding a column means adding a criteria slot.
 	 */
-	private void createCriteriaAdder() {
+	private void createAdder() {
 		
+		int YAxis = getTableYAxis() + getTableHeight() + 5;
+	
+	    addAlternative = new Button(shell, SWT.PUSH);
+	    addAlternative.setText("Add Alternative");
+	    addAlternative.setLocation(getTableXAxis(), YAxis);
+	    addAlternative.pack();
+        
+        int XAxis = getTableXAxis() + getAddAltWidth() + 5;
+        
 	    addCriteria = new Button(shell, SWT.PUSH);
 	    addCriteria.setText("Add Criteria");
-	    addCriteria.setBounds(30 + getAddAltWidth(), 91, 25, 25);
+	    addCriteria.setLocation(XAxis, YAxis);
 	    addCriteria.pack();
-        addCriteria.addSelectionListener(addCriteriaListener);
+	    
+        addAlternative.addSelectionListener(adderListener);
+        addCriteria.addSelectionListener(adderListener);
 		
 	}
 	
-	// GETTER FOR ITEMS DIMENSIONS //
-    
-	/** 
-	 * Get the current width of the shell.
-	 * 
-	 * @return shell width.
-	 */
-    private int getShellWidth(){
-    	return shell.getBounds().width;
-    }
-    
-	/** 
-	 * Get the current height of the sell.
-	 * 
-	 * @return shell height.
-	 */
-    private int getShellHeight(){
-    	return shell.getBounds().height;
-    }
-    
-	/** 
-	 * Get the current width of the table.
-	 * 
-	 * @return table width.
-	 */
-    private int getTableWidth(){
-    	return table.getBounds().width;
-    }
-    
-	/** 
-	 * Get the current height of the table.
-	 * 
-	 * @return table height.
-	 */
-    private int getTableHeight(){
-    	return table.getBounds().height;
-    }
-    
-	/** 
-	 * Get the current width of the addAlternative button.
-	 * 
-	 * @return addAlternative width.
-	 */
-    private int getAddAltWidth(){
-    	return addAlternative.getBounds().width;
-    }
-    
-	/** 
-	 * Get the current width of the addAlternative button.
-	 * 
-	 * @return addAlternative width.
-	 */
-	@SuppressWarnings("unused")
-    private int getAddAltHeight(){
-    	return addAlternative.getBounds().height;
-    }
-	
-	/** 
-	 * Get the current Y axis position of the addAlternative button.
-	 * 
-	 * @return addAlternative Y axis position.
-	 */
-    private int getAddAltYAxis(){
-    	return addAlternative.getBounds().y;
-    }
-    
-	/** 
-	 * Get the current Y axis position of the addCriteria button.
-	 * 
-	 * @return addCriteria Y axis position.
-	 */
-    private int getAddCritYAxis(){
-    	return addCriteria.getBounds().y;
-    }
-    
-    // MODIFIER FOR ITEMS DIMENSION // 
-    
     /**
-	 * Increase the width of both shell and table, depending on their current width.
-	 * Used when a column is added (new criterion).
+	 * Initialize the dimension of the shell and the inner margin.
 	 */
-	private void updateGUIWidth() {
+	private void initShell() {
 		
-		int widthNeeded = getTableWidth() + 25;
+		int width = getLabelWidth() + marginLeft + marginRight;
+		int height = getLabelHeight() + getTableHeight() + getAddAltHeight() + 5 + marginTop + marginBottom;
 		
-		if( widthNeeded >= getShellWidth()){
-			shell.setSize(getShellWidth() + 50, getShellHeight());
-		}
-
-	    table.setSize(getTableWidth() + 50, getTableHeight());
+	    shell.setSize(width, height);
+		shell.setMinimumSize(width, height);
+	    shell.setText("Alternatives and criteria evaluations");
+	    
 	}
 
+    // MODIFIER FOR ITEMS DIMENSION // 
+	
     /**
 	 * Increase the height of both shell and table, depending on their current height.
 	 * Used when a row is added (new alternative).
+	 * Increase the width of both shell and table, depending on their current width.
+	 * Used when a column is added (new criterion).
+	 * 
+	 * @param event can not be null
 	 */
-	private void updateGUIHeight() {
+	private void updateGUISize(Object adder) {
 		
-		shell.setSize(getShellWidth(), getShellHeight() + 18);
-	    table.setSize(getTableWidth(), getTableHeight() + 18);
+		if(adder == addAlternative){
+			shell.setSize(getShellWidth(), getShellHeight() + itemHeight);
+		    table.setSize(getTableWidth(), getTableHeight() + itemHeight);
+		}
+		
+		if(adder == addCriteria){
+
+		    table.setSize(getTableWidth() + columnWidth, getTableHeight());
+		    
+			int widthNeeded = getTableWidth() + marginLeft + marginRight;
+			
+			if( widthNeeded >= getShellWidth()){
+				shell.setSize(widthNeeded, getShellHeight());
+			}
+			
+		}
 		
 	}
 	
@@ -314,10 +412,10 @@ public class EvaluationsGUI {
 	 */
 	private void updateAdderPosition() {
 		
-			addAlternative.setBounds(25, getAddAltYAxis() + 18, 25, 25);
+			addAlternative.setLocation(getTableXAxis(), getAddAltYAxis() + itemHeight);
 	        addAlternative.pack();
 	        
-			addCriteria.setBounds(30 + getAddAltWidth(), getAddCritYAxis() + 18, 25, 25);
+			addCriteria.setLocation(getAddCritXAxis(), getAddCritYAxis() + itemHeight);
 			addCriteria.pack();
 		
 	}
@@ -325,23 +423,36 @@ public class EvaluationsGUI {
 	// LISTENER FOR THE TABLE STRUCTURE ALTERATION //
 
     // Creator for the listener //
-	
+
 	/**
-	 * Create a listener for the addAlternative button.
-	 * Handle the creation of a new row in the table.
+	 * Create a listener for the addAlternative and addCriteria buttons.
+	 * Handle the creation of a new row or a new column in the table.
 	 */ 
-    private void createAlternativeListener(){
+    private void createAdderListener(){
     	
-        addAlternativeListener = new SelectionListener() {
+        adderListener = new SelectionListener() {
         	
         	@Override
 			public void widgetSelected(SelectionEvent event) {
-        		new TableItem(table, SWT.NULL);
-  
-        		alternativesList.add(null);
-        		addPerformanceMatAlt();
-        		updateGUIHeight();
-        		updateAdderPosition();
+        		Object adder = event.getSource();
+        		
+        		if(adder == addAlternative){
+	        		new TableItem(table, SWT.NULL);
+	        		
+	        		alternativesList.add(null);
+	        		addPerformanceMat(adder);
+	        		updateGUISize(adder);
+	        		updateAdderPosition();
+        		}
+        		
+        		if(adder == addCriteria){
+            		TableColumn column = new TableColumn(table, SWT.NULL);
+                	column.setWidth(columnWidth);
+            		
+            		criteriaList.add(null);
+            		addPerformanceMat(adder);
+            		updateGUISize(adder);
+        		}
         	}
 			
 			@Override
@@ -352,68 +463,41 @@ public class EvaluationsGUI {
 
     }
     
-	/**
-	 * Create a listener for the addCriteria button.
-	 * Handle the creation of a new column in the table.
-	 */ 
-    private void createCriteriaListener(){
-    	
-        addCriteriaListener = new SelectionListener() {
-        	
-        	@Override
-			public void widgetSelected(SelectionEvent event) {
-        		TableColumn column = new TableColumn(table, SWT.NULL);
-            	column.setWidth(50);
-        		
-        		criteriaList.add(null);
-        		addPerformanceMatCrit();
-        		updateGUIWidth();
-        	}
-			
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				
-			}
-        }; 
- 
-    }
-    
     // Methods used by the listener //
     
     /**
+     * CASE ADD ALTERNATIVE :
      * Add to the performance matrix a new row.
      * This row is an array and represents a new alternative.
      * Every value of the array is set to null, representing the current value of the criteria.
-     */
-    private void addPerformanceMatAlt(){
-    	
-    	ArrayList<Float> performanceList = new ArrayList<>();
-    	
-    	for(int i=0; i < criteriaList.size();i++){
-    		performanceList.add(i,null);
-    	}
-		performanceMat.add(performanceList);
-    	LOGGER.info("Update alternative in performance matrix : " + performanceMat.toString());
-    	
-    }
-    
-    /**
+     * 
+     * CASE ADD CRITERIA :
      * Add to the performance matrix a new column.
      * This column represents a new criterion.
      * Every alternative array have a null value added, representing the current value of the new criterion.
      */
-    private void addPerformanceMatCrit(){
+    private void addPerformanceMat(Object adder){
     	
     	ArrayList<Float> performanceList = new ArrayList<>();
     	
-    	for(int i=0; i<alternativesList.size();i++){
-    		performanceList = performanceMat.get(i);
-    		performanceList.add(i,null);
-    		performanceMat.set(i, performanceList);
+    	if(adder == addAlternative){
+	    	for(int i=0; i < criteriaList.size();i++){
+	    		performanceList.add(i,null);
+	    	}
+			performanceMat.add(performanceList);
+	    	LOGGER.info("Update alternative in performance matrix : " + performanceMat.toString());
     	}
-    	LOGGER.info("Update criteria in performance matrix : " + performanceMat.toString());
     	
+    	if(adder == addCriteria){
+    		for(int i=0; i < alternativesList.size();i++){
+        		performanceList = performanceMat.get(i);
+        		performanceList.add(null);
+        		performanceMat.set(i, performanceList);
+        	}
+        	LOGGER.info("Update criteria in performance matrix : " + performanceMat.toString());
+    	}
     }
+    
     
 	// LISTENER FOR THE TABLE VALUE ALTERATION //
 
@@ -430,42 +514,21 @@ public class EvaluationsGUI {
 			@Override
 			public void handleEvent(Event event) {
 			
-		        Point pt = new Point(event.x, event.y);
+		        clickPoint = new Point(event.x, event.y);
+		    	textEdit = new Text(table, SWT.NULL);
+
+		        setActiveItem(clickPoint);
 		        
-	            int column = getTableColumn(pt);
-		        int index = getTableIndex(pt);
-		        
-		        TableItem item = table.getItem(index);
-	            final Text text = new Text(table, SWT.BORDER);
-	            
-	            // Can't choose the header's cell "AlternativeID" or something out of the table
-	            if(column == 0 && index ==0){
+	            // Can't choose the header's cell "AlternativeID"
+	            if(activeColumn == 0 && activeIndex ==0){
 	            	return;
 	            }
+
+		        createPutTableValueListener(textEdit, activeItem, activeColumn);
+		        createTextListener();
+		        
+		        setTextEdit();
 	            
-		        putTableValueListener = new Listener() {
-		        	@Override
-		            public void handleEvent(Event event) {
-		        		putTableValue(event,item, index, column, text);
-		            }
-		        };
-		        
-		        textListener = new ModifyListener() {
-		    		@Override
-		            public void modifyText(ModifyEvent event) {
-		    			Text text = (Text) event.widget;
-			    		putMCPValue(item,index, column,text);
-		            }
-		        };
-		            		
-		        text.addListener(SWT.FocusOut, putTableValueListener);
-		        text.addListener(SWT.Traverse, putTableValueListener);
-		        text.addModifyListener(textListener);
-		        editor.setEditor(text, item, column);
-		        text.setText(item.getText(column));
-		        text.selectAll();
-		        text.setFocus();
-		        
 		        return;
 
 			}
@@ -474,6 +537,66 @@ public class EvaluationsGUI {
     }
 	
 	// Methods used by the listener //
+    
+    /**
+     * Create a listener to update a table item value according to the user input.
+     * 
+     * @param textEdit can not be null, the new item value
+     * @param item can not be null, the table item
+     * @param column can not be null, the table item's column
+     */
+    private void createPutTableValueListener(Text text, TableItem item, int column){
+    	
+    	putTableValueListener = new Listener() {
+        	@Override
+            public void handleEvent(Event event) {
+        		putTableValue(event, text, item, column);
+            }
+        };
+        
+    }
+    
+    /**
+     * Create a listener to update the MCProblem according to the user input. 
+     */
+    private void createTextListener(){
+    	
+    	textListener = new ModifyListener() {
+    		@Override
+            public void modifyText(ModifyEvent event) {
+	    		putMCPValue((Text) event.widget);
+            }
+        };
+        
+    }
+    
+    /**
+     * 
+     * 
+     * @param pt can not be null
+     */
+    private void setActiveItem(Point pt){
+    	
+    	activeIndex = getTableIndex(pt);
+    	activeColumn = getTableColumn(pt);
+    	activeItem = table.getItem(activeIndex);
+    	
+    }
+    
+    /**
+     * Set the text editor to the table cell selected by the user.
+     */
+    private void setTextEdit(){
+    	
+        textEdit.addListener(SWT.FocusOut, putTableValueListener);
+        textEdit.addListener(SWT.Traverse, putTableValueListener);
+        textEdit.addModifyListener(textListener);
+        editor.setEditor(textEdit, activeItem, activeColumn);
+        textEdit.setText(activeItem.getText(activeColumn));
+        textEdit.selectAll();
+        textEdit.setFocus();
+        
+    }
 	
 	/**
 	 * Get the index of the table's cell depending on the user's click position.
@@ -514,15 +637,19 @@ public class EvaluationsGUI {
     }
     
     /**
-	 * Create a listener for the addCriteria button.
-	 * Handle the creation of a new column in the table.
-	 */ 
-    private void putTableValue(Event event, TableItem item, int index, int column, Text text){
+     * Update the table item with the new input value.
+     * 
+     * @param event can not be null
+     * @param text can not be null
+     * @param item can not be null
+     * @param column can not be null
+     */
+    private void putTableValue(Event event, Text text, TableItem item, int column){
     	
     	switch (event.type) {
 	    	case SWT.FocusOut:
 	    		item.setText(column, text.getText());
-	            text.dispose();
+            	text.dispose();
 	            break;
 	                  
 	        case SWT.Traverse:
@@ -532,11 +659,17 @@ public class EvaluationsGUI {
 	            		item.setText(column, text.getText());
 	                            
 	                case SWT.TRAVERSE_ESCAPE:
-	                    text.dispose();
-	                    event.doit = false;
+	                	text.dispose();
+	                	
+	                case SWT.DEFAULT:
+	                	break;
 	            }
-	        break;	
+	            break;
+	            
+	        case SWT.DEFAULT:
+	        	break;
     	}
+    	
     }
     
     /**
@@ -550,16 +683,16 @@ public class EvaluationsGUI {
      * @param column can not be null 
      * @param text can not be null
      */
-    private void putMCPValue(TableItem item,int index, int column, Text text){
-    	 
-        if(column == 0){
-        	text.setData(index);
+    private void putMCPValue(Text text){
+    	
+        if(activeColumn == 0){
+        	text.setData(activeIndex);
         }
-        if(index == 0){
-        	text.setData(column);
+        if(activeIndex == 0){
+        	text.setData(activeColumn);
         }
         
-        if(column==0 && index != 0){
+        if(activeColumn==0 && activeIndex != 0){
 	    	try {
 				Integer.parseInt(text.getText());
 				updateAlternativeList(text);
@@ -569,7 +702,7 @@ public class EvaluationsGUI {
 			}
         }
         
-        if(column!=0 && index == 0){
+        if(activeColumn!=0 && activeIndex == 0){
 	    	try {
 				Integer.parseInt(text.getText());
 				updateCriteriaList(text);
@@ -579,10 +712,10 @@ public class EvaluationsGUI {
 			}
         }
         
-        if(column!=0 && index != 0){
+        if(activeColumn!=0 && activeIndex != 0){
 	    	try {
 				Float.parseFloat(text.getText());
-				updatePerformanceMat(index,column,text);
+				updatePerformanceMat(activeIndex,activeColumn,text);
 			}
 			catch(Exception isNull)
 			{
@@ -678,40 +811,35 @@ public class EvaluationsGUI {
 	 * @throws IOException
 	 */
     private void marshall() throws FileNotFoundException, JAXBException, IOException {
+    	
     	mcp = new MCProblem();
     	marshaller = new MCProblemMarshaller(mcp);
-    	
-    	String path="MCPFile.xml";
-    	
-    	for (int i =0; i < alternativesList.size(); i++) {
-			if (alternativesList.get(i) != null) {
-				mcp.addAlt(new Alternative(Integer.parseInt(alternativesList.get(i))));
-				LOGGER.info("Alternatives in the MCP: {}." + mcp.getAlternatives());
-			}
-		}
-    	for (int i =0; i < criteriaList.size(); i++) {
-			if (criteriaList.get(i) != null) {
-				mcp.addCrit(new Criterion(Integer.parseInt(criteriaList.get(i))));
-				LOGGER.info("Criteria in the MCP: {}." + mcp.getCriteria());
-			}
-		}
+    	Alternative alt = null;
+    	Criterion crit = null;
 
     	for (int i =0; i < alternativesList.size(); i++) {
+    		
 			if (alternativesList.get(i) != null) {
-	    		Alternative alt = new Alternative(Integer.parseInt(alternativesList.get(i)));
-	    		for(int j=0; j < criteriaList.size(); j++){
-	    			if (criteriaList.get(j) != null) {
-		    			Criterion crit = new Criterion(Integer.parseInt(criteriaList.get(j)));
-		    			try{
-			    			mcp.putEvaluation(alt,crit,Float.parseFloat(performanceMat.get(i).get(j).toString()));
-							LOGGER.info("Performance in the MCP: {}." + mcp.getTableEval());
-		    			}catch(Exception wrongInput){
-		    			}
-	    			}
-				}
-	    	}
-		}
-    	
+	    		alt = new Alternative(Integer.parseInt(alternativesList.get(i)));
+	    		mcp.addAlt(alt);
+			}
+				
+	    	for(int j=0; j < criteriaList.size(); j++){
+	    			
+	    		if (criteriaList.get(j) != null) {
+		    		crit = new Criterion(Integer.parseInt(criteriaList.get(j)));
+		    		try{
+			    		mcp.putEvaluation(alt,crit,Float.parseFloat(performanceMat.get(i).get(j).toString()));
+		    		}catch(Exception wrongInput){
+		   				mcp.addCrit(crit);
+		   			}
+	    		}
+			}
+    	}
+
+		LOGGER.info("Alternatives in the MCP: {}." + mcp.getAlternatives());
+		LOGGER.info("Criteria in the MCP: {}." + mcp.getCriteria());
+		LOGGER.info("Performance in the MCP: {}." + mcp.getTableEval());
     	
     	try (final FileOutputStream fos = new FileOutputStream(path)) {
 			marshaller.marshalAndWrite(fos);
