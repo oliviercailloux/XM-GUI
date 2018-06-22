@@ -25,8 +25,6 @@ public final class Alternative {
 		return id;
 	}
 	
-
-	
 	/** 
 	 * Overriding equals() to compare Alternative objects according to their id.
 	 */
