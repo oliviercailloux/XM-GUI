@@ -48,7 +48,7 @@ import io.github.oliviercailloux.y2018.xmgui.file2.AlternativesRankingMarshaller
 
 public class AppWSCall {
 	
-	private static final String ENDPOINT_ADDRESS = "http://webservices.decision-deck.org/soap/plotNumericPerformanceTable.py";
+	private static final String ENDPOINT_ADDRESS = "http://webservices.decision-deck.org/soap/plotNumericPerformanceTable-ITTB.py";
 	@SuppressWarnings("unused")
 	private static final String FAILURE = "The problem submission was unsuccessful";
 	@SuppressWarnings("unused")
@@ -164,11 +164,11 @@ public class AppWSCall {
 			final Element submit = doc.createElement("submitProblem");
 			submit.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xsd", "http://www.w3.org/2001/XMLSchema");
 			
-			final Element sub1 = doc.createElement("overallValues");
 			
 			/*
 			 * NON NECESSAIRE POUR INVOQUER plotNumericPerformanceTable
 			 *
+			final Element sub1 = doc.createElement("overallValues");
 			CDATASection cdataOverVal = doc.createCDATASection(asString(altrMarshaller.altsRankingNodeForWSCall(altrMarshaller, doc)));
 			sub1.appendChild(cdataOverVal);
 			*
@@ -179,28 +179,52 @@ public class AppWSCall {
 			submit.appendChild(subMethParameters);
 			CDATASection cdataMethParameters = doc.createCDATASection(asString(CreateMethodParamatersNode.plotMethodParametersNodeForWSCall(doc)));
 			subMethParameters.appendChild(cdataMethParameters);
+			final Attr attrMethParameters = doc.createAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:type");
+			attrMethParameters.setValue("xsd:string");
+			subMethParameters.setAttributeNodeNS(attrMethParameters);
+			Attr methParamsTag = doc.createAttribute("tag");
+			methParamsTag.setValue("methodParameters");
+			subMethParameters.setAttributeNode(methParamsTag);
 			
 			final Element sub2 = doc.createElement("alternatives");
 			submit.appendChild(sub2);
 			CDATASection cdataAlt = doc.createCDATASection(asString(mcpMarshaller.altsNodeForWSCall(mcp, doc)));
 			sub2.appendChild(cdataAlt);
+			final Attr attrSub2 = doc.createAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:type");
+ 			attrSub2.setValue("xsd:string");
+			sub2.setAttributeNodeNS(attrSub2);
+			Attr altsTag = doc.createAttribute("tag");
+			altsTag.setValue("alternatives");
+			sub2.setAttributeNode(altsTag);
 			
 			final Element sub4 = doc.createElement("criteria");
 			submit.appendChild(sub4);
 			CDATASection cdataCriteria = doc.createCDATASection(asString(mcpMarshaller.critNodeForWSCall(mcp, doc)));
 			sub4.appendChild(cdataCriteria);
+			final Attr attrSub4 = doc.createAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:type");
+			attrSub4.setValue("xsd:string");
+			sub4.setAttributeNodeNS(attrSub4);
+			Attr criteriaTag = doc.createAttribute("tag");
+			criteriaTag.setValue("criteria");
+			sub4.setAttributeNode(criteriaTag);
 			
 			final Element sub3 = doc.createElement("performanceTable");
 			submit.appendChild(sub3);
 			CDATASection cdataPerfTable = doc.createCDATASection(asString(mcpMarshaller.perfTableNodeForWSCall(mcp, doc)));
 			sub3.appendChild(cdataPerfTable);
-			
+			final Attr attrSub3 = doc.createAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:type");
+			attrSub3.setValue("xsd:string");
+			sub3.setAttributeNodeNS(attrSub3);
+			Attr perfTableTag = doc.createAttribute("tag");
+			perfTableTag.setValue("performanceTable");
+			sub3.setAttributeNode(perfTableTag);
+
 			
 			final Attr attrType1 = doc.createAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:type");
 			attrType1.setValue("xsd:string");
-			sub1.setAttributeNodeNS(attrType1);
-			final Attr attrType2 = (Attr) attrType1.cloneNode(true);
-			sub2.setAttributeNodeNS(attrType2);
+			// sub1.setAttributeNodeNS(attrType1);
+			//final Attr attrType2 = (Attr) attrType1.cloneNode(true);
+			//sub2.setAttributeNodeNS(attrType2);
 			
 			
 			LOGGER.info("Sending: {}.", asString(doc));
@@ -227,38 +251,42 @@ public class AppWSCall {
 			
 			LOGGER.info("Ticket: {}.", ticket);
 		}
-
-		final Document requestSolutionDoc = builder.newDocument();
-		final Element requestSolution = requestSolutionDoc.createElement("requestSolution");
-		requestSolution.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xsd","http://www.w3.org/2001/XMLSchema");
-		final Element ticketEl = requestSolutionDoc.createElement("ticket");
-		requestSolutionDoc.appendChild(requestSolution);
-		requestSolution.appendChild(ticketEl);
-		final Text ticketTextNode = requestSolutionDoc.createTextNode(ticket);
-		ticketEl.appendChild(ticketTextNode);
-		final Attr attrType1 = requestSolutionDoc.createAttributeNS("http://www.w3.org/2001/XMLSchema-instance","xsi:type");
-		attrType1.setValue("xsd:string");
-		ticketEl.setAttributeNodeNS(attrType1);
 		
-		LOGGER.info("Sending: {}.", asString(requestSolutionDoc));
+	final Document requestSolutionDoc = builder.newDocument();
+	final Element requestSolution = requestSolutionDoc.createElement("requestSolution");
+	requestSolution.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xsd","http://www.w3.org/2001/XMLSchema");
+	final Element ticketEl = requestSolutionDoc.createElement("ticket");
+	requestSolutionDoc.appendChild(requestSolution);
+	requestSolution.appendChild(ticketEl);
+	final Text ticketTextNode = requestSolutionDoc.createTextNode(ticket);
+	ticketEl.appendChild(ticketTextNode);
+	final Attr attrType1 = requestSolutionDoc.createAttributeNS("http://www.w3.org/2001/XMLSchema-instance","xsi:type");
+	attrType1.setValue("xsd:string");
+	ticketEl.setAttributeNodeNS(attrType1);
+	
+	LOGGER.info("Sending: {}.", asString(requestSolutionDoc));
 
-		final Node solution = invoke(dispatch, new DOMSource(requestSolutionDoc));
+	final Node solution = invoke(dispatch, new DOMSource(requestSolutionDoc));
 
-		LOGGER.info("Returned answer: {}.", asString(solution));
+	LOGGER.info("Returned answer: {}.", asString(solution));
 
-		final NodeList directChildren = solution.getChildNodes();
-		assertEquals(1, directChildren.getLength());
-		final Node requestSolutionResponse = directChildren.item(0);
-		assertEquals("requestSolutionResponse", requestSolutionResponse.getNodeName());
-		final NodeList subChildren = requestSolutionResponse.getChildNodes();
-		assertEquals(4, subChildren.getLength());
-		final Node alternativesRanks = subChildren.item(0);
-		assertEquals("alternativesRanks", alternativesRanks.getNodeName());
-		final NodeList alternativesRanksContentList = alternativesRanks.getChildNodes();
-		assertEquals(1, alternativesRanksContentList.getLength());
-		final Node alternativesRanksContent = alternativesRanksContentList.item(0);
-		assertEquals(Node.TEXT_NODE, alternativesRanksContent.getNodeType());
+	final NodeList directChildren = solution.getChildNodes();
+	assertEquals(1, directChildren.getLength());
+	final Node requestSolutionResponse = directChildren.item(0);
+	assertEquals("requestSolutionResponse", requestSolutionResponse.getNodeName());
+	final NodeList subChildren = requestSolutionResponse.getChildNodes();
+	assertEquals(4, subChildren.getLength());
+	final Node alternativesRanks = subChildren.item(0);
+	assertEquals("alternativesRanks", alternativesRanks.getNodeName());
+	final NodeList alternativesRanksContentList = alternativesRanks.getChildNodes();
+	assertEquals(1, alternativesRanksContentList.getLength());
+	final Node alternativesRanksContent = alternativesRanksContentList.item(0);
+	assertEquals(Node.TEXT_NODE, alternativesRanksContent.getNodeType());
 
-		LOGGER.info("Content of returned alternativesRanks: {}.", alternativesRanksContent.getNodeValue());
+	LOGGER.info("Content of returned alternativesRanks: {}.", alternativesRanksContent.getNodeValue());
+	
 	}
+
 }
+
+		

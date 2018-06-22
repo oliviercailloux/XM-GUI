@@ -198,7 +198,44 @@
  			assertEquals("ticket", secondSubChild.getNodeName());
  			ticket = secondSubChild.getFirstChild().getTextContent();
  
+			LOGGER.info("Ticket: {}.", ticket);
+ 			
  		}
- 	}
- }
+ 		
+ 		final Document requestSolutionDoc = builder.newDocument();
+		final Element requestSolution = requestSolutionDoc.createElement("requestSolution");
+		requestSolution.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xsd","http://www.w3.org/2001/XMLSchema");
+		final Element ticketEl = requestSolutionDoc.createElement("ticket");
+		requestSolutionDoc.appendChild(requestSolution);
+		requestSolution.appendChild(ticketEl);
+		final Text ticketTextNode = requestSolutionDoc.createTextNode(ticket);
+		ticketEl.appendChild(ticketTextNode);
+		final Attr attrType1 = requestSolutionDoc.createAttributeNS("http://www.w3.org/2001/XMLSchema-instance","xsi:type");
+		attrType1.setValue("xsd:string");
+		ticketEl.setAttributeNodeNS(attrType1);
+		
+		LOGGER.info("Sending: {}.", asString(requestSolutionDoc));
+
+		final Node solution = invoke(dispatch, new DOMSource(requestSolutionDoc));
+
+		LOGGER.info("Returned answer: {}.", asString(solution));
+
+		final NodeList directChildren = solution.getChildNodes();
+		assertEquals(1, directChildren.getLength());
+		final Node requestSolutionResponse = directChildren.item(0);
+		assertEquals("requestSolutionResponse", requestSolutionResponse.getNodeName());
+		final NodeList subChildren = requestSolutionResponse.getChildNodes();
+		assertEquals(4, subChildren.getLength());
+		final Node alternativesRanks = subChildren.item(0);
+		assertEquals("alternativesRanks", alternativesRanks.getNodeName());
+		final NodeList alternativesRanksContentList = alternativesRanks.getChildNodes();
+		assertEquals(1, alternativesRanksContentList.getLength());
+		final Node alternativesRanksContent = alternativesRanksContentList.item(0);
+		assertEquals(Node.TEXT_NODE, alternativesRanksContent.getNodeType());
+
+		LOGGER.info("Content of returned alternativesRanks: {}.", alternativesRanksContent.getNodeValue());
+	}
+
+}
+
  		

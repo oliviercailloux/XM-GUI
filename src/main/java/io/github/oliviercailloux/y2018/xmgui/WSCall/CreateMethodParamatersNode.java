@@ -19,7 +19,7 @@ public class CreateMethodParamatersNode {
 		
 		Element parameter1 = doc.createElement("parameter");
 		Attr parameter1Id = doc.createAttribute("id");
-		parameter1Id.setValue("chart-title");
+		parameter1Id.setValue("chart_title");
 		parameter1.setAttributeNode(parameter1Id);
 		plotMethodParametersNode.appendChild(parameter1);
 		Element value1Node=doc.createElement("value");
@@ -30,7 +30,7 @@ public class CreateMethodParamatersNode {
 		
 		Element parameter2 = doc.createElement("parameter");
 		Attr parameter2Id = doc.createAttribute("id");
-		parameter2Id.setValue("domain-axis");
+		parameter2Id.setValue("domain_axis");
 		parameter2.setAttributeNode(parameter2Id);
 		plotMethodParametersNode.appendChild(parameter2);
 		Element value2Node=doc.createElement("value");
@@ -41,7 +41,7 @@ public class CreateMethodParamatersNode {
 		
 		Element parameter3 = doc.createElement("parameter");
 		Attr parameter3Id = doc.createAttribute("id");
-		parameter3Id.setValue("range-axis");
+		parameter3Id.setValue("range_axis");
 		parameter3.setAttributeNode(parameter3Id);
 		plotMethodParametersNode.appendChild(parameter3);
 		Element value3Node=doc.createElement("value");

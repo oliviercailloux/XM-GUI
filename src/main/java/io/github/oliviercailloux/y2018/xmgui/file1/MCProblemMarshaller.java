@@ -162,6 +162,9 @@ public class MCProblemMarshaller {
 		Element XMCDANode = doc.createElement("xmcda:XMCDA");
 		Element perfTableNode = doc.createElement("performanceTable");
 		XMCDANode.appendChild(perfTableNode);
+		Attr perfTableTag = doc.createAttribute("mcdaConcept");
+		perfTableTag.setValue("performanceTable");
+		perfTableNode.setAttributeNode(perfTableTag);
 		
 		for (Alternative a : mcp.getAlternatives()) {
 				int altid = a.getId();
