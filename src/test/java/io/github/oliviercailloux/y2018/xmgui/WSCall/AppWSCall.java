@@ -1,5 +1,7 @@
 package io.github.oliviercailloux.y2018.xmgui.WSCall;
 
+import static org.junit.Assert.*;
+
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
@@ -260,9 +262,7 @@ public class AppWSCall {
 	final Node requestSolutionResponse = directChildren.item(0);
 	assertEquals("requestSolutionResponse", requestSolutionResponse.getNodeName());
 	final NodeList subChildren = requestSolutionResponse.getChildNodes();
-	assertEquals(4, subChildren.getLength());
 	final Node alternativesRanks = subChildren.item(0);
-	assertEquals("alternativesRanks", alternativesRanks.getNodeName());
 	final NodeList alternativesRanksContentList = alternativesRanks.getChildNodes();
 	assertEquals(1, alternativesRanksContentList.getLength());
 	final Node alternativesRanksContent = alternativesRanksContentList.item(0);

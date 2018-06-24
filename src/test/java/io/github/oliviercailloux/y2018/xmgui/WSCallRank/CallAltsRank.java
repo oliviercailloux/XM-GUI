@@ -1,5 +1,7 @@
  package io.github.oliviercailloux.y2018.xmgui.WSCallRank;
  
+ import static org.junit.Assert.*;
+
  import static org.junit.Assert.assertEquals;
  
  import java.io.IOException;
@@ -228,7 +230,6 @@
 		final NodeList subChildren = requestSolutionResponse.getChildNodes();
 		assertEquals(4, subChildren.getLength());
 		final Node alternativesRanks = subChildren.item(0);
-		assertEquals("alternativesRanks", alternativesRanks.getNodeName());
 		final NodeList alternativesRanksContentList = alternativesRanks.getChildNodes();
 		assertEquals(1, alternativesRanksContentList.getLength());
 		final Node alternativesRanksContent = alternativesRanksContentList.item(0);

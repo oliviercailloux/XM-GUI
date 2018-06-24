@@ -85,7 +85,7 @@ public class AltsCritsGUI {
     			try {
 					Integer.parseInt(text.getText());
 					updateAlternativeList(text);
-					text.setBackground(display.getSystemColor(SWT.COLOR_GREEN));
+					text.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
 				}
 				catch(Exception wrongInput)
 				{
@@ -102,7 +102,7 @@ public class AltsCritsGUI {
     			try {
 					Integer.parseInt(text.getText());
 					updateCriteriaList(text);
-					text.setBackground(display.getSystemColor(SWT.COLOR_GREEN));
+					text.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
 				}
 				catch(Exception wrongInput)
 				{

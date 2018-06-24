@@ -1,5 +1,7 @@
 package io.github.oliviercailloux.y2018.xmgui.WSCall;
 
+import static org.junit.Assert.*;
+
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
