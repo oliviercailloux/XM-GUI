@@ -146,14 +146,20 @@
  			// For now, a raw MCProblem is created to be sent to the decision-deck rankAlternativesValues web service.
  			// The evaluationGUI will provide such MCProblem in the future. 			
  			MCProblem mcp = new MCProblem();
-			Alternative alt0= new Alternative(0);
 			Alternative alt1= new Alternative(1);
-			Criterion crt =new Criterion(0);
- 			mcp.putEvaluation(alt0, crt, 0.0f);
-			mcp.putEvaluation(alt1, crt, 1.0f);
+			Alternative alt2= new Alternative(2);
+			Alternative alt3= new Alternative(3);
+			
+			mcp.addAlt(alt1);
+			mcp.addAlt(alt2);
+			mcp.addAlt(alt3);
+
  			MCProblemMarshaller mcpMarshaller= new MCProblemMarshaller(mcp);
- 			AlternativesRanking altr = new AlternativesRanking(1000,alt0);
- 			altr.putAltRank(2,alt1);
+ 			
+ 			AlternativesRanking altr = new AlternativesRanking(3,alt1);
+ 			altr.putAltRank(2,alt2);
+ 			altr.putAltRank(1,alt3);
+
  			AlternativesRankingMarshaller altrMarshaller = new AlternativesRankingMarshaller(altr);
  			
 			// Create the problem to be submitted to the web service and set its attributes
