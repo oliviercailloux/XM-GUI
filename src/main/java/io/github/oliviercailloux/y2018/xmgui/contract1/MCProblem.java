@@ -1,16 +1,14 @@
 package io.github.oliviercailloux.y2018.xmgui.contract1;
 
-import java.util.Set;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableTable;
-import com.google.common.collect.Multiset.Entry;
 import com.google.common.collect.Table;
-
 
 /**
  * An object of this class MCProblem contains a set of alternatives, criteria
@@ -26,7 +24,7 @@ public class MCProblem {
 	 * Add a value for an alternative-criterion pair
 	 * 
 	 * @param alt must not be null
-	 * @param c must not be null
+	 * @param c   must not be null
 	 * @param val must not be null
 	 */
 	public void putEvaluation(Alternative alt, Criterion c, Float d) {
@@ -73,28 +71,28 @@ public class MCProblem {
 	public ImmutableTable<Alternative, Criterion, Float> getTableEval() {
 		return ImmutableTable.copyOf(tableEval);
 	}
-	
-	public ImmutableSet<Alternative> getAlternatives(){
+
+	public ImmutableSet<Alternative> getAlternatives() {
 		return ImmutableSet.copyOf(alternatives);
 	}
-	
-	public ImmutableSet<Criterion> getCriteria(){
+
+	public ImmutableSet<Criterion> getCriteria() {
 		return ImmutableSet.copyOf(criteria);
 	}
-	
-	public ImmutableMap<Criterion,Float> getValueList(Alternative alt){
+
+	public ImmutableMap<Criterion, Float> getValueList(Alternative alt) {
 		return ImmutableMap.copyOf(tableEval.row(alt));
 	}
-	
-	public String toStringTableEval(){
-		String s="---------------------------TableEval--------------------------------------\n";
+
+	public String toStringTableEval() {
+		String s = "---------------------------TableEval--------------------------------------\n";
 		for (Alternative key : tableEval.rowKeySet()) {
-	        s+=key.toString()+"\n";
-	        for (java.util.Map.Entry<Criterion, Float> row : tableEval.row(key).entrySet()) {
-	            s+="\t"+ row.getKey().toString() + " value : " + row.getValue() +"\n";
-	        }
-	    }
-		s+="\n---------------------------TableEval--------------------------------------";
+			s += key.toString() + "\n";
+			for (java.util.Map.Entry<Criterion, Float> row : tableEval.row(key).entrySet()) {
+				s += "\t" + row.getKey().toString() + " value : " + row.getValue() + "\n";
+			}
+		}
+		s += "\n---------------------------TableEval--------------------------------------";
 		return s;
 	}
 }

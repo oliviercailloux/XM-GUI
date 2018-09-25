@@ -1,6 +1,7 @@
 package io.github.oliviercailloux.y2018.xmgui.contract2;
 
-import java.util.*;
+import java.util.Objects;
+import java.util.Set;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableSetMultimap;
@@ -21,7 +22,7 @@ public class AlternativesRanking {
 	 * alternative.
 	 * 
 	 * @param rank must be positive
-	 * @param alt must not be null
+	 * @param alt  must not be null
 	 */
 	public AlternativesRanking(int rank, Alternative alt) {
 		if (rank <= 0 || alt == null) {
@@ -35,8 +36,9 @@ public class AlternativesRanking {
 	 * Put a rank for a given alternative. Can be used to put ex-aequo alternatives
 	 * on the same rank. This also creates a history entry for the put alternative.
 	 * 
-	 * @param rank must be positive and inferior to the total number of alternatives + 1
-	 * @param alt must not be null
+	 * @param rank must be positive and inferior to the total number of alternatives
+	 *             + 1
+	 * @param alt  must not be null
 	 */
 	public void putAltRank(int rank, Alternative alt) {
 		if (rank <= 0 || alt == null) {
@@ -50,7 +52,8 @@ public class AlternativesRanking {
 	 * Alternative accessor. Return the corresponding alternative(s) for a given
 	 * rank.
 	 * 
-	 * @param rank must be positive and inferior to the total number of alternatives + 1
+	 * @param rank must be positive and inferior to the total number of alternatives
+	 *             + 1
 	 * @return alternative(s)
 	 */
 	public Set<Alternative> getAlt(int rank) {
@@ -102,22 +105,25 @@ public class AlternativesRanking {
 		}
 		return s;
 	}
-	
-	/** 
-	 * Overriding equals() to compare AlternativesRanking objects according to their map.
+
+	/**
+	 * Overriding equals() to compare AlternativesRanking objects according to their
+	 * map.
 	 */
 	@Override
 	public boolean equals(Object obj) {
-	    if (obj == null) return false;
-	    if (obj == this) return true;
-	    if (!(obj instanceof AlternativesRanking)) return false;
-	    AlternativesRanking altR = (AlternativesRanking) obj;
-        return altR.map.equals(map);
+		if (obj == null)
+			return false;
+		if (obj == this)
+			return true;
+		if (!(obj instanceof AlternativesRanking))
+			return false;
+		AlternativesRanking altR = (AlternativesRanking) obj;
+		return altR.map.equals(map);
 	}
-	
-	/** 
-	 * Overriding hashCode() because we
-	 * override equals()
+
+	/**
+	 * Overriding hashCode() because we override equals()
 	 */
 	@Override
 	public int hashCode() {
