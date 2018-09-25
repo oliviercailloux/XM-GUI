@@ -1,4 +1,12 @@
-# XM-GUI
-Interface graphique permettant d’éditer des problèmes de théorie de la décision et d’envoyer ces problèmes à des services web.
+= XM-GUI
 
 image:https://travis-ci.org/Raphaaal/XM-GUI.svg?branch=master["Build Status", link="https://travis-ci.org/Raphaaal/XM-GUI"]
+
+A Java project developed during the https://github.com/oliviercailloux/java-course[Java course] taught at Université Paris-Dauphine (in http://www.mido.dauphine.fr/[MIDO] L3 Apprentissage). The code is jointly copyrighted by Olivier Cailloux and the following students:
+
+* Louis Leprince
+* Raphaël Azorin
+* Ayoub Lamrani Alaoui
+
+The code is hereby published under the MIT License, with their permission.
+
